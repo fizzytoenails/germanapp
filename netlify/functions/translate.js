@@ -11,7 +11,7 @@ exports.handler = async (event) => {
     texts.forEach((t) => params.append('text', t));
     params.append('target_lang', body.target_lang || 'EN');
     params.append('source_lang', body.source_lang || 'DE');
-    params.append('auth_key', '1b7d9e67-ba29-49f0-9677-0d82641a8ad0:fx');
+    params.append('auth_key', 'const API_KEY = process.env.DEEPL_API_KEY;');
 
     const res = await fetch('https://api-free.deepl.com/v2/translate', {
       method: 'POST',
