@@ -26,13 +26,125 @@
     style.textContent = `
       html, body { overflow-x: hidden !important; }
       .brand { text-decoration: none !important; }
+      body {
+        -webkit-text-size-adjust: 100% !important;
+        text-size-adjust: 100% !important;
+      }
       .nav { z-index: 5000 !important; }
       .nav-links { z-index: 5002 !important; }
       .settings-fab { z-index: 1300 !important; }
       .settings-panel { z-index: 1301 !important; }
+      .column, .col, .board, .word-list, .phrase-list, .list {
+        min-width: 0 !important;
+      }
+      .scroll, .table-wrap {
+        overflow: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+      }
+      button, .btn, .secondary-btn, .primary-btn, select, input, textarea {
+        min-height: 42px !important;
+      }
       body.theme-dark .nav {
         background: rgba(10, 17, 32, 0.9) !important;
         border-color: rgba(148, 163, 184, 0.25) !important;
+      }
+      @media (max-width: 980px) {
+        body {
+          padding: 10px !important;
+        }
+        .container {
+          width: 100% !important;
+          max-width: 100% !important;
+          gap: 12px !important;
+        }
+        .nav {
+          padding: 10px 12px !important;
+          border-radius: 18px !important;
+          gap: 10px !important;
+        }
+        .menu-toggle {
+          top: 10px !important;
+          right: 10px !important;
+          width: 42px !important;
+          height: 42px !important;
+        }
+        .nav-actions {
+          width: 100% !important;
+          margin-right: 0 !important;
+          justify-content: stretch !important;
+        }
+        .timer {
+          width: 100% !important;
+          min-width: 0 !important;
+        }
+        .controls, .actions, .btns {
+          display: flex !important;
+          flex-wrap: wrap !important;
+          gap: 8px !important;
+        }
+        .controls > *, .actions > *, .btns > * {
+          flex: 1 1 auto !important;
+        }
+        .board {
+          grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+          gap: 10px !important;
+        }
+        .column, .col {
+          padding: 10px !important;
+          border-radius: 14px !important;
+        }
+        .word-card, .phrase-card, .item {
+          padding: 10px !important;
+          border-radius: 12px !important;
+        }
+        .stats {
+          grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+          gap: 8px !important;
+        }
+        .settings-fab {
+          width: 50px !important;
+          height: 50px !important;
+          right: 14px !important;
+          bottom: 14px !important;
+        }
+        .settings-panel {
+          right: 10px !important;
+          left: 10px !important;
+          width: auto !important;
+          bottom: 72px !important;
+        }
+        input, select, textarea {
+          font-size: 16px !important;
+        }
+      }
+      @media (max-width: 640px) {
+        .brand h1 {
+          font-size: 1.2rem !important;
+        }
+        .brand img {
+          width: 38px !important;
+          height: 38px !important;
+        }
+        .nav-links {
+          min-width: 210px !important;
+        }
+        .board {
+          gap: 8px !important;
+        }
+        .column h3, .col h3 {
+          font-size: 1rem !important;
+        }
+        .stat strong {
+          font-size: 1.05rem !important;
+        }
+      }
+      @media (min-width: 1200px) {
+        .container {
+          max-width: 1280px !important;
+        }
+        .board {
+          gap: 16px !important;
+        }
       }
     `;
     document.head.appendChild(style);
