@@ -28,12 +28,13 @@
     .quiz{display:grid;gap:8px}.quiz input{padding:10px;border-radius:10px;border:1px solid var(--border);background:var(--card);color:var(--ink)}
     .btns{display:flex;gap:8px;flex-wrap:wrap}.btn{border:none;border-radius:12px;padding:10px 14px;font-weight:700;cursor:pointer;background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#fff}
     .hint{font-size:.9rem;color:var(--muted);min-height:20px}.ok{color:var(--ok)}.bad{color:var(--bad)}
-    .board{display:grid;grid-template-columns:1fr 1fr;gap:12px}.col{background:rgba(148,163,184,.1);border-radius:14px;padding:12px}
-    .item{padding:10px;border-radius:12px;background:var(--card);border:1px solid transparent;cursor:pointer;margin-bottom:8px;display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
-    .item-main{display:grid;gap:4px;min-width:0}
+    .board{display:grid;grid-template-columns:1fr 1fr;gap:12px}.col{background:rgba(148,163,184,.1);border-radius:14px;padding:12px;min-width:0}
+    .item{padding:10px;border-radius:12px;background:var(--card);border:1px solid transparent;cursor:pointer;margin-bottom:8px;display:flex;justify-content:space-between;gap:8px;align-items:flex-start;overflow:hidden}
+    .item-main{display:grid;gap:4px;min-width:0;flex:1 1 auto}
+    .item-main > div{min-width:0;overflow-wrap:anywhere;word-break:break-word;line-height:1.3}
     .item-hint{display:none;font-size:.82rem;color:var(--muted)}
     .item.flipped .item-hint{display:block}
-    .item-tools{display:flex;gap:6px}
+    .item-tools{display:flex;gap:6px;flex:0 0 auto}
     .icon-btn{cursor:pointer;opacity:.85;font-size:1rem}
     .item.selected{border-color:var(--accent);background:var(--soft)}.item.matched{border-color:var(--ok);background:rgba(22,163,74,.13);pointer-events:none}.item.wrong{border-color:var(--bad);background:rgba(220,38,38,.12)}
     .settings-fab{position:fixed;right:22px;bottom:22px;width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#fff;display:grid;place-items:center;box-shadow:var(--shadow);cursor:pointer;z-index:60}
