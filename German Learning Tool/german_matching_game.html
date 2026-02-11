@@ -1,0 +1,1120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <title>DeutscheTag | Vocabulary Loop</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;600;700&family=Playfair+Display:wght@500;600&display=swap');
+
+        :root {
+            --bg: linear-gradient(135deg, #f7f4ff 0%, #f9f6ef 45%, #eef5ff 100%);
+            --card: #ffffff;
+            --ink: #0f172a;
+            --muted: #64748b;
+            --accent: #6d4bff;
+            --accent-2: #2b72ff;
+            --soft: rgba(109, 75, 255, 0.12);
+            --shadow: 0 18px 45px rgba(15, 23, 42, 0.12);
+            --soft-shadow: 0 12px 24px rgba(15, 23, 42, 0.08);
+            --radius-lg: 26px;
+            --radius-md: 18px;
+            --radius-sm: 12px;
+            --nav-bg: rgba(255, 255, 255, 0.82);
+            --border: rgba(148, 163, 184, 0.2);
+            --success: #22c55e;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+        }
+
+        body.theme-dark {
+            --bg: linear-gradient(135deg, #0b1120 0%, #0f172a 45%, #111827 100%);
+            --card: #101827;
+            --ink: #e2e8f0;
+            --muted: #94a3b8;
+            --accent: #8b5cf6;
+            --accent-2: #38bdf8;
+            --soft: rgba(139, 92, 246, 0.18);
+            --shadow: 0 18px 45px rgba(0, 0, 0, 0.45);
+            --soft-shadow: 0 12px 24px rgba(0, 0, 0, 0.35);
+            --nav-bg: rgba(15, 23, 42, 0.82);
+            --border: rgba(148, 163, 184, 0.2);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body {
+            min-height: 100vh;
+            background: var(--bg);
+            font-family: 'Manrope', 'Segoe UI', sans-serif;
+            color: var(--ink);
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+            overflow-x: hidden;
+            touch-action: pan-y;
+            overscroll-behavior-x: none;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(circle at 20% 20%, rgba(109, 75, 255, 0.18), transparent 55%),
+                        radial-gradient(circle at 80% 10%, rgba(43, 114, 255, 0.15), transparent 45%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .nav {
+            position: relative;
+            position: relative;
+            background: var(--nav-bg);
+            border-radius: var(--radius-lg);
+            padding: 12px 18px;
+            box-shadow: var(--soft-shadow);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border);
+        }
+
+        .brand {
+    text-decoration: none;
+    color: inherit;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand img {
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
+            box-shadow: 0 8px 18px rgba(109, 75, 255, 0.2);
+        }
+
+        .brand h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.2rem, 2.4vw, 1.8rem);
+        }
+
+                                        
+        .nav-links {
+            display: none;
+            position: absolute;
+            right: 16px;
+            top: 68px;
+            flex-direction: column;
+            align-items: stretch;
+            background: var(--card);
+            padding: 12px;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            box-shadow: var(--soft-shadow);
+            z-index: 35;
+            min-width: 180px;
+        }
+
+        .nav-links.open { display: flex; }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--muted);
+            padding: 8px 12px;
+            border-radius: 999px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .nav-links a.active,
+        .nav-links a:hover {
+            background: var(--soft);
+            color: var(--accent);
+        }
+        .nav-actions {
+            margin-right: 68px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .theme-select {
+            border: 1px solid var(--border);
+            background: var(--card);
+            color: var(--ink);
+            padding: 8px 10px;
+            border-radius: 12px;
+            font-weight: 600;
+        }
+
+        .timer {
+            background: var(--card);
+            border-radius: 14px;
+            padding: 10px 14px;
+            display: grid;
+            gap: 6px;
+            min-width: 220px;
+            border: 1px solid var(--border);
+        }
+
+        .timer .row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: var(--muted);
+        }
+
+        .timer strong { color: var(--ink); }
+
+        .timer button {
+            border: none;
+            border-radius: 10px;
+            padding: 6px 10px;
+            font-weight: 600;
+            cursor: pointer;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            color: white;
+            transition: transform 0.2s ease;
+        }
+
+        .timer button:hover { animation: bounce 0.6s; }
+
+        .timer .note {
+            font-size: 0.8rem;
+            color: var(--warning);
+            min-height: 18px;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-3px); }
+        }
+
+        .hero {
+            background: var(--card);
+            border-radius: var(--radius-lg);
+            padding: 18px;
+            box-shadow: var(--shadow);
+            display: grid;
+            gap: 12px;
+        }
+
+        .hero h2 { font-size: 1.4rem; }
+        .hero p { color: var(--muted); }
+
+        .progress-bar {
+            height: 14px;
+            border-radius: 999px;
+            background: rgba(148, 163, 184, 0.2);
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--accent), var(--accent-2));
+            border-radius: 999px;
+            transition: width 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            color: white;
+            font-size: 0.75rem;
+            padding-right: 8px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .stat {
+            background: rgba(148, 163, 184, 0.12);
+            border-radius: var(--radius-md);
+            padding: 12px;
+            text-align: center;
+        }
+
+        .stat strong {
+            display: block;
+            font-size: 1.2rem;
+            color: var(--accent);
+        }
+
+        .stat span { color: var(--muted); font-size: 0.85rem; }
+
+        .controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+        }
+
+        .toggle {
+            background: var(--card);
+            border-radius: var(--radius-md);
+            padding: 12px 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            box-shadow: var(--soft-shadow);
+        }
+
+        .toggle span { font-weight: 600; }
+
+        .switch {
+            position: relative;
+            width: 46px;
+            height: 26px;
+            border-radius: 999px;
+            background: rgba(148, 163, 184, 0.4);
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .switch input { opacity: 0; width: 0; height: 0; }
+
+        .switch::after {
+            content: "";
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: white;
+            top: 3px;
+            left: 3px;
+            transition: transform 0.2s ease;
+            box-shadow: 0 4px 10px rgba(15, 23, 42, 0.15);
+        }
+
+        .switch.active { background: rgba(109, 75, 255, 0.45); }
+        .switch.active::after { transform: translateX(20px); }
+
+        .message {
+            text-align: center;
+            font-weight: 600;
+            min-height: 26px;
+            color: var(--muted);
+        }
+
+        .message.success { color: var(--success); }
+        .message.error { color: var(--danger); }
+
+        .board {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            min-width: 0;
+        }
+
+        .column {
+            background: rgba(255, 255, 255, 0.65);
+            border-radius: var(--radius-lg);
+            padding: 16px;
+            backdrop-filter: blur(10px);
+            box-shadow: var(--soft-shadow);
+            min-width: 0;
+        }
+
+        .column h3 {
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1rem;
+        }
+
+        .word-list { display: flex; flex-direction: column; gap: 10px; }
+
+        .word-card {
+            padding: 12px 14px;
+            background: var(--card);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            min-height: 60px;
+            word-break: break-word;
+        }
+
+        .word-card:hover { transform: translateY(-2px); }
+
+        .word-card .content {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .word-card .word { font-weight: 600; }
+
+        .word-card .hint {
+            display: none;
+            font-size: 0.85rem;
+            color: var(--ink);
+            background: rgba(109, 75, 255, 0.18);
+            border-radius: 10px;
+            padding: 8px 10px;
+        }
+
+        .word-card.flipped .hint { display: block; }
+
+        .word-card.selected {
+            border-color: #6d4bff;
+            background: rgba(109, 75, 255, 0.2);
+            box-shadow: 0 0 12px rgba(109, 75, 255, 0.35);
+        }
+
+        .word-card.matched {
+            background: rgba(34, 197, 94, 0.2);
+            border-color: #22c55e;
+            box-shadow: 0 0 14px rgba(34, 197, 94, 0.4);
+            pointer-events: none;
+            opacity: 0.9;
+        }
+
+        .word-card.wrong {
+            border-color: rgba(239, 68, 68, 0.7);
+            animation: shake 0.4s;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-4px); }
+            75% { transform: translateX(4px); }
+        }
+
+        .card-icons {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .icon-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 10px;
+            background: rgba(148, 163, 184, 0.2);
+            display: grid;
+            place-items: center;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .icon-btn svg { width: 16px; height: 16px; stroke: #3b4a6b; }
+        .icon-btn:active { transform: scale(0.95); }
+
+        .actions {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .primary-btn {
+            border: none;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            color: white;
+            padding: 12px 20px;
+            border-radius: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 10px 22px rgba(109, 75, 255, 0.25);
+        }
+
+        .primary-btn:hover { animation: bounce 0.6s; }
+
+        .secondary-btn {
+            border: none;
+            background: rgba(148, 163, 184, 0.18);
+            color: var(--ink);
+            padding: 12px 18px;
+            border-radius: 16px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        @media (max-width: 980px) {
+            .board { grid-template-columns: 1fr 1fr; }
+            .column { padding: 12px; }
+            .word-card { min-height: 52px; padding: 10px 12px; font-size: 0.92rem; }
+        }
+
+        @media (max-width: 820px) {
+            .nav { justify-content: center; }
+            .timer { width: 100%; }
+        }
+
+        @media (max-width: 640px) {
+            body { padding: 12px; }
+            .nav-actions { width: 100%; justify-content: space-between; }
+            .board { grid-template-columns: 1fr 1fr; gap: 10px; }
+            .word-card .hint { font-size: 0.78rem; }
+        }
+            .nav-actions { width: 100%; justify-content: space-between; }
+        }
+    
+                .settings-panel {
+            position: fixed;
+            right: 22px;
+            bottom: 88px;
+            width: min(320px, 90vw);
+            background: var(--card);
+            border-radius: 18px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+            padding: 14px;
+            display: none;
+            flex-direction: column;
+            gap: 12px;
+            z-index: 50;
+        }
+
+        .settings-panel.open { display: flex; }
+
+        .settings-panel h4 { font-size: 1rem; }
+        .settings-row { display: flex; gap: 8px; flex-wrap: wrap; }
+        .settings-row select {
+            border: 1px solid var(--border);
+            background: var(--card);
+            color: var(--ink);
+            padding: 8px 10px;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+        .settings-note { font-size: 0.85rem; color: var(--muted); }
+        .debug-box { background: rgba(148, 163, 184, 0.12); padding: 10px; border-radius: 10px; font-size: 0.85rem; color: var(--muted); }
+        .settings-actions { display: flex; gap: 8px; }
+        .settings-actions button {
+            border: none;
+            border-radius: 10px;
+            padding: 8px 12px;
+            font-weight: 600;
+            cursor: pointer;
+            background: rgba(148, 163, 184, 0.2);
+            color: var(--ink);
+        }
+    
+        .menu-toggle {
+            display: inline-flex;
+            border: none;
+            background: rgba(148, 163, 184, 0.2);
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            cursor: pointer;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            flex-direction: column;
+            position: absolute;
+            right: 16px;
+            top: 16px;
+            z-index: 40;
+        }
+
+        .menu-toggle span {
+            width: 20px;
+            height: 2px;
+            background: var(--ink);
+            border-radius: 999px;
+            display: block;
+        }
+
+        .nav { position: relative; }
+
+                        .nav-actions { margin-right: 68px; }
+
+        .settings-fab {
+            position: fixed;
+            right: 22px;
+            bottom: 22px;
+            width: 52px;
+            height: 52px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            color: white;
+            display: grid;
+            place-items: center;
+            box-shadow: var(--shadow);
+            cursor: pointer;
+            z-index: 60;
+        }
+
+        .settings-panel {
+            position: fixed;
+            right: 22px;
+            bottom: 88px;
+            width: min(320px, 90vw);
+            background: var(--card);
+            border-radius: 18px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+            padding: 14px;
+            display: none;
+            flex-direction: column;
+            gap: 12px;
+            z-index: 60;
+        }
+
+        .settings-panel.open { display: flex; }
+
+        .settings-panel h4 { font-size: 1rem; }
+        .settings-row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+        .settings-row select {
+            border: 1px solid var(--border);
+            background: var(--card);
+            color: var(--ink);
+            padding: 8px 10px;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+        .settings-note { font-size: 0.85rem; color: var(--muted); }
+        .debug-box { background: rgba(148, 163, 184, 0.12); padding: 10px; border-radius: 10px; font-size: 0.85rem; color: var(--muted); }
+        .settings-actions { display: flex; gap: 8px; }
+        .settings-actions button {
+            border: none;
+            border-radius: 10px;
+            padding: 8px 12px;
+            font-weight: 600;
+            cursor: pointer;
+            background: rgba(148, 163, 184, 0.2);
+            color: var(--ink);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav class="nav">
+            <a class="brand" href="index.html">
+                <img src="apple-touch-icon.png" alt="DeutscheTag logo">
+                <div>
+                    <h1>DeutscheTag</h1>
+                    <div style="color: var(--muted); font-size: 0.9rem;">Vocabulary loop</div>
+                </div>
+            </a>
+            <button class="menu-toggle" id="menuToggle" aria-label="Open navigation">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a class="active" href="german_matching_game.html">Vocabulary</a>
+                <a href="german_grammar_game.html">Sentence Match</a>
+                <a href="typing_practice.html">Typing</a>
+                <a href="dictionary.html">Dictionary</a>
+                <a href="fundamentals.html">Time & Alphabet</a>
+                <a href="number_time_match.html">Number/Time Match</a>
+                <a href="grammar_guide.html">Grammar Guide</a>
+                <a href="falling_match.html">Falling Match</a>
+                            <a href="german_2048.html">2048</a>
+                            <a href="translate_parse.html">Translate</a>
+            </div>
+            <div class="nav-actions">
+                <div class="timer" id="timerWidget">
+                    <div class="row"><span>Session</span><strong id="sessionTime">00:00</strong></div>
+                    <div class="row"><span>Today</span><strong id="todayTime">00:00</strong></div>
+                    <div class="row"><span>Streak</span><strong id="streakCount">0 days</strong></div>
+                    <div class="note" id="timerNote"></div>
+                    <button id="timerToggle">Start</button>
+                </div>
+            </div>
+        </nav>
+
+        <section class="hero">
+            <h2>Vocabulary Loop</h2>
+            <p>Match each pair with focused repetition. Hints reveal the answer first, then show an example sentence if available.</p>
+            <div class="progress-bar"><div class="progress-fill" id="progressBar">0/500</div></div>
+            <div class="stats">
+                <div class="stat"><strong id="currentRound">1/50</strong><span>Round</span></div>
+                <div class="stat"><strong id="totalMatched">0</strong><span>Matched</span></div>
+                <div class="stat"><strong id="roundScore">0/10</strong><span>This round</span></div>
+            </div>
+        </section>
+
+        <section class="controls">
+            <label class="toggle">
+                <span>Repeat missed pairs</span>
+                <span class="switch" id="repeatSwitch"><input type="checkbox" id="repeatToggle"></span>
+            </label>
+            <label class="toggle">
+                <span>Review-only loop (missed only)</span>
+                <span class="switch" id="reviewSwitch"><input type="checkbox" id="reviewToggle"></span>
+            </label>
+            <label class="toggle">
+                <span>Show example sentences</span>
+                <span class="switch active" id="exampleSwitch"><input type="checkbox" id="exampleToggle" checked></span>
+            </label>
+            <label class="toggle">
+                <span>Auto-advance after round</span>
+                <span class="switch" id="autoSwitch"><input type="checkbox" id="autoToggle"></span>
+            </label>
+        </section>
+
+        <div class="message" id="message"></div>
+
+        <section class="board">
+            <div class="column">
+                <h3>Deutsch <span id="missedCount">0 to revisit</span></h3>
+                <div class="word-list" id="germanWords"></div>
+            </div>
+            <div class="column">
+                <h3>English</h3>
+                <div class="word-list" id="englishWords"></div>
+            </div>
+        </section>
+
+        <div class="actions">
+            <button class="secondary-btn" id="skipBtn">Skip Round →</button>
+            <button class="primary-btn" id="nextBtn" style="display: none;">Continue →</button>
+        </div>
+    </div>
+
+    <script>
+
+const allWords = [['der', 'the (masculine)'], ['die', 'the (feminine/plural)'], ['das', 'the (neuter)'], ['und', 'and'], ['in', 'in'], ['sein', 'to be / his'], ['ein', 'a/an'], ['zu', 'to'], ['haben', 'to have'], ['ich', 'I'], ['werden', 'to become'], ['sie', 'she/they'], ['von', 'from/of'], ['nicht', 'not'], ['mit', 'with'], ['es', 'it'], ['sich', 'oneself'], ['auch', 'also'], ['auf', 'on'], ['für', 'for'], ['an', 'at/on'], ['er', 'he'], ['so', 'so'], ['dass', 'that'], ['können', 'can'], ['dies', 'this'], ['als', 'as/when'], ['ihr', 'you(pl)/her'], ['ja', 'yes'], ['wie', 'how'], ['bei', 'at/with'], ['oder', 'or'], ['wir', 'we'], ['aber', 'but'], ['dann', 'then'], ['man', 'one/you'], ['da', 'there/since'], ['noch', 'still/yet'], ['nach', 'after/to'], ['was', 'what'], ['also', 'so/thus'], ['aus', 'out/from'], ['alle', 'all'], ['wenn', 'if/when'], ['nur', 'only'], ['müssen', 'must'], ['sagen', 'to say'], ['um', 'around/at'], ['über', 'over/about'], ['machen', 'to make/do'], ['kein', 'no/none'], ['Jahr', 'year'], ['du', 'you(singular)'], ['mein', 'my'], ['schon', 'already'], ['vor', 'before/in front'], ['durch', 'through'], ['geben', 'to give'], ['mehr', 'more'], ['andere', 'other'], ['viel', 'much/many'], ['kommen', 'to come'], ['jetzt', 'now'], ['sollen', 'should'], ['mir', 'me/to me'], ['wollen', 'to want'], ['ganz', 'whole/quite'], ['mich', 'me'], ['immer', 'always'], ['gehen', 'to go'], ['sehr', 'very'], ['hier', 'here'], ['doch', 'but/however'], ['bis', 'until'], ['groß', 'big/tall'], ['wieder', 'again'], ['Mal', 'time'], ['zwei', 'two'], ['gut', 'good'], ['wissen', 'to know'], ['neu', 'new'], ['sehen', 'to see'], ['lassen', 'to let'], ['uns', 'us'], ['weil', 'because'], ['unter', 'under'], ['denn', 'because'], ['stehen', 'to stand'], ['jede', 'every'], ['Beispiel', 'example'], ['Zeit', 'time'], ['erste', 'first'], ['ihm', 'him/to him'], ['ihn', 'him'], ['wo', 'where'], ['lang', 'long'], ['eigentlich', 'actually'], ['damit', 'with it/so that'], ['selbst', 'self/even'], ['unser', 'our'], ['oben', 'above'], ['Mann', 'man'], ['solch', 'such'], ['dürfen', 'may/to be allowed'], ['sollte', 'should'], ['konnte', 'could'], ['beim', 'at the'], ['weit', 'far'], ['Leben', 'life'], ['zurück', 'back'], ['jedoch', 'however'], ['etwas', 'something'], ['ohne', 'without'], ['heute', 'today'], ['gegen', 'against'], ['gleich', 'same/right away'], ['einfach', 'simple'], ['neben', 'next to'], ['Tag', 'day'], ['während', 'during/while'], ['finden', 'to find'], ['nichts', 'nothing'], ['bleiben', 'to stay'], ['sondern', 'but rather'], ['natürlich', 'naturally'], ['zwischen', 'between'], ['zusammen', 'together'], ['Frau', 'woman/wife'], ['letzt', 'last'], ['nein', 'no'], ['dazu', 'to it/for that'], ['eben', 'just/exactly'], ['Hand', 'hand'], ['fragen', 'to ask'], ['zeigen', 'to show'], ['zwar', 'indeed/to be sure'], ['Herr', 'Mr./gentleman'], ['Teil', 'part'], ['nächste', 'next'], ['sicherlich', 'certainly'], ['gering', 'small/minor'], ['Kind', 'child'], ['dabei', 'in doing so'], ['allein', 'alone'], ['innerhalb', 'within'], ['halten', 'to hold/stop'], ['alt', 'old'], ['nennen', 'to call/name'], ['sicher', 'sure/safe'], ['Weg', 'way/path'], ['nie', 'never'], ['Welt', 'world'], ['Ende', 'end'], ['Sache', 'thing/matter'], ['Haus', 'house'], ['gerade', 'just/straight'], ['weiter', 'further'], ['soweit', 'as far as'], ['Auge', 'eye'], ['liegen', 'to lie/be located'], ['Frage', 'question'], ['kennen', 'to know (people)'], ['Arbeit', 'work'], ['heißen', 'to be called'], ['Wasser', 'water'], ['gar', 'quite/at all'], ['nah', 'near'], ['wirklich', 'really'], ['denken', 'to think'], ['Platz', 'place/square'], ['vielleicht', 'maybe'], ['Grund', 'reason/ground'], ['Art', 'type/kind'], ['darauf', 'on it/thereupon'], ['los', 'loose/off'], ['davon', 'of it/from it'], ['Menschen', 'people/humans'], ['Staat', 'state'], ['mögen', 'to like'], ['Land', 'country/land'], ['stellen', 'to place/put'], ['junger', 'young'], ['führen', 'to lead'], ['ob', 'whether'], ['Ort', 'place/location'], ['setzen', 'to set/sit'], ['Geld', 'money'], ['recht', 'right/quite'], ['drei', 'three'], ['hoch', 'high'], ['bestehen', 'to exist/pass'], ['Stadt', 'city'], ['verschieden', 'different'], ['Seite', 'side/page'], ['seitdem', 'since then'], ['bringen', 'to bring'], ['Wort', 'word'], ['Zahl', 'number'], ['nehmen', 'to take'], ['sprechen', 'to speak'], ['kam', 'came'], ['Bild', 'picture/image'], ['völlig', 'completely'], ['darin', 'in it'], ['Name', 'name'], ['möglich', 'possible'], ['tun', 'to do'], ['einige', 'some'], ['deshalb', 'therefore'], ['Prozent', 'percent'], ['eher', 'rather/sooner'], ['glauben', 'to believe'], ['zuerst', 'first/at first'], ['Buch', 'book'], ['Gesicht', 'face'], ['je', 'ever/each'], ['Meter', 'meter'], ['etwa', 'about/approximately'], ['wahr', 'true'], ['Weise', 'way/manner'], ['spät', 'late'], ['oft', 'often'], ['daher', 'therefore'], ['dennoch', 'nevertheless'], ['inzwischen', 'meanwhile'], ['fast', 'almost'], ['Kopf', 'head'], ['beide', 'both'], ['spielen', 'to play'], ['nachdem', 'after'], ['verstehen', 'to understand'], ['gegenüber', 'opposite/toward'], ['Musik', 'music'], ['vier', 'four'], ['Uhr', 'clock/hour'], ['höher', 'higher'], ['Stelle', 'position/place'], ['erreichen', 'to reach'], ['Geschichte', 'story/history'], ['warum', 'why'], ['plötzlich', 'suddenly'], ['laufen', 'to run/walk'], ['beginnen', 'to begin'], ['lieber', 'rather/preferably'], ['Raum', 'room/space'], ['gelten', 'to be valid'], ['zugleich', 'at the same time'], ['aufgrund', 'due to'], ['Mutter', 'mother'], ['entgegen', 'toward/contrary'], ['vergehen', 'to pass (time)'], ['Farbe', 'color'], ['klein', 'small'], ['Tür', 'door'], ['schließen', 'to close'], ['Minute', 'minute'], ['Vater', 'father'], ['legen', 'to lay/put'], ['ziehen', 'to pull/move'], ['brauchen', 'to need'], ['arbeiten', 'to work'], ['ergeben', 'to result in'], ['bilden', 'to form'], ['bereit', 'ready'], ['bestimmt', 'certain/definitely'], ['hinter', 'behind'], ['erhalten', 'to receive'], ['Mensch', 'human/person'], ['bedeuten', 'to mean'], ['scheinen', 'to shine/seem'], ['Zimmer', 'room'], ['meist', 'mostly'], ['Straße', 'street'], ['einzig', 'only/single'], ['Kraft', 'power/strength'], ['außer', 'except'], ['folgen', 'to follow'], ['enthalten', 'to contain'], ['schwer', 'heavy/difficult'], ['schließlich', 'finally'], ['falls', 'if/in case'], ['Nacht', 'night'], ['lernen', 'to learn'], ['wirken', 'to have an effect'], ['Ton', 'sound/tone'], ['zumindest', 'at least'], ['erscheinen', 'to appear'], ['würde', 'would'], ['weder', 'neither'], ['Sohn', 'son'], ['laut', 'loud/according to'], ['Fall', 'case/fall'], ['direkt', 'direct'], ['weg', 'away'], ['vergangen', 'past'], ['Monat', 'month'], ['bevor', 'before'], ['Woche', 'week'], ['tragen', 'to carry/wear'], ['gelingen', 'to succeed'], ['Fest', 'festival/firm'], ['Wesen', 'being/essence'], ['Richtung', 'direction'], ['Stimme', 'voice'], ['Luft', 'air'], ['früh', 'early'], ['warten', 'to wait'], ['rund', 'round'], ['Angst', 'fear'], ['gehören', 'to belong'], ['Tochter', 'daughter'], ['insbesondere', 'especially'], ['Gefühl', 'feeling'], ['Feld', 'field'], ['wenig', 'little/few'], ['Form', 'form/shape'], ['nämlich', 'namely'], ['entlang', 'along'], ['wünschen', 'to wish'], ['Entwicklung', 'development'], ['bieten', 'to offer'], ['treffen', 'to meet'], ['danach', 'after that'], ['zunächst', 'first/initially'], ['Natur', 'nature'], ['zuvor', 'before/previously'], ['bald', 'soon'], ['verlieren', 'to lose'], ['Sprache', 'language'], ['Ordnung', 'order'], ['Bereich', 'area/field'], ['Reihe', 'row/series'], ['damals', 'back then'], ['hinaus', 'out/beyond'], ['bereits', 'already'], ['betreffen', 'to concern'], ['mal', 'times/once'], ['fehlen', 'to be missing'], ['gewinnen', 'to win'], ['Krieg', 'war'], ['Boden', 'floor/ground'], ['Lage', 'situation/position'], ['schaffen', 'to create/manage'], ['ansehen', 'to look at'], ['erkennen', 'to recognize'], ['Problem', 'problem'], ['umso', 'all the more'], ['holen', 'to fetch/get'], ['sogar', 'even'], ['darum', 'therefore/about it'], ['kürzlich', 'recently'], ['Mittel', 'means/medium'], ['weiteren', 'further'], ['anfangen', 'to begin'], ['entsprechen', 'to correspond'], ['geschehen', 'to happen'], ['Gesellschaft', 'society'], ['Punkt', 'point/dot'], ['entstehen', 'to arise'], ['behalten', 'to keep'], ['einzeln', 'individual/single'], ['Interesse', 'interest'], ['Möglichkeit', 'possibility'], ['entwickeln', 'to develop'], ['ebenso', 'just as'], ['dunkel', 'dark'], ['aussehen', 'to look like'], ['Liebe', 'love'], ['Morgen', 'morning'], ['lesen', 'to read'], ['fühlen', 'to feel'], ['Gruppe', 'group'], ['suchen', 'to search'], ['allgemein', 'general'], ['erklären', 'to explain'], ['Ding', 'thing'], ['Gegenteil', 'opposite'], ['erzählen', 'to tell'], ['darstellen', 'to represent'], ['eigen', 'own'], ['halt', 'stop/just'], ['lediglich', 'merely'], ['Meinung', 'opinion'], ['Abend', 'evening'], ['Thema', 'topic/theme'], ['Rahmen', 'frame'], ['reden', 'to talk'], ['Schule', 'school'], ['Aufgabe', 'task'], ['Herz', 'heart'], ['Beruf', 'profession'], ['erwarten', 'to expect'], ['Gesetz', 'law'], ['wohnen', 'to live/reside'], ['interessieren', 'to interest'], ['richtig', 'correct'], ['Blick', 'glance/view'], ['Familie', 'family'], ['danken', 'to thank'], ['Freund', 'friend'], ['Ausland', 'foreign country'], ['Auto', 'car'], ['erinnern', 'to remember'], ['Rolle', 'role'], ['Gegenwart', 'present'], ['Stunde', 'hour'], ['öffnen', 'to open'], ['dafür', 'for it'], ['ungefähr', 'approximately'], ['sofort', 'immediately'], ['Markt', 'market'], ['Tisch', 'table'], ['Unterschied', 'difference'], ['Sinn', 'sense/meaning'], ['Stück', 'piece'], ['drehen', 'to turn'], ['glücklich', 'happy'], ['Preis', 'price/prize'], ['stark', 'strong'], ['Schwester', 'sister'], ['Bruder', 'brother'], ['ruhig', 'quiet/calm'], ['studieren', 'to study'], ['Regel', 'rule'], ['verbinden', 'to connect'], ['klar', 'clear'], ['Licht', 'light'], ['Hilfe', 'help'], ['offenbar', 'obviously'], ['hell', 'bright'], ['versuchen', 'to try'], ['Wohnung', 'apartment'], ['gewiss', 'certain'], ['gebrauchen', 'to use'], ['Recht', 'right/law'], ['anbieten', 'to offer'], ['Ziel', 'goal/destination'], ['Satz', 'sentence'], ['Leute', 'people'], ['teilen', 'to share/divide'], ['schreiben', 'to write'], ['Erfolg', 'success'], ['Spiel', 'game'], ['beziehen', 'to refer to'], ['verwenden', 'to use'], ['bewegen', 'to move'], ['hingegen', 'on the other hand'], ['Gedanke', 'thought'], ['wechseln', 'to change'], ['Bett', 'bed'], ['leicht', 'light/easy'], ['Gang', 'hallway/gear'], ['Verhältnis', 'relationship/ratio'], ['trinken', 'to drink'], ['Zukunft', 'future'], ['Bewegung', 'movement'], ['anschauen', 'to look at'], ['Grad', 'degree'], ['überhaupt', 'at all'], ['fallen', 'to fall'], ['erfahren', 'to experience'], ['Ansicht', 'view/opinion'], ['Kampf', 'fight/struggle'], ['Mund', 'mouth'], ['klingen', 'to sound'], ['vergleichen', 'to compare'], ['verändern', 'to change'], ['Idee', 'idea'], ['verlassen', 'to leave'], ['benutzen', 'to use'], ['steigen', 'to climb/rise'], ['hinten', 'back/behind'], ['wachsen', 'to grow'], ['Aufmerksamkeit', 'attention'], ['schweigen', 'to be silent'], ['wählen', 'to choose/vote'], ['längst', 'long ago'], ['nötig', 'necessary'], ['Körper', 'body'], ['handeln', 'to act/deal'], ['helfen', 'to help'], ['kurz', 'short'], ['vorstellen', 'to introduce/imagine']];
+
+        const sentenceBank = {
+            der: { de: 'Der Mann wartet.', en: 'The man is waiting.' },
+            die: { de: 'Die Frau kommt.', en: 'The woman is coming.' },
+            das: { de: 'Das ist gut.', en: 'That is good.' },
+            und: { de: 'Ich trinke und esse.', en: 'I drink and eat.' },
+            in: { de: 'Wir sind in der Stadt.', en: 'We are in the city.' },
+            haben: { de: 'Wir haben Zeit.', en: 'We have time.' },
+            ich: { de: 'Ich bin hier.', en: 'I am here.' },
+            nicht: { de: 'Das ist nicht klar.', en: 'That is not clear.' },
+            mit: { de: 'Ich komme mit dir.', en: 'I am coming with you.' },
+            auch: { de: 'Sie kommt auch.', en: 'She is coming too.' },
+            auf: { de: 'Das Buch liegt auf dem Tisch.', en: 'The book is on the table.' },
+            für: { de: 'Das ist für dich.', en: 'That is for you.' },
+            sein: { de: 'Ich will ruhig sein.', en: 'I want to be calm.' },
+            gehen: { de: 'Wir gehen nach Hause.', en: 'We are going home.' },
+            sehen: { de: 'Ich sehe den Zug.', en: 'I see the train.' },
+            gut: { de: 'Der Kaffee ist gut.', en: 'The coffee is good.' },
+            lernen: { de: 'Ich lerne jeden Tag.', en: 'I study every day.' },
+            Zeit: { de: 'Zeit ist wichtig.', en: 'Time is important.' },
+            Wasser: { de: 'Das Wasser ist kalt.', en: 'The water is cold.' },
+            Haus: { de: 'Das Haus ist hell.', en: 'The house is bright.' }
+        };
+
+        let currentIndex = 0;
+        let selectedGerman = null;
+        let selectedEnglish = null;
+        let roundMatches = 0;
+        let totalMatches = 0;
+        let roundAdvance = 10;
+        const missedQueue = [];
+        const missedSet = new Set();
+        const missedStorageKey = 'dt-vocab-missed';
+        const wordIndex = new Map(allWords.map((pair, idx) => [pair[0].toLowerCase(), idx]));
+
+        const repeatToggle = document.getElementById('repeatToggle');
+        const reviewToggle = document.getElementById('reviewToggle');
+        const exampleToggle = document.getElementById('exampleToggle');
+        const autoToggle = document.getElementById('autoToggle');
+
+        function setSwitchState(el, active) {
+            if (active) {
+                el.classList.add('active');
+            } else {
+                el.classList.remove('active');
+            }
+        }
+
+        function shuffle(a) {
+            const n = [...a];
+            for (let i = n.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [n[i], n[j]] = [n[j], n[i]];
+            }
+            return n;
+        }
+
+        function speakText(text, lang, e) {
+            if (e) e.stopPropagation();
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const u = new SpeechSynthesisUtterance(text);
+                u.lang = lang === 'de' ? 'de-DE' : 'en-US';
+                u.rate = 0.85;
+                window.speechSynthesis.speak(u);
+            }
+        }
+
+        function playTone(freq, duration) {
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = 'sine';
+                osc.frequency.value = freq;
+                gain.gain.value = 0.06;
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start();
+                osc.stop(ctx.currentTime + duration);
+                setTimeout(() => ctx.close(), duration * 1000 + 60);
+            } catch (e) {
+                // ignore audio errors
+            }
+        }
+
+        function flipCard(card, e) {
+            if (e) e.stopPropagation();
+            if (!exampleToggle.checked) return;
+            card.classList.toggle('flipped');
+        }
+
+        function getRoundIndices() {
+            if (reviewToggle.checked) {
+                roundAdvance = 0;
+                return missedQueue.slice(0, 10);
+            }
+            const indices = [];
+            let missed = [];
+            if (repeatToggle.checked && missedQueue.length) {
+                missed = missedQueue.slice(0, Math.min(4, missedQueue.length));
+            }
+            const remaining = 10 - missed.length;
+            const nextNew = allWords.slice(currentIndex, currentIndex + remaining).map((_, idx) => currentIndex + idx);
+            roundAdvance = nextNew.length;
+            indices.push(...missed, ...nextNew);
+            return indices;
+        }
+
+        function createHint(answer, example) {
+            const lines = [];
+            lines.push(`Answer: ${answer}`);
+            if (exampleToggle.checked && example) {
+                lines.push(`Example: ${example}`);
+            }
+            return lines.join(' ');
+        }
+
+        function loadRound() {
+            const gc = document.getElementById('germanWords');
+            const ec = document.getElementById('englishWords');
+            const md = document.getElementById('message');
+            gc.innerHTML = '';
+            ec.innerHTML = '';
+            md.textContent = '';
+            roundMatches = 0;
+            selectedGerman = null;
+            selectedEnglish = null;
+
+            const indices = getRoundIndices();
+            if (indices.length === 0) {
+                md.textContent = reviewToggle.checked
+                    ? 'Review-only loop is empty. Add missed items first.'
+                    : 'All words completed. Reset to begin again.';
+                document.getElementById('nextBtn').style.display = 'none';
+                document.getElementById('skipBtn').style.display = 'none';
+                updateStats();
+                return;
+            }
+
+            const roundWords = indices.map((i) => ({ index: i, pair: allWords[i] }));
+            const shuffledEnglish = shuffle([...roundWords]);
+
+            roundWords.forEach((item) => {
+                const [de, en] = item.pair;
+                const example = sentenceBank[de] || sentenceBank[de.toLowerCase()] || null;
+                const exampleText = example ? `${example.de} — ${example.en}` : '';
+
+                const card = document.createElement('div');
+                card.className = 'word-card';
+                const content = document.createElement('div');
+                content.className = 'content';
+                const word = document.createElement('div');
+                word.className = 'word';
+                word.textContent = de;
+                const hint = document.createElement('div');
+                hint.className = 'hint';
+                hint.textContent = createHint(en, exampleText);
+
+                content.appendChild(word);
+                content.appendChild(hint);
+
+                const icons = document.createElement('div');
+                icons.className = 'card-icons';
+
+                const speaker = document.createElement('div');
+                speaker.className = 'icon-btn';
+                speaker.title = 'Listen';
+                speaker.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M4 10v4h4l5 4V6L8 10H4Z"/><path d="M16 9a4 4 0 0 1 0 6"/><path d="M19 6a8 8 0 0 1 0 12"/></svg>`;
+                speaker.onclick = (e) => speakText(de, 'de', e);
+
+                const hintBtn = document.createElement('div');
+                hintBtn.className = 'icon-btn';
+                hintBtn.title = 'Show answer & example';
+                hintBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>`;
+                hintBtn.onclick = (e) => flipCard(card, e);
+
+                icons.appendChild(speaker);
+                icons.appendChild(hintBtn);
+
+                card.appendChild(content);
+                card.appendChild(icons);
+                card.dataset.index = item.index;
+                card.dataset.german = de;
+                card.dataset.english = en;
+                card.onclick = () => selectGerman(card);
+                gc.appendChild(card);
+            });
+
+            shuffledEnglish.forEach((item) => {
+                const [de, en] = item.pair;
+                const example = sentenceBank[de] || sentenceBank[de.toLowerCase()] || null;
+                const exampleText = example ? `${example.en} — ${example.de}` : '';
+
+                const card = document.createElement('div');
+                card.className = 'word-card';
+                const content = document.createElement('div');
+                content.className = 'content';
+                const word = document.createElement('div');
+                word.className = 'word';
+                word.textContent = en;
+                const hint = document.createElement('div');
+                hint.className = 'hint';
+                hint.textContent = createHint(de, exampleText);
+
+                content.appendChild(word);
+                content.appendChild(hint);
+
+                const icons = document.createElement('div');
+                icons.className = 'card-icons';
+
+                const speaker = document.createElement('div');
+                speaker.className = 'icon-btn';
+                speaker.title = 'Listen';
+                speaker.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M4 10v4h4l5 4V6L8 10H4Z"/><path d="M16 9a4 4 0 0 1 0 6"/><path d="M19 6a8 8 0 0 1 0 12"/></svg>`;
+                speaker.onclick = (e) => speakText(en, 'en', e);
+
+                const hintBtn = document.createElement('div');
+                hintBtn.className = 'icon-btn';
+                hintBtn.title = 'Show answer & example';
+                hintBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>`;
+                hintBtn.onclick = (e) => flipCard(card, e);
+
+                icons.appendChild(speaker);
+                icons.appendChild(hintBtn);
+
+                card.appendChild(content);
+                card.appendChild(icons);
+                card.dataset.index = item.index;
+                card.dataset.english = en;
+                card.dataset.german = de;
+                card.onclick = () => selectEnglish(card);
+                ec.appendChild(card);
+            });
+
+            updateStats();
+        }
+
+        function selectGerman(card) {
+            if (card.classList.contains('matched')) return;
+            document.querySelectorAll('#germanWords .word-card').forEach((x) => x.classList.remove('selected'));
+            card.classList.add('selected');
+            selectedGerman = card;
+            checkMatch();
+        }
+
+        function selectEnglish(card) {
+            if (card.classList.contains('matched')) return;
+            document.querySelectorAll('#englishWords .word-card').forEach((x) => x.classList.remove('selected'));
+            card.classList.add('selected');
+            selectedEnglish = card;
+            checkMatch();
+        }
+
+        function queueMissed(index) {
+            if (!missedSet.has(index)) {
+                missedSet.add(index);
+                missedQueue.push(index);
+                persistMissed();
+            }
+        }
+
+        function clearMissed(index) {
+            if (!missedSet.has(index)) return;
+            missedSet.delete(index);
+            const pos = missedQueue.indexOf(index);
+            if (pos > -1) missedQueue.splice(pos, 1);
+            persistMissed();
+        }
+
+        function persistMissed() {
+            const words = [...missedSet].map((idx) => allWords[idx]?.[0]).filter(Boolean);
+            localStorage.setItem(missedStorageKey, JSON.stringify(words));
+        }
+
+        function loadMissedFromStorage() {
+            const raw = localStorage.getItem(missedStorageKey);
+            if (!raw) return;
+            try {
+                const items = JSON.parse(raw);
+                if (!Array.isArray(items)) return;
+                items.forEach((word) => {
+                    const idx = wordIndex.get(String(word).toLowerCase());
+                    if (idx === undefined) return;
+                    if (!missedSet.has(idx)) {
+                        missedSet.add(idx);
+                        missedQueue.push(idx);
+                    }
+                });
+            } catch (e) {
+                // ignore malformed storage
+            }
+        }
+
+        function checkMatch() {
+            if (!selectedGerman || !selectedEnglish) return;
+            const md = document.getElementById('message');
+            const index = Number(selectedGerman.dataset.index);
+            if (selectedGerman.dataset.english === selectedEnglish.dataset.english) {
+                selectedGerman.classList.add('matched');
+                selectedEnglish.classList.add('matched');
+                selectedGerman.classList.remove('selected');
+                selectedEnglish.classList.remove('selected');
+                md.textContent = 'Correct. Keep going.';
+                md.className = 'message success';
+                roundMatches += 1;
+                totalMatches += 1;
+                playTone(520, 0.08);
+                clearMissed(index);
+                selectedGerman = null;
+                selectedEnglish = null;
+
+                if (roundMatches === 10) {
+                    md.textContent = 'Round complete. Take a breath.';
+                    document.getElementById('nextBtn').style.display = 'inline-block';
+                    document.getElementById('skipBtn').style.display = 'none';
+                    if (autoToggle.checked) {
+                        setTimeout(() => nextRound(), 700);
+                    }
+                }
+            } else {
+                selectedGerman.classList.add('wrong');
+                selectedEnglish.classList.add('wrong');
+                md.textContent = 'Not quite. Repeat and match.';
+                md.className = 'message error';
+                playTone(220, 0.08);
+                queueMissed(index);
+                setTimeout(() => {
+                    selectedGerman.classList.remove('wrong', 'selected');
+                    selectedEnglish.classList.remove('wrong', 'selected');
+                    selectedGerman = null;
+                    selectedEnglish = null;
+                    md.textContent = '';
+                }, 700);
+            }
+            updateStats();
+        }
+
+        function updateStats() {
+            const totalRounds = Math.ceil(allWords.length / 10);
+            const currentRound = Math.min(totalRounds, Math.floor(currentIndex / 10) + 1);
+            document.getElementById('currentRound').textContent = `${currentRound}/${totalRounds}`;
+            document.getElementById('totalMatched').textContent = totalMatches;
+            document.getElementById('roundScore').textContent = `${roundMatches}/10`;
+            const progress = (totalMatches / allWords.length) * 100;
+            const progressBar = document.getElementById('progressBar');
+            progressBar.style.width = `${progress}%`;
+            progressBar.textContent = `${totalMatches}/500`;
+            document.getElementById('missedCount').textContent = `${missedQueue.length} to revisit`;
+        }
+
+        function nextRound() {
+            if (!reviewToggle.checked) {
+                currentIndex = Math.min(allWords.length, currentIndex + roundAdvance);
+            }
+            document.getElementById('nextBtn').style.display = 'none';
+            document.getElementById('skipBtn').style.display = 'inline-block';
+            loadRound();
+        }
+
+        function skipRound() {
+            if (reviewToggle.checked) {
+                loadRound();
+                return;
+            }
+            if (currentIndex + roundAdvance < allWords.length) {
+                nextRound();
+            }
+        }
+
+        repeatToggle.addEventListener('change', (e) => {
+            setSwitchState(document.getElementById('repeatSwitch'), e.target.checked);
+            loadRound();
+        });
+
+        reviewToggle.addEventListener('change', (e) => {
+            setSwitchState(document.getElementById('reviewSwitch'), e.target.checked);
+            loadRound();
+        });
+
+        exampleToggle.addEventListener('change', (e) => {
+            setSwitchState(document.getElementById('exampleSwitch'), e.target.checked);
+            if (!e.target.checked) {
+                document.querySelectorAll('.word-card').forEach((card) => card.classList.remove('flipped'));
+            }
+            loadRound();
+        });
+
+        autoToggle.addEventListener('change', (e) => {
+            setSwitchState(document.getElementById('autoSwitch'), e.target.checked);
+        });
+
+        document.getElementById('nextBtn').addEventListener('click', nextRound);
+        document.getElementById('skipBtn').addEventListener('click', skipRound);
+
+        loadMissedFromStorage();
+        setSwitchState(document.getElementById('exampleSwitch'), true);
+        loadRound();
+    </script>
+    <script src="menu-settings.js"></script>
+
+    <div class="settings-fab" id="settingsFab" aria-label="Open settings">
+        ⚙
+    </div>
+    <div class="settings-panel" id="settingsPanel">
+        <h4>Settings</h4>
+        <div class="settings-row">
+            <label for="settingsTheme" style="font-weight:600;">Theme</label>
+            <select id="settingsTheme">
+                <option value="system">System</option>
+                <option value="light">Light</option>
+                <option value="dark">Dark</option>
+            </select>
+        </div>
+        <div class="debug-box" id="deeplDebug">DeepL debug available on Translate page.</div>
+        <div class="settings-actions">
+            <button id="debugTestBtn">Test DeepL</button>
+            <button id="debugClearBtn">Clear cache</button>
+        </div>
+        <div class="settings-note">Theme settings apply across all pages.</div>
+    </div>
+
+</body>
+</html>

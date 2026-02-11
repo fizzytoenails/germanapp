@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <title>DeutscheTag | 20/48</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;600;700&family=Playfair+Display:wght@500;600&display=swap');
+
+        :root {
+            --bg: linear-gradient(135deg, #f7f4ff 0%, #f9f6ef 45%, #eef5ff 100%);
+            --card: #ffffff;
+            --ink: #0f172a;
+            --muted: #64748b;
+            --accent: #6d4bff;
+            --accent-2: #2b72ff;
+            --soft: rgba(109, 75, 255, 0.12);
+            --shadow: 0 18px 45px rgba(15, 23, 42, 0.12);
+            --soft-shadow: 0 12px 24px rgba(15, 23, 42, 0.08);
+            --radius-lg: 26px;
+            --radius-md: 18px;
+            --nav-bg: rgba(255, 255, 255, 0.82);
+            --border: rgba(148, 163, 184, 0.2);
+            --success: #22c55e;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+        }
+
+        body.theme-dark {
+            --bg: linear-gradient(135deg, #0b1120 0%, #0f172a 45%, #111827 100%);
+            --card: #101827;
+            --ink: #e2e8f0;
+            --muted: #94a3b8;
+            --accent: #8b5cf6;
+            --accent-2: #38bdf8;
+            --soft: rgba(139, 92, 246, 0.18);
+            --shadow: 0 18px 45px rgba(0, 0, 0, 0.45);
+            --soft-shadow: 0 12px 24px rgba(0, 0, 0, 0.35);
+            --nav-bg: rgba(15, 23, 42, 0.82);
+            --border: rgba(148, 163, 184, 0.2);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            min-height: 100vh;
+            background: var(--bg);
+            font-family: 'Manrope', 'Segoe UI', sans-serif;
+            color: var(--ink);
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(circle at 20% 20%, rgba(109, 75, 255, 0.18), transparent 55%),
+                        radial-gradient(circle at 80% 10%, rgba(43, 114, 255, 0.15), transparent 45%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .nav {
+            position: relative;
+            position: relative;
+            background: var(--nav-bg);
+            border-radius: var(--radius-lg);
+            padding: 12px 18px;
+            box-shadow: var(--soft-shadow);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border);
+        }
+
+        .brand {
+    text-decoration: none;
+    color: inherit;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand img {
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
+            box-shadow: 0 8px 18px rgba(109, 75, 255, 0.2);
+        }
+
+        .brand h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.2rem, 2.4vw, 1.8rem);
+        }
+
+                                        
+        .nav-links {
+            display: none;
+            position: absolute;
+            right: 16px;
+            top: 68px;
+            flex-direction: column;
+            align-items: stretch;
+            background: var(--card);
+            padding: 12px;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            box-shadow: var(--soft-shadow);
+            z-index: 35;
+            min-width: 180px;
+        }
+
+        .nav-links.open { display: flex; }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--muted);
+            padding: 8px 12px;
+            border-radius: 999px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .nav-links a.active,
+        .nav-links a:hover {
+            background: var(--soft);
+            color: var(--accent);
+        }
+        .nav-actions {
+            margin-right: 68px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .theme-select {
+            border: 1px solid var(--border);
+            background: var(--card);
+            color: var(--ink);
+            padding: 8px 10px;
+            border-radius: 12px;
+            font-weight: 600;
+        }
+
+        .timer {
+            background: var(--card);
+            border-radius: 14px;
+            padding: 10px 14px;
+            display: grid;
+            gap: 6px;
+            min-width: 220px;
+            border: 1px solid var(--border);
+        }
+
+        .timer .row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: var(--muted);
+        }
+
+        .timer strong { color: var(--ink); }
+
+        .timer button {
+            border: none;
+            border-radius: 10px;
+            padding: 6px 10px;
+            font-weight: 600;
+            cursor: pointer;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            color: white;
+            transition: transform 0.2s ease;
+        }
+
+        .timer button:hover { animation: bounce 0.6s; }
+
+        .timer .note {
+            font-size: 0.8rem;
+            color: var(--warning);
+            min-height: 18px;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-3px); }
+        }
+
+        .panel {
+            background: var(--card);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            box-shadow: var(--shadow);
+            display: grid;
+            gap: 12px;
+        }
+
+        .panel h2 { font-size: 1.5rem; }
+        .panel p { color: var(--muted); }
+
+        .game-shell {
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            gap: 20px;
+            align-items: start;
+        }
+
+        .board {
+            background: rgba(148, 163, 184, 0.15);
+            border-radius: 18px;
+            padding: 14px;
+            display: grid;
+            grid-template-columns: repeat(4, minmax(60px, 1fr));
+            grid-auto-rows: minmax(60px, 1fr);
+            gap: 12px;
+            min-height: 320px;
+            aspect-ratio: 1 / 1;
+            position: relative;
+            touch-action: none;
+            width: 100%;
+            max-width: 520px;
+        }
+
+        .cell {
+            background: rgba(148, 163, 184, 0.25);
+            border-radius: 12px;
+        }
+
+        .tile {
+            position: absolute;
+            border-radius: 12px;
+            display: grid;
+            place-items: center;
+            font-weight: 700;
+            text-align: center;
+            padding: 6px;
+            transition: transform 0.18s ease, top 0.18s ease, left 0.18s ease;
+            box-shadow: 0 12px 20px rgba(15, 23, 42, 0.2);
+            font-size: clamp(0.65rem, 2.2vw, 0.95rem);
+        }
+
+        .tile small {
+            display: block;
+            font-size: 0.6rem;
+            opacity: 0.7;
+        }
+
+        .tile.pop {
+            animation: pop 0.2s ease;
+        }
+
+        @keyframes pop {
+            0% { transform: scale(0.8); }
+            100% { transform: scale(1); }
+        }
+
+        .scoreboard {
+            display: grid;
+            gap: 10px;
+        }
+
+        .score-card {
+            background: var(--card);
+            border-radius: 16px;
+            padding: 16px;
+            border: 1px solid var(--border);
+            box-shadow: var(--soft-shadow);
+        }
+
+        .score-card h3 { font-size: 1.1rem; }
+        .score-card p { color: var(--muted); margin-top: 6px; }
+
+        .score-row {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 8px;
+            font-weight: 600;
+        }
+
+        .action-row {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
+        .action-row button {
+            border: none;
+            border-radius: 10px;
+            padding: 10px 14px;
+            font-weight: 600;
+            cursor: pointer;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            color: white;
+        }
+
+        .action-row button.secondary {
+            background: rgba(148, 163, 184, 0.2);
+            color: var(--ink);
+        }
+
+        @media (max-width: 980px) {
+            .game-shell { grid-template-columns: 1fr; }
+        }
+            .nav-actions { width: 100%; justify-content: space-between; }
+        }
+
+        @media (max-width: 640px) {
+            body { padding: 12px; }
+        }
+    
+                .settings-panel {
+            position: fixed;
+            right: 22px;
+            bottom: 88px;
+            width: min(320px, 90vw);
+            background: var(--card);
+            border-radius: 18px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+            padding: 14px;
+            display: none;
+            flex-direction: column;
+            gap: 12px;
+            z-index: 50;
+        }
+
+        .settings-panel.open { display: flex; }
+
+        .settings-panel h4 { font-size: 1rem; }
+        .settings-row { display: flex; gap: 8px; flex-wrap: wrap; }
+        .settings-row select {
+            border: 1px solid var(--border);
+            background: var(--card);
+            color: var(--ink);
+            padding: 8px 10px;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+        .settings-note { font-size: 0.85rem; color: var(--muted); }
+        .debug-box { background: rgba(148, 163, 184, 0.12); padding: 10px; border-radius: 10px; font-size: 0.85rem; color: var(--muted); }
+        .settings-actions { display: flex; gap: 8px; }
+        .settings-actions button {
+            border: none;
+            border-radius: 10px;
+            padding: 8px 12px;
+            font-weight: 600;
+            cursor: pointer;
+            background: rgba(148, 163, 184, 0.2);
+            color: var(--ink);
+        }
+    
+        .menu-toggle {
+            display: inline-flex;
+            border: none;
+            background: rgba(148, 163, 184, 0.2);
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            cursor: pointer;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            flex-direction: column;
+            position: absolute;
+            right: 16px;
+            top: 16px;
+            z-index: 40;
+        }
+
+        .menu-toggle span {
+            width: 20px;
+            height: 2px;
+            background: var(--ink);
+            border-radius: 999px;
+            display: block;
+        }
+
+        .nav { position: relative; }
+
+                        .nav-actions { margin-right: 68px; }
+
+        .settings-fab {
+            position: fixed;
+            right: 22px;
+            bottom: 22px;
+            width: 52px;
+            height: 52px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            color: white;
+            display: grid;
+            place-items: center;
+            box-shadow: var(--shadow);
+            cursor: pointer;
+            z-index: 60;
+        }
+
+        .settings-panel {
+            position: fixed;
+            right: 22px;
+            bottom: 88px;
+            width: min(320px, 90vw);
+            background: var(--card);
+            border-radius: 18px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+            padding: 14px;
+            display: none;
+            flex-direction: column;
+            gap: 12px;
+            z-index: 60;
+        }
+
+        .settings-panel.open { display: flex; }
+
+        .settings-panel h4 { font-size: 1rem; }
+        .settings-row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+        .settings-row select {
+            border: 1px solid var(--border);
+            background: var(--card);
+            color: var(--ink);
+            padding: 8px 10px;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+        .settings-note { font-size: 0.85rem; color: var(--muted); }
+        .debug-box { background: rgba(148, 163, 184, 0.12); padding: 10px; border-radius: 10px; font-size: 0.85rem; color: var(--muted); }
+        .settings-actions { display: flex; gap: 8px; }
+        .settings-actions button {
+            border: none;
+            border-radius: 10px;
+            padding: 8px 12px;
+            font-weight: 600;
+            cursor: pointer;
+            background: rgba(148, 163, 184, 0.2);
+            color: var(--ink);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav class="nav">
+            <a class="brand" href="index.html">
+                <img src="apple-touch-icon.png" alt="DeutscheTag logo">
+                <div>
+                    <h1>DeutscheTag</h1>
+                    <div style="color: var(--muted); font-size: 0.9rem;">20/48</div>
+                </div>
+            </a>
+            <button class="menu-toggle" id="menuToggle" aria-label="Open navigation">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="german_matching_game.html">Vocabulary</a>
+                <a href="german_grammar_game.html">Sentence Match</a>
+                <a href="typing_practice.html">Typing</a>
+                <a href="dictionary.html">Dictionary</a>
+                <a href="fundamentals.html">Time & Alphabet</a>
+                <a href="number_time_match.html">Number/Time Match</a>
+                <a href="grammar_guide.html">Grammar Guide</a>
+                <a href="falling_match.html">Falling Match</a>
+                <a class="active" href="german_2048.html">2048</a>
+                            <a href="translate_parse.html">Translate</a>
+            </div>
+            <div class="nav-actions">
+                <div class="timer" id="timerWidget">
+                    <div class="row"><span>Session</span><strong id="sessionTime">00:00</strong></div>
+                    <div class="row"><span>Today</span><strong id="todayTime">00:00</strong></div>
+                    <div class="row"><span>Streak</span><strong id="streakCount">0 days</strong></div>
+                    <div class="note" id="timerNote"></div>
+                    <button id="timerToggle">Start</button>
+                </div>
+            </div>
+        </nav>
+
+        <section class="panel">
+            <h2>20/48 in German</h2>
+            <p>Merge matching tiles to reach higher German number words. Swipe, drag, use arrows/WASD, or scroll with a trackpad.</p>
+        </section>
+
+        <section class="game-shell">
+            <div class="board" id="board">
+                <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
+                <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
+                <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
+                <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
+            </div>
+            <div class="scoreboard">
+                <div class="score-card">
+                    <h3>Progress</h3>
+                    <div class="score-row"><span>Score</span><span id="score">0</span></div>
+                    <div class="score-row"><span>Best</span><span id="best">0</span></div>
+                    <p id="status">Keep merging matching tiles.</p>
+                    <div class="action-row">
+                        <button id="newGame">New Game</button>
+                        <button class="secondary" id="undoBtn">Undo</button>
+                    </div>
+                </div>
+                <div class="score-card">
+                    <h3>How to play</h3>
+                    <p>Swipe or use arrow keys. Two equal tiles merge into the next number. The German word helps you rehearse number vocabulary.</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+
+const boardEl = document.getElementById('board');
+        const scoreEl = document.getElementById('score');
+        const bestEl = document.getElementById('best');
+        const statusEl = document.getElementById('status');
+        const newGameBtn = document.getElementById('newGame');
+        const undoBtn = document.getElementById('undoBtn');
+
+        const size = 4;
+        let grid = [];
+        let score = 0;
+        let best = Number(localStorage.getItem('dt-2048-best') || 0);
+        let history = [];
+
+        const wordMap = {
+            2: 'zwei',
+            4: 'vier',
+            8: 'acht',
+            16: 'sechzehn',
+            32: 'zweiunddreißig',
+            64: 'vierundsechzig',
+            128: 'einhundertachtundzwanzig',
+            256: 'zweihundertsechsundfünfzig',
+            512: 'fünfhundertzwölf',
+            1024: 'eintausendvierundzwanzig',
+            2048: 'zweitausendachtundvierzig'
+        };
+
+        const tileColors = {
+            2: '#fef3c7',
+            4: '#fde68a',
+            8: '#fcd34d',
+            16: '#fbbf24',
+            32: '#fb7185',
+            64: '#f87171',
+            128: '#a78bfa',
+            256: '#8b5cf6',
+            512: '#38bdf8',
+            1024: '#22c55e',
+            2048: '#14b8a6'
+        };
+
+        function emptyGrid() {
+            return Array.from({ length: size }, () => Array(size).fill(0));
+        }
+
+        function cloneGrid(source) {
+            return source.map((row) => row.slice());
+        }
+
+        function saveHistory() {
+            history.push({ grid: cloneGrid(grid), score });
+            if (history.length > 10) history.shift();
+        }
+
+        function spawnTile() {
+            const empties = [];
+            for (let r = 0; r < size; r++) {
+                for (let c = 0; c < size; c++) {
+                    if (grid[r][c] === 0) empties.push([r, c]);
+                }
+            }
+            if (!empties.length) return false;
+            const [r, c] = empties[Math.floor(Math.random() * empties.length)];
+            grid[r][c] = Math.random() < 0.9 ? 2 : 4;
+            return { r, c };
+        }
+
+        function setStatus(text) {
+            statusEl.textContent = text;
+        }
+
+        const GAP = 12;
+        const PAD = 14;
+
+        function drawBoard(newTile) {
+            boardEl.querySelectorAll('.tile').forEach((tile) => tile.remove());
+            const cellSize = (boardEl.clientWidth - GAP * (size - 1) - PAD * 2) / size;
+            grid.forEach((row, r) => {
+                row.forEach((value, c) => {
+                    if (!value) return;
+                    const tile = document.createElement('div');
+                    tile.className = 'tile';
+                    if (newTile && newTile.r === r && newTile.c === c) tile.classList.add('pop');
+                    tile.style.width = `${cellSize}px`;
+                    tile.style.height = `${cellSize}px`;
+                    tile.style.top = `${r * (cellSize + GAP) + PAD}px`;
+                    tile.style.left = `${c * (cellSize + GAP) + PAD}px`;
+                    tile.style.background = tileColors[value] || '#0ea5e9';
+                    tile.style.color = value <= 4 ? '#1f2937' : 'white';
+                    tile.innerHTML = `${wordMap[value] || value}<small>${value}</small>`;
+                    boardEl.appendChild(tile);
+                });
+            });
+        }
+
+        function slide(row) {
+            const filtered = row.filter((v) => v);
+            const result = [];
+            for (let i = 0; i < filtered.length; i++) {
+                if (filtered[i] === filtered[i + 1]) {
+                    const merged = filtered[i] * 2;
+                    result.push(merged);
+                    score += merged;
+                    i++;
+                } else {
+                    result.push(filtered[i]);
+                }
+            }
+            while (result.length < size) result.push(0);
+            return result;
+        }
+
+        function rotate(gridData) {
+            return gridData[0].map((_, i) => gridData.map((row) => row[i]).reverse());
+        }
+
+        function move(direction) {
+            const rotations = { left: 0, up: 1, right: 2, down: 3 }[direction];
+            let rotated = cloneGrid(grid);
+            for (let i = 0; i < rotations; i++) rotated = rotate(rotated);
+            const moved = rotated.map((row) => slide(row));
+            for (let i = 0; i < (4 - rotations) % 4; i++) moved = rotate(moved);
+            const changed = JSON.stringify(grid) !== JSON.stringify(moved);
+            if (changed) {
+                saveHistory();
+                grid = moved;
+                const newTile = spawnTile();
+                drawBoard(newTile);
+                updateScore();
+                checkGame();
+            }
+        }
+
+        function updateScore() {
+            scoreEl.textContent = score;
+            if (score > best) {
+                best = score;
+                localStorage.setItem('dt-2048-best', String(best));
+            }
+            bestEl.textContent = best;
+        }
+
+        function canMoveAny() {
+            if (grid.flat().includes(0)) return true;
+            for (let r = 0; r < size; r++) {
+                for (let c = 0; c < size; c++) {
+                    const current = grid[r][c];
+                    if ((grid[r + 1] && grid[r + 1][c] === current) || (grid[r][c + 1] === current)) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        function checkGame() {
+            if (grid.flat().includes(2048)) {
+                setStatus('Du hast 2048 erreicht!');
+                return;
+            }
+            setStatus(canMoveAny() ? 'Keep going.' : 'No moves left. Start a new game.');
+        }
+
+        function undo() {
+            const last = history.pop();
+            if (!last) return;
+            grid = cloneGrid(last.grid);
+            score = last.score;
+            drawBoard();
+            updateScore();
+        }
+
+        function resetGame() {
+            grid = emptyGrid();
+            score = 0;
+            history = [];
+            spawnTile();
+            spawnTile();
+            drawBoard();
+            updateScore();
+            setStatus('Keep merging matching tiles.');
+        }
+
+        function handleKey(e) {
+            const keyMap = {
+                ArrowLeft: 'left',
+                ArrowRight: 'right',
+                ArrowUp: 'up',
+                ArrowDown: 'down',
+                a: 'left',
+                d: 'right',
+                w: 'up',
+                s: 'down'
+            };
+            if (keyMap[e.key]) {
+                e.preventDefault();
+                move(keyMap[e.key]);
+            }
+        }
+
+        let swipeStart = null;
+        boardEl.addEventListener('pointerdown', (e) => {
+            swipeStart = { x: e.clientX, y: e.clientY, id: e.pointerId };
+            boardEl.setPointerCapture(e.pointerId);
+        });
+
+        boardEl.addEventListener('pointermove', (e) => {
+            if (!swipeStart || swipeStart.id !== e.pointerId) return;
+            e.preventDefault();
+            const dx = e.clientX - swipeStart.x;
+            const dy = e.clientY - swipeStart.y;
+            if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 32) {
+                move(dx > 0 ? 'right' : 'left');
+                boardEl.releasePointerCapture(e.pointerId);
+                swipeStart = null;
+            } else if (Math.abs(dy) > 32) {
+                move(dy > 0 ? 'down' : 'up');
+                boardEl.releasePointerCapture(e.pointerId);
+                swipeStart = null;
+            }
+        }, { passive: false });
+
+        boardEl.addEventListener('pointerup', (e) => {
+            if (!swipeStart || swipeStart.id !== e.pointerId) return;
+            const dx = e.clientX - swipeStart.x;
+            const dy = e.clientY - swipeStart.y;
+            if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 24) {
+                move(dx > 0 ? 'right' : 'left');
+            } else if (Math.abs(dy) > 24) {
+                move(dy > 0 ? 'down' : 'up');
+            }
+            boardEl.releasePointerCapture(e.pointerId);
+            swipeStart = null;
+        });
+
+        boardEl.addEventListener('pointercancel', () => {
+            swipeStart = null;
+        });
+
+        let lastWheelTime = 0;
+        boardEl.addEventListener('wheel', (e) => {
+            const now = Date.now();
+            if (now - lastWheelTime < 240) return;
+            if (Math.abs(e.deltaX) < 6 && Math.abs(e.deltaY) < 6) return;
+            e.preventDefault();
+            if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
+                move(e.deltaX > 0 ? 'right' : 'left');
+            } else {
+                move(e.deltaY > 0 ? 'down' : 'up');
+            }
+            lastWheelTime = now;
+        }, { passive: false });
+
+        newGameBtn.addEventListener('click', resetGame);
+        undoBtn.addEventListener('click', undo);
+        window.addEventListener('keydown', handleKey);
+        window.addEventListener('resize', () => drawBoard());
+
+        resetGame();
+    </script>
+    <script src="menu-settings.js"></script>
+
+    <div class="settings-fab" id="settingsFab" aria-label="Open settings">
+        ⚙
+    </div>
+    <div class="settings-panel" id="settingsPanel">
+        <h4>Settings</h4>
+        <div class="settings-row">
+            <label for="settingsTheme" style="font-weight:600;">Theme</label>
+            <select id="settingsTheme">
+                <option value="system">System</option>
+                <option value="light">Light</option>
+                <option value="dark">Dark</option>
+            </select>
+        </div>
+        <div class="debug-box" id="deeplDebug">DeepL debug available on Translate page.</div>
+        <div class="settings-actions">
+            <button id="debugTestBtn">Test DeepL</button>
+            <button id="debugClearBtn">Clear cache</button>
+        </div>
+        <div class="settings-note">Theme settings apply across all pages.</div>
+    </div>
+
+</body>
+</html>
