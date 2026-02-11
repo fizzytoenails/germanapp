@@ -454,6 +454,50 @@ const rules = [
             { title: 'Common word order traps', text: 'Only one element can occupy the first position in V2 clauses.', example: 'Heute <strong>gehe</strong> ich zur Arbeit.' }
         ];
 
+        const examStyleRules = [
+            { title: 'Article + noun in forms', text: 'In A1/A2 exam writing, always write nouns with article and capital letter to reduce case/gender errors.', example: 'Ich suche <strong>eine Wohnung</strong> in der Stadt.' },
+            { title: 'Formal opening in messages', text: 'Use a formal opening in letters and short email tasks: "Sehr geehrte Damen und Herren," or named greeting.', example: '<strong>Sehr geehrte Frau Müller</strong>, ich habe eine Frage.' },
+            { title: 'Informal opening in messages', text: 'For friends and family tasks, use "Hallo + Name" and informal pronouns.', example: '<strong>Hallo Anna</strong>, wie geht es dir?' },
+            { title: 'Question inversion', text: 'In direct questions, finite verb is first unless a W-word is present.', example: '<strong>Haben</strong> Sie morgen Zeit? / <strong>Wann</strong> haben Sie Zeit?' },
+            { title: 'Bitte + infinitive requests', text: 'Polite functional language often uses "Können Sie ...?" or imperative + bitte.', example: '<strong>Können Sie</strong> mir helfen? / <strong>Bitte öffnen</strong> Sie die Tür.' },
+            { title: 'Temporal anchors first', text: 'In appointment and travel contexts, start with time phrase for clarity.', example: '<strong>Am Montag um 9 Uhr</strong> habe ich einen Termin.' },
+            { title: 'Akkusativ after haben/brauchen', text: 'Many daily verbs in A1/A2 take accusative object directly.', example: 'Ich brauche <strong>einen Termin</strong>.' },
+            { title: 'Dativ with helfen/danken', text: 'Core social verbs use dative pronouns/nouns.', example: 'Ich helfe <strong>dir</strong>. / Ich danke <strong>Ihnen</strong>.' },
+            { title: 'Two-way prepositions (Wo/Wohin)', text: 'Use dative for location (Wo?) and accusative for direction (Wohin?).', example: 'Ich bin <strong>im</strong> Büro. Ich gehe <strong>ins</strong> Büro.' },
+            { title: 'Verb second after adverbials', text: 'When time/place comes first, finite verb remains second and subject moves after.', example: 'Heute <strong>fahre</strong> ich in die Stadt.' },
+            { title: 'Sentence frame with modal verbs', text: 'Modal in slot 2 and main infinitive at end are high-frequency in exam listening/reading.', example: 'Ich <strong>muss</strong> morgen früher <strong>aufstehen</strong>.' },
+            { title: 'Perfekt in daily reporting', text: 'Use Perfekt to report completed actions in spoken and short written tasks.', example: 'Ich <strong>habe</strong> gestern lange <strong>gearbeitet</strong>.' },
+            { title: 'Sein vs haben in Perfekt', text: 'Movement and change-of-state verbs usually take "sein".', example: 'Wir <strong>sind</strong> spät <strong>angekommen</strong>.' },
+            { title: 'weil clause position', text: 'In "weil" clauses, finite verb goes to the end.', example: 'Ich bleibe zu Hause, weil ich krank <strong>bin</strong>.' },
+            { title: 'wenn for conditions and repetition', text: 'Use "wenn" for repeated or possible conditions (if/whenever).', example: '<strong>Wenn</strong> ich Zeit habe, komme ich.' },
+            { title: 'dass in opinions', text: 'A2 opinion statements often need "dass" and verb-final subordinate clause.', example: 'Ich finde, dass der Kurs sehr gut <strong>ist</strong>.' },
+            { title: 'Noun compounds in everyday German', text: 'Recognize common compounds to decode meaning quickly in reading tasks.', example: '<strong>Fahrkarte</strong>, <strong>Bahnhofsausgang</strong>, <strong>Krankenhauszimmer</strong>' },
+            { title: 'Fixed chunks for phone calls', text: 'Memorize standard call phrases to reduce hesitation under time pressure.', example: '<strong>Guten Tag, hier spricht</strong> Anna Weber.' },
+            { title: 'Word order with pronouns', text: 'Short pronouns usually come before full noun phrases in the middle field.', example: 'Ich gebe <strong>es</strong> meiner Freundin morgen.' },
+            { title: 'Negation placement with nicht', text: 'Place "nicht" before what is negated or near clause end for whole-clause negation.', example: 'Ich komme heute <strong>nicht</strong>.' },
+            { title: 'kein vs nicht in practical tasks', text: 'Use "kein" before nouns without article; use "nicht" with verbs/adjectives/prepositional phrases.', example: 'Ich habe <strong>kein</strong> Geld, aber ich bin <strong>nicht</strong> traurig.' },
+            { title: 'Comparisons in daily contexts', text: 'Use "als" for inequality and "so ... wie" for equality.', example: 'Der Zug ist schneller <strong>als</strong> der Bus.' },
+            { title: 'Imperative polite vs familiar', text: 'Choose imperative form by social context.', example: '<strong>Kommen Sie</strong> bitte herein. / <strong>Komm</strong> bitte herein.' },
+            { title: 'Connectors for short writing tasks', text: 'Use simple connectors to organize text: zuerst, dann, danach, zum Schluss.', example: '<strong>Zuerst</strong> frühstücke ich, <strong>dann</strong> fahre ich zur Arbeit.' },
+            { title: 'Case after common prepositions', text: 'Memorize A1/A2 preposition-case pairs to avoid frequent exam errors.', example: '<strong>mit</strong> dem Bus, <strong>für</strong> meine Mutter, <strong>ohne</strong> Ticket.' },
+            { title: 'Short email closing formulas', text: 'Use consistent closing formula by formality level.', example: 'Mit freundlichen Grüßen / Viele Grüße' }
+        ];
+        rules.push(...examStyleRules);
+
+        const pdfDrivenRules = [
+            { title: 'Possessive Articles (A1)', text: 'From DE_A1_2012G: use mein/dein/sein/ihr/unser/euer in nominative with noun gender and number.', example: 'Das ist <strong>mein</strong> Arbeitszimmer. Das sind <strong>seine</strong> Spielsachen.' },
+            { title: 'Singular vs plural possessives', text: 'From DE_A1_2012G: singular and plural endings differ; keep article+noun agreement visible in short statements.', example: 'Ist das <strong>deine</strong> Wohnung? Ja, das ist <strong>meine</strong> Wohnung.' },
+            { title: 'Local prepositions with position', text: 'From bakery/location units (A1): use location prepositions for object positions in spaces.', example: 'Die Torte steht <strong>hinter</strong> dem Kuchen. Der Ball ist <strong>neben</strong> der Box.' },
+            { title: 'bei vs in (A1/A2)', text: 'From worksheet instructions: choose preposition by context (person/place relation).', example: 'Ich bin <strong>bei</strong> meiner Mutter. Ich bin <strong>in</strong> der Schule.' },
+            { title: 'Modal verbs in present (A2)', text: 'From DE_A2_1123G: können/dürfen/müssen/sollen/wollen/möchten express ability, permission, obligation, request.', example: 'Wir <strong>müssen</strong> heute lange arbeiten. Hier <strong>darf</strong> man nicht rauchen.' },
+            { title: 'Modal verbs in Präteritum (A2)', text: 'From DE_A2_1123G: use Präteritum forms for past obligations/abilities in narratives.', example: 'Ich <strong>wollte</strong> früher Feierabend machen. Musstest du länger arbeiten?' },
+            { title: 'Modal verbs + infinitive end position', text: 'From A2 exercises: modal verb in slot 2, lexical verb at sentence end.', example: 'Du sollst dein Zimmer <strong>aufräumen</strong>.' },
+            { title: 'Imperative in du-form', text: 'From command-task sheets: imperative used for direct instructions in practical contexts.', example: '<strong>Kopier</strong> bitte dieses Dokument! <strong>Räum</strong> bitte die Küche auf!' },
+            { title: 'So sagt man das chunks', text: 'From PDF phrase boxes: fixed colloquial chunks improve fluency in spoken reactions.', example: 'Das darf doch nicht wahr sein! / Alles in Butter.' },
+            { title: 'Functional writing blocks', text: 'From letter/email worksheets: keep Absender, Empfänger, Betreff, and polite request line in task writing.', example: 'Bitte überweisen Sie das Geld bis zum 31. Dezember.' }
+        ];
+        rules.push(...pdfDrivenRules);
+
         const grammarTitle = document.getElementById('grammarTitle');
         const grammarText = document.getElementById('grammarText');
         const grammarExample = document.getElementById('grammarExample');

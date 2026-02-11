@@ -137,7 +137,6 @@
     const debugBox = document.getElementById('deeplDebug');
     const debugTestBtn = document.getElementById('debugTestBtn');
     const debugClearBtn = document.getElementById('debugClearBtn');
-    const relayCheckBtn = document.getElementById('relayCheckBtn');
 
     if (settingsFab && settingsPanel) {
       settingsFab.addEventListener('click', (e) => {
@@ -199,25 +198,6 @@
           });
         } else {
           updateDebugBox('DeepL status: open Translate page to test.');
-        }
-      });
-    }
-
-    if (relayCheckBtn) {
-      relayCheckBtn.addEventListener('click', () => {
-        if (typeof window.checkRelayStatus === 'function') {
-          updateDebugBox('DeepL status: checking relay...');
-          window.checkRelayStatus().then((info) => {
-            if (info && info.ok) {
-              updateDebugBox(`DeepL status: relay OK (${info.status}).`);
-            } else {
-              updateDebugBox('DeepL status: relay missing (404).');
-            }
-          }).catch(() => {
-            updateDebugBox('DeepL status: relay unreachable.');
-          });
-        } else {
-          updateDebugBox('DeepL status: open Translate page to check relay.');
         }
       });
     }

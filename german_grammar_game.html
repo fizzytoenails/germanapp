@@ -597,7 +597,7 @@
 
     <script>
 
-const allPhrases = [
+        const allPhrases = [
             ['Ich bin müde.', 'I am tired.', 'I am tired'],
             ['Wir haben Zeit.', 'We have time.', 'We have time'],
             ['Er kommt heute.', 'He is coming today.', 'He comes today'],
@@ -804,6 +804,64 @@ const allPhrases = [
             ['Ich will sprechen.', 'I want to speak.', 'I want to speak'],
             ['Wir finden die Stadt.', 'We find the city.', 'We find the city']
         ];
+
+        const examPhrasePack = [
+            ['Entschuldigung, wo ist die Apotheke?', 'Excuse me, where is the pharmacy?', 'Excuse, where is the pharmacy'],
+            ['Ich habe morgen einen Termin beim Arzt.', 'I have a doctor appointment tomorrow.', 'I have tomorrow an appointment at-the doctor'],
+            ['Können Sie das bitte wiederholen?', 'Can you repeat that please?', 'Can you that please repeat'],
+            ['Ich hätte gern einen Kaffee ohne Milch.', 'I would like a coffee without milk.', 'I would-have gladly a coffee without milk'],
+            ['Der Zug nach Berlin hat zehn Minuten Verspätung.', 'The train to Berlin is ten minutes late.', 'The train to Berlin has ten minutes delay'],
+            ['Wo muss ich umsteigen?', 'Where do I have to change trains?', 'Where must I change'],
+            ['Ich suche die Touristeninformation.', 'I am looking for the tourist information office.', 'I search the tourist information'],
+            ['Wie lange dauert die Fahrt?', 'How long does the trip take?', 'How long lasts the trip'],
+            ['Wir treffen uns am Eingang um halb acht.', 'We meet at the entrance at half past seven.', 'We meet us at-the entrance at half eight'],
+            ['Ich kann heute nicht kommen, weil ich arbeiten muss.', 'I cannot come today because I have to work.', 'I can today not come, because I work must'],
+            ['Wenn du früher kommst, warten wir im Café.', 'If you come earlier, we wait in the cafe.', 'If you earlier come, wait we in-the cafe'],
+            ['Ich möchte ein Einzelzimmer für zwei Nächte reservieren.', 'I would like to reserve a single room for two nights.', 'I would-like a single-room for two nights reserve'],
+            ['Haben Sie noch ein freies Zimmer?', 'Do you still have a free room?', 'Have you still a free room'],
+            ['Die Rechnung, bitte.', 'The bill, please.', 'The bill please'],
+            ['Kann ich mit Karte bezahlen?', 'Can I pay by card?', 'Can I with card pay'],
+            ['Wir nehmen den Bus, obwohl es regnet.', 'We take the bus although it is raining.', 'We take the bus although it rains'],
+            ['Nachdem ich gefrühstückt habe, gehe ich zur Arbeit.', 'After I have had breakfast, I go to work.', 'After I breakfasted have, go I to-the work'],
+            ['Bevor du gehst, ruf mich bitte an.', 'Before you leave, please call me.', 'Before you go, call me please on'],
+            ['Ich finde, dass der Kurs sehr interessant ist.', 'I think that the course is very interesting.', 'I find, that the course very interesting is'],
+            ['Meiner Meinung nach ist das eine gute Lösung.', 'In my opinion that is a good solution.', 'My opinion according is that a good solution'],
+            ['Der Film war besser als das Buch.', 'The movie was better than the book.', 'The film was better than the book'],
+            ['Das Hotel ist so teuer wie das andere.', 'The hotel is as expensive as the other one.', 'The hotel is so expensive as the other'],
+            ['Im Formular fehlt meine Postleitzahl.', 'My postal code is missing on the form.', 'In-the form is-missing my postal code'],
+            ['Ich brauche eine Bestätigung per E-Mail.', 'I need a confirmation by email.', 'I need a confirmation by email'],
+            ['Darf ich hier parken?', 'May I park here?', 'May I here park'],
+            ['Am Wochenende besuche ich meine Eltern.', 'On the weekend I visit my parents.', 'At-the weekend visit I my parents'],
+            ['Seit zwei Jahren lerne ich Deutsch.', 'I have been learning German for two years.', 'Since two years learn I German'],
+            ['Das passt mir leider nicht.', 'Unfortunately that does not suit me.', 'That fits me unfortunately not'],
+            ['Könnten wir einen neuen Termin vereinbaren?', 'Could we arrange a new appointment?', 'Could we a new appointment arrange'],
+            ['Ich freue mich auf unser Treffen.', 'I am looking forward to our meeting.', 'I rejoice myself on our meeting']
+        ];
+        allPhrases.push(...examPhrasePack);
+
+        const pdfPhrasePack = [
+            ['Ist das deine Wohnung?', 'Is that your apartment?', 'Is that your apartment'],
+            ['Ja, das ist meine Wohnung.', 'Yes, that is my apartment.', 'Yes that is my apartment'],
+            ['Hier liegen noch seine Spielsachen.', 'His toys are still lying here.', 'Here lie still his toys'],
+            ['Eure Wohnung ist wirklich sehr schön.', 'Your apartment is really very nice.', 'Your apartment is really very nice'],
+            ['Das hier ist unsere Wohnküche.', 'This here is our kitchen-living room.', 'This here is our living-kitchen'],
+            ['Hier darf man nicht rauchen.', 'You are not allowed to smoke here.', 'Here may one not smoke'],
+            ['Wir müssen heute lange arbeiten.', 'We have to work long today.', 'We must today long work'],
+            ['Du sollst dein Zimmer aufräumen.', 'You should tidy your room.', 'You should your room tidy-up'],
+            ['Kannst du mir helfen?', 'Can you help me?', 'Can you me help'],
+            ['Ich möchte mein Paket abholen.', 'I would like to pick up my package.', 'I would-like my package pick-up'],
+            ['Ich hatte einen Zettel an der Tür.', 'I had a note on the door.', 'I had a note on the door'],
+            ['Bitte überweisen Sie das Geld bis zum 31. Dezember.', 'Please transfer the money by 31 December.', 'Please transfer you the money by the 31st of December'],
+            ['Der Ball ist neben der Box.', 'The ball is next to the box.', 'The ball is next to the box'],
+            ['Die Torte steht hinter dem Kuchen.', 'The cake stands behind the pie.', 'The cake stands behind the cake'],
+            ['Komm vorbei, wir sind im Café!', 'Come by, we are in the cafe!', 'Come past we are in-the cafe'],
+            ['In welcher Reihenfolge machst du diese Schritte?', 'In which order do you do these steps?', 'In which order make you these steps'],
+            ['Musstest du denn wieder länger arbeiten?', 'Did you have to work longer again?', 'Had-to you then again longer work'],
+            ['Als Kind habe ich nicht Auto fahren können.', 'As a child I could not drive a car.', 'As child have I not car drive can'],
+            ['Nina hat letzte Woche arbeiten müssen.', 'Nina had to work last week.', 'Nina has last week work must'],
+            ['Ich habe gestern mein Zimmer aufräumen sollen.', 'Yesterday I was supposed to tidy my room.', 'I have yesterday my room tidy should']
+        ];
+        allPhrases.push(...pdfPhrasePack);
 
         let selectedGerman = null;
         let selectedEnglish = null;

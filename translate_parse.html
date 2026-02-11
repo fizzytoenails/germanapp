@@ -528,8 +528,7 @@ const statusEl = document.getElementById('status');
         const sentencesResult = document.getElementById('sentencesResult');
         const paragraphResult = document.getElementById('paragraphResult');
         const DEEPL_KEY = '1b7d9e67-ba29-49f0-9677-0d82641a8ad0:fx';
-        const LOCAL_RELAY = '/.netlify/functions/translate';
-        const FALLBACK_RELAY = 'https://comfy-concha-fb9a0f.netlify.app/.netlify/functions/translate';
+        const DEEPL_RELAY = 'https://comfy-concha-fb9a0f.netlify.app/.netlify/functions/translate';
 
         const allWords = [['der', 'the (masculine)'], ['die', 'the (feminine/plural)'], ['das', 'the (neuter)'], ['und', 'and'], ['in', 'in'], ['sein', 'to be / his'], ['ein', 'a/an'], ['zu', 'to'], ['haben', 'to have'], ['ich', 'I'], ['werden', 'to become'], ['sie', 'she/they'], ['von', 'from/of'], ['nicht', 'not'], ['mit', 'with'], ['es', 'it'], ['sich', 'oneself'], ['auch', 'also'], ['auf', 'on'], ['für', 'for'], ['an', 'at/on'], ['er', 'he'], ['so', 'so'], ['dass', 'that'], ['können', 'can'], ['dies', 'this'], ['als', 'as/when'], ['ihr', 'you(pl)/her'], ['ja', 'yes'], ['wie', 'how'], ['bei', 'at/with'], ['oder', 'or'], ['wir', 'we'], ['aber', 'but'], ['dann', 'then'], ['man', 'one/you'], ['da', 'there/since'], ['noch', 'still/yet'], ['nach', 'after/to'], ['was', 'what'], ['also', 'so/thus'], ['aus', 'out/from'], ['alle', 'all'], ['wenn', 'if/when'], ['nur', 'only'], ['müssen', 'must'], ['sagen', 'to say'], ['um', 'around/at'], ['über', 'over/about'], ['machen', 'to make/do'], ['kein', 'no/none'], ['Jahr', 'year'], ['du', 'you(singular)'], ['mein', 'my'], ['schon', 'already'], ['vor', 'before/in front'], ['durch', 'through'], ['geben', 'to give'], ['mehr', 'more'], ['andere', 'other'], ['viel', 'much/many'], ['kommen', 'to come'], ['jetzt', 'now'], ['sollen', 'should'], ['mir', 'me/to me'], ['wollen', 'to want'], ['ganz', 'whole/quite'], ['mich', 'me'], ['immer', 'always'], ['gehen', 'to go'], ['sehr', 'very'], ['hier', 'here'], ['doch', 'but/however'], ['bis', 'until'], ['groß', 'big/tall'], ['wieder', 'again'], ['Mal', 'time'], ['zwei', 'two'], ['gut', 'good'], ['wissen', 'to know'], ['neu', 'new'], ['sehen', 'to see'], ['lassen', 'to let'], ['uns', 'us'], ['weil', 'because'], ['unter', 'under'], ['denn', 'because'], ['stehen', 'to stand'], ['jede', 'every'], ['Beispiel', 'example'], ['Zeit', 'time'], ['erste', 'first'], ['ihm', 'him/to him'], ['ihn', 'him'], ['wo', 'where'], ['lang', 'long'], ['eigentlich', 'actually'], ['damit', 'with it/so that'], ['selbst', 'self/even'], ['unser', 'our'], ['oben', 'above'], ['Mann', 'man'], ['solch', 'such'], ['dürfen', 'may/to be allowed'], ['sollte', 'should'], ['konnte', 'could'], ['beim', 'at the'], ['weit', 'far'], ['Leben', 'life'], ['zurück', 'back'], ['jedoch', 'however'], ['etwas', 'something'], ['ohne', 'without'], ['heute', 'today'], ['gegen', 'against'], ['gleich', 'same/right away'], ['einfach', 'simple'], ['neben', 'next to'], ['Tag', 'day'], ['während', 'during/while'], ['finden', 'to find'], ['nichts', 'nothing'], ['bleiben', 'to stay'], ['sondern', 'but rather'], ['natürlich', 'naturally'], ['zwischen', 'between'], ['zusammen', 'together'], ['Frau', 'woman/wife'], ['letzt', 'last'], ['nein', 'no'], ['dazu', 'to it/for that'], ['eben', 'just/exactly'], ['Hand', 'hand'], ['fragen', 'to ask'], ['zeigen', 'to show'], ['zwar', 'indeed/to be sure'], ['Herr', 'Mr./gentleman'], ['Teil', 'part'], ['nächste', 'next'], ['sicherlich', 'certainly'], ['gering', 'small/minor'], ['Kind', 'child'], ['dabei', 'in doing so'], ['allein', 'alone'], ['innerhalb', 'within'], ['halten', 'to hold/stop'], ['alt', 'old'], ['nennen', 'to call/name'], ['sicher', 'sure/safe'], ['Weg', 'way/path'], ['nie', 'never'], ['Welt', 'world'], ['Ende', 'end'], ['Sache', 'thing/matter'], ['Haus', 'house'], ['gerade', 'just/straight'], ['weiter', 'further'], ['soweit', 'as far as'], ['Auge', 'eye'], ['liegen', 'to lie/be located'], ['Frage', 'question'], ['kennen', 'to know (people)'], ['Arbeit', 'work'], ['heißen', 'to be called'], ['Wasser', 'water'], ['gar', 'quite/at all'], ['nah', 'near'], ['wirklich', 'really'], ['denken', 'to think'], ['Platz', 'place/square'], ['vielleicht', 'maybe'], ['Grund', 'reason/ground'], ['Art', 'type/kind'], ['darauf', 'on it/thereupon'], ['los', 'loose/off'], ['davon', 'of it/from it'], ['Menschen', 'people/humans'], ['Staat', 'state'], ['mögen', 'to like'], ['Land', 'country/land'], ['stellen', 'to place/put'], ['junger', 'young'], ['führen', 'to lead'], ['ob', 'whether'], ['Ort', 'place/location'], ['setzen', 'to set/sit'], ['Geld', 'money'], ['recht', 'right/quite'], ['drei', 'three'], ['hoch', 'high'], ['bestehen', 'to exist/pass'], ['Stadt', 'city'], ['verschieden', 'different'], ['Seite', 'side/page'], ['seitdem', 'since then'], ['bringen', 'to bring'], ['Wort', 'word'], ['Zahl', 'number'], ['nehmen', 'to take'], ['sprechen', 'to speak'], ['kam', 'came'], ['Bild', 'picture/image'], ['völlig', 'completely'], ['darin', 'in it'], ['Name', 'name'], ['möglich', 'possible'], ['tun', 'to do'], ['einige', 'some'], ['deshalb', 'therefore'], ['Prozent', 'percent'], ['eher', 'rather/sooner'], ['glauben', 'to believe'], ['zuerst', 'first/at first'], ['Buch', 'book'], ['Gesicht', 'face'], ['je', 'ever/each'], ['Meter', 'meter'], ['etwa', 'about/approximately'], ['wahr', 'true'], ['Weise', 'way/manner'], ['spät', 'late'], ['oft', 'often'], ['daher', 'therefore'], ['dennoch', 'nevertheless'], ['inzwischen', 'meanwhile'], ['fast', 'almost'], ['Kopf', 'head'], ['beide', 'both'], ['spielen', 'to play'], ['nachdem', 'after'], ['verstehen', 'to understand'], ['gegenüber', 'opposite/toward'], ['Musik', 'music'], ['vier', 'four'], ['Uhr', 'clock/hour'], ['höher', 'higher'], ['Stelle', 'position/place'], ['erreichen', 'to reach'], ['Geschichte', 'story/history'], ['warum', 'why'], ['plötzlich', 'suddenly'], ['laufen', 'to run/walk'], ['beginnen', 'to begin'], ['lieber', 'rather/preferably'], ['Raum', 'room/space'], ['gelten', 'to be valid'], ['zugleich', 'at the same time'], ['aufgrund', 'due to'], ['Mutter', 'mother'], ['entgegen', 'toward/contrary'], ['vergehen', 'to pass (time)'], ['Farbe', 'color'], ['klein', 'small'], ['Tür', 'door'], ['schließen', 'to close'], ['Minute', 'minute'], ['Vater', 'father'], ['legen', 'to lay/put'], ['ziehen', 'to pull/move'], ['brauchen', 'to need'], ['arbeiten', 'to work'], ['ergeben', 'to result in'], ['bilden', 'to form'], ['bereit', 'ready'], ['bestimmt', 'certain/definitely'], ['hinter', 'behind'], ['erhalten', 'to receive'], ['Mensch', 'human/person'], ['bedeuten', 'to mean'], ['scheinen', 'to shine/seem'], ['Zimmer', 'room'], ['meist', 'mostly'], ['Straße', 'street'], ['einzig', 'only/single'], ['Kraft', 'power/strength'], ['außer', 'except'], ['folgen', 'to follow'], ['enthalten', 'to contain'], ['schwer', 'heavy/difficult'], ['schließlich', 'finally'], ['falls', 'if/in case'], ['Nacht', 'night'], ['lernen', 'to learn'], ['wirken', 'to have an effect'], ['Ton', 'sound/tone'], ['zumindest', 'at least'], ['erscheinen', 'to appear'], ['würde', 'would'], ['weder', 'neither'], ['Sohn', 'son'], ['laut', 'loud/according to'], ['Fall', 'case/fall'], ['direkt', 'direct'], ['weg', 'away'], ['vergangen', 'past'], ['Monat', 'month'], ['bevor', 'before'], ['Woche', 'week'], ['tragen', 'to carry/wear'], ['gelingen', 'to succeed'], ['Fest', 'festival/firm'], ['Wesen', 'being/essence'], ['Richtung', 'direction'], ['Stimme', 'voice'], ['Luft', 'air'], ['früh', 'early'], ['warten', 'to wait'], ['rund', 'round'], ['Angst', 'fear'], ['gehören', 'to belong'], ['Tochter', 'daughter'], ['insbesondere', 'especially'], ['Gefühl', 'feeling'], ['Feld', 'field'], ['wenig', 'little/few'], ['Form', 'form/shape'], ['nämlich', 'namely'], ['entlang', 'along'], ['wünschen', 'to wish'], ['Entwicklung', 'development'], ['bieten', 'to offer'], ['treffen', 'to meet'], ['danach', 'after that'], ['zunächst', 'first/initially'], ['Natur', 'nature'], ['zuvor', 'before/previously'], ['bald', 'soon'], ['verlieren', 'to lose'], ['Sprache', 'language'], ['Ordnung', 'order'], ['Bereich', 'area/field'], ['Reihe', 'row/series'], ['damals', 'back then'], ['hinaus', 'out/beyond'], ['bereits', 'already'], ['betreffen', 'to concern'], ['mal', 'times/once'], ['fehlen', 'to be missing'], ['gewinnen', 'to win'], ['Krieg', 'war'], ['Boden', 'floor/ground'], ['Lage', 'situation/position'], ['schaffen', 'to create/manage'], ['ansehen', 'to look at'], ['erkennen', 'to recognize'], ['Problem', 'problem'], ['umso', 'all the more'], ['holen', 'to fetch/get'], ['sogar', 'even'], ['darum', 'therefore/about it'], ['kürzlich', 'recently'], ['Mittel', 'means/medium'], ['weiteren', 'further'], ['anfangen', 'to begin'], ['entsprechen', 'to correspond'], ['geschehen', 'to happen'], ['Gesellschaft', 'society'], ['Punkt', 'point/dot'], ['entstehen', 'to arise'], ['behalten', 'to keep'], ['einzeln', 'individual/single'], ['Interesse', 'interest'], ['Möglichkeit', 'possibility'], ['entwickeln', 'to develop'], ['ebenso', 'just as'], ['dunkel', 'dark'], ['aussehen', 'to look like'], ['Liebe', 'love'], ['Morgen', 'morning'], ['lesen', 'to read'], ['fühlen', 'to feel'], ['Gruppe', 'group'], ['suchen', 'to search'], ['allgemein', 'general'], ['erklären', 'to explain'], ['Ding', 'thing'], ['Gegenteil', 'opposite'], ['erzählen', 'to tell'], ['darstellen', 'to represent'], ['eigen', 'own'], ['halt', 'stop/just'], ['lediglich', 'merely'], ['Meinung', 'opinion'], ['Abend', 'evening'], ['Thema', 'topic/theme'], ['Rahmen', 'frame'], ['reden', 'to talk'], ['Schule', 'school'], ['Aufgabe', 'task'], ['Herz', 'heart'], ['Beruf', 'profession'], ['erwarten', 'to expect'], ['Gesetz', 'law'], ['wohnen', 'to live/reside'], ['interessieren', 'to interest'], ['richtig', 'correct'], ['Blick', 'glance/view'], ['Familie', 'family'], ['danken', 'to thank'], ['Freund', 'friend'], ['Ausland', 'foreign country'], ['Auto', 'car'], ['erinnern', 'to remember'], ['Rolle', 'role'], ['Gegenwart', 'present'], ['Stunde', 'hour'], ['öffnen', 'to open'], ['dafür', 'for it'], ['ungefähr', 'approximately'], ['sofort', 'immediately'], ['Markt', 'market'], ['Tisch', 'table'], ['Unterschied', 'difference'], ['Sinn', 'sense/meaning'], ['Stück', 'piece'], ['drehen', 'to turn'], ['glücklich', 'happy'], ['Preis', 'price/prize'], ['stark', 'strong'], ['Schwester', 'sister'], ['Bruder', 'brother'], ['ruhig', 'quiet/calm'], ['studieren', 'to study'], ['Regel', 'rule'], ['verbinden', 'to connect'], ['klar', 'clear'], ['Licht', 'light'], ['Hilfe', 'help'], ['offenbar', 'obviously'], ['hell', 'bright'], ['versuchen', 'to try'], ['Wohnung', 'apartment'], ['gewiss', 'certain'], ['gebrauchen', 'to use'], ['Recht', 'right/law'], ['anbieten', 'to offer'], ['Ziel', 'goal/destination'], ['Satz', 'sentence'], ['Leute', 'people'], ['teilen', 'to share/divide'], ['schreiben', 'to write'], ['Erfolg', 'success'], ['Spiel', 'game'], ['beziehen', 'to refer to'], ['verwenden', 'to use'], ['bewegen', 'to move'], ['hingegen', 'on the other hand'], ['Gedanke', 'thought'], ['wechseln', 'to change'], ['Bett', 'bed'], ['leicht', 'light/easy'], ['Gang', 'hallway/gear'], ['Verhältnis', 'relationship/ratio'], ['trinken', 'to drink'], ['Zukunft', 'future'], ['Bewegung', 'movement'], ['anschauen', 'to look at'], ['Grad', 'degree'], ['überhaupt', 'at all'], ['fallen', 'to fall'], ['erfahren', 'to experience'], ['Ansicht', 'view/opinion'], ['Kampf', 'fight/struggle'], ['Mund', 'mouth'], ['klingen', 'to sound'], ['vergleichen', 'to compare'], ['verändern', 'to change'], ['Idee', 'idea'], ['verlassen', 'to leave'], ['benutzen', 'to use'], ['steigen', 'to climb/rise'], ['hinten', 'back/behind'], ['wachsen', 'to grow'], ['Aufmerksamkeit', 'attention'], ['schweigen', 'to be silent'], ['wählen', 'to choose/vote'], ['längst', 'long ago'], ['nötig', 'necessary'], ['Körper', 'body'], ['handeln', 'to act/deal'], ['helfen', 'to help'], ['kurz', 'short'], ['vorstellen', 'to introduce/imagine']];
         const topWords = new Set(allWords.map((pair) => pair[0].toLowerCase()));
@@ -555,24 +554,6 @@ const statusEl = document.getElementById('status');
             statusEl.style.color = isError ? 'var(--danger)' : 'var(--muted)';
         }
 
-        async function checkRelayStatus() {
-            const relays = [LOCAL_RELAY, FALLBACK_RELAY];
-            for (const relay of relays) {
-                try {
-                    const res = await fetch(relay, { method: 'GET' });
-                    if (res.status === 404) {
-                        continue;
-                    }
-                    return { ok: true, relay, status: res.status };
-                } catch (err) {
-                    continue;
-                }
-            }
-            return { ok: false, relay: FALLBACK_RELAY, status: 404 };
-        }
-
-        window.checkRelayStatus = checkRelayStatus;
-
         async function callDeepL(texts, key) {
             const params = new URLSearchParams();
             texts.forEach((t) => params.append('text', t));
@@ -580,29 +561,25 @@ const statusEl = document.getElementById('status');
             params.append('source_lang', 'DE');
             params.append('auth_key', key);
 
-            const relays = [LOCAL_RELAY, FALLBACK_RELAY];
-            for (const relay of relays) {
+            const useRelay = true;
+            if (useRelay) {
                 let res;
                 try {
-                    res = await fetch(relay, {
+                    res = await fetch(DEEPL_RELAY, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ text: texts, source_lang: 'DE', target_lang: 'EN' })
                     });
                 } catch (err) {
-                    continue;
+                    throw new Error('Relay request failed (network).');
                 }
                 if (!res.ok) {
-                    if (res.status === 404) {
-                        continue;
-                    }
                     const message = await res.text();
                     throw new Error(message || `Relay request failed (${res.status}).`);
                 }
                 const data = await res.json();
                 return data.translations.map((t) => t.text);
             }
-            throw new Error('Relay request failed (404). The Netlify function is not deployed.');
 
             const res = await fetch('https://api-free.deepl.com/v2/translate', {
                 method: 'POST',
@@ -779,7 +756,6 @@ const statusEl = document.getElementById('status');
         <div class="settings-actions">
             <button id="debugTestBtn">Test DeepL</button>
             <button id="debugClearBtn">Clear cache</button>
-            <button id="relayCheckBtn">Check Relay</button>
         </div>
         <div class="settings-note">Theme settings apply across all pages.</div>
     </div>
