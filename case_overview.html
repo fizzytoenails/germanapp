@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <title>DeutscheTag | Case Overview</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;600;700&family=Playfair+Display:wght@500;600&display=swap');
+    :root{--bg:linear-gradient(135deg,#f7f4ff 0%,#f9f6ef 45%,#eef5ff 100%);--card:#fff;--ink:#0f172a;--muted:#64748b;--accent:#6d4bff;--accent2:#2b72ff;--soft:rgba(109,75,255,.12);--border:rgba(148,163,184,.2);--shadow:0 18px 45px rgba(15,23,42,.12);--ok:#16a34a;--bad:#dc2626}
+    body.theme-dark{--bg:linear-gradient(135deg,#0b1120 0%,#0f172a 45%,#111827 100%);--card:#101827;--ink:#e2e8f0;--muted:#94a3b8;--soft:rgba(139,92,246,.2)}
+    *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+    body{font-family:'Manrope','Segoe UI',sans-serif;background:var(--bg);color:var(--ink);padding:16px;display:flex;justify-content:center;overflow-x:hidden}
+    .container{width:100%;max-width:1200px;display:grid;gap:14px}
+    .nav{position:relative;background:rgba(255,255,255,.82);border:1px solid var(--border);border-radius:24px;padding:12px 18px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;box-shadow:0 12px 24px rgba(15,23,42,.08);backdrop-filter:blur(12px)}
+    .brand{display:flex;gap:12px;align-items:center;text-decoration:none;color:inherit}.brand img{width:44px;height:44px;border-radius:14px}.brand h1{font-family:'Playfair Display',serif;font-size:clamp(1.2rem,2.5vw,1.8rem)}
+    .menu-toggle{display:inline-flex;border:none;background:rgba(148,163,184,.2);width:44px;height:44px;border-radius:12px;cursor:pointer;align-items:center;justify-content:center;gap:4px;flex-direction:column;position:absolute;right:16px;top:16px;z-index:40}.menu-toggle span{width:20px;height:2px;background:var(--ink);border-radius:999px}
+    .nav-links{display:none;position:absolute;right:16px;top:68px;background:var(--card);padding:12px;border:1px solid var(--border);border-radius:16px;z-index:45;min-width:220px}.nav-links.open{display:flex;flex-direction:column}.nav-links a{text-decoration:none;color:var(--muted);padding:8px 12px;border-radius:999px;font-weight:600}.nav-links a.active,.nav-links a:hover{background:var(--soft);color:var(--accent)}
+    .nav-actions{margin-right:68px;width:100%;display:flex;justify-content:flex-start}.timer{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:10px 14px;display:grid;gap:6px;min-width:220px}.timer .row{display:flex;justify-content:space-between;font-size:.85rem;color:var(--muted)}.timer button{border:none;border-radius:10px;padding:6px 10px;font-weight:600;cursor:pointer;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff}.timer .note{font-size:.8rem;color:#f59e0b;min-height:18px}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:16px;box-shadow:var(--shadow);display:grid;gap:10px}
+    .lead{color:var(--muted)}
+    .cases{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px}
+    .case-chip{background:rgba(148,163,184,.12);border-radius:12px;padding:10px;font-size:.9rem}
+    .scroll{max-height:360px;overflow:auto;border:1px solid var(--border);border-radius:12px}
+    table{width:100%;border-collapse:collapse;font-size:.88rem}th,td{padding:7px;border-bottom:1px solid var(--border);text-align:left}th{color:var(--muted)}
+    .quiz{display:grid;gap:8px}
+    .quiz .target{font-weight:700;font-size:1.1rem}
+    input{padding:10px;border-radius:10px;border:1px solid var(--border);background:var(--card);color:var(--ink)}
+    .btns{display:flex;gap:8px;flex-wrap:wrap}.btn{border:none;border-radius:12px;padding:10px 14px;font-weight:700;cursor:pointer;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff}
+    .msg{font-weight:700;min-height:20px}.ok{color:var(--ok)}.bad{color:var(--bad)}.hint{color:var(--muted);min-height:20px}
+    .settings-fab{position:fixed;right:22px;bottom:22px;width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;display:grid;place-items:center;box-shadow:var(--shadow);cursor:pointer;z-index:60}
+    .settings-panel{position:fixed;right:22px;bottom:88px;width:min(320px,90vw);background:var(--card);border-radius:18px;border:1px solid var(--border);box-shadow:var(--shadow);padding:14px;display:none;flex-direction:column;gap:12px;z-index:60}.settings-panel.open{display:flex}.settings-row{display:flex;gap:8px;align-items:center}.settings-row select{border:1px solid var(--border);background:var(--card);color:var(--ink);padding:8px 10px;border-radius:10px;font-weight:600}.debug-box{background:rgba(148,163,184,.12);padding:10px;border-radius:10px;font-size:.85rem;color:var(--muted)}.settings-actions{display:flex;gap:8px}.settings-actions button{border:none;border-radius:10px;padding:8px 12px;font-weight:600;cursor:pointer;background:rgba(148,163,184,.2);color:var(--ink)}
+  </style>
+</head>
+<body>
+<div class="container">
+  <nav class="nav">
+    <a class="brand" href="index.html"><img src="apple-touch-icon.png" alt="DeutscheTag logo"><div><h1>DeutscheTag</h1><div style="color:var(--muted);font-size:.9rem">Nominative / accusative / dative / genitive</div></div></a>
+    <button class="menu-toggle" id="menuToggle" aria-label="Open navigation"><span></span><span></span><span></span></button>
+    <div class="nav-links"><a href="index.html">Home</a><a class="active" href="case_overview.html">Case Overview</a></div>
+    <div class="nav-actions"><div class="timer" id="timerWidget"><div class="row"><span>Session</span><strong id="sessionTime">00:00</strong></div><div class="row"><span>Today</span><strong id="todayTime">00:00</strong></div><div class="row"><span>Streak</span><strong id="streakCount">0 days</strong></div><div class="note" id="timerNote"></div><button id="timerToggle">Start</button></div></div>
+  </nav>
+
+  <section class="card">
+    <h2>Case Map</h2>
+    <div class="cases">
+      <div class="case-chip"><strong>Nominative</strong><br>Role: subject (the doer/state carrier).<br>Question: <em>Wer?/Was?</em><br>Example: <strong>Der Mann</strong> wartet.</div>
+      <div class="case-chip"><strong>Accusative</strong><br>Role: direct object (what is affected).<br>Question: <em>Wen?/Was?</em><br>Example: Ich sehe <strong>den Mann</strong>.</div>
+      <div class="case-chip"><strong>Dative</strong><br>Role: indirect object (recipient/beneficiary).<br>Question: <em>Wem?</em><br>Example: Ich helfe <strong>dem Mann</strong>.</div>
+      <div class="case-chip"><strong>Genitive</strong><br>Role: possession/belonging.<br>Question: <em>Wessen?</em><br>Example: Das ist das Auto <strong>des Mannes</strong>.</div>
+    </div>
+    <p class="lead">Full pattern in one sentence: <strong>Der Mann</strong> gibt <strong>dem Kind</strong> <strong>den Ball</strong>. (Nominative + Dative + Accusative)</p>
+    <p class="lead">Practical rule: learn each noun with article and plural, then memorize verb + case pairings (for example: <em>helfen + Dativ</em>, <em>sehen + Akkusativ</em>).</p>
+  </section>
+
+  <section class="card">
+    <h3>100 Common Nouns by Case</h3>
+    <div class="scroll"><table><thead><tr><th>Noun</th><th>Nom</th><th>Akk</th><th>Dat</th><th>Gen</th><th>Meaning</th></tr></thead><tbody id="nounTable"></tbody></table></div>
+  </section>
+
+  <section class="card quiz">
+    <h3>Case Article Trainer</h3>
+    <p class="lead">Type the correct article form. If wrong, you get answer + explanation + one-step hint.</p>
+    <div class="target" id="prompt"></div>
+    <input id="answer" placeholder="Type article form: der/die/das/den/dem/des ..." autocomplete="off">
+    <div class="btns"><button class="btn" id="checkBtn">Check</button><button class="btn" id="listenBtn">Sound</button><button class="btn" id="hintBtn">Hint</button><button class="btn" id="nextBtn">Next</button></div>
+    <div class="msg" id="msg"></div>
+    <div class="hint" id="hint"></div>
+  </section>
+</div>
+
+<script>
+const nouns = [
+  ['Mann','masc','man'],['Frau','fem','woman'],['Kind','neut','child'],['Haus','neut','house'],['Stadt','fem','city'],['Weg','masc','way'],['Tag','masc','day'],['Woche','fem','week'],['Monat','masc','month'],['Jahr','neut','year'],
+  ['Auto','neut','car'],['Zug','masc','train'],['Bahnhof','masc','station'],['Bus','masc','bus'],['Straße','fem','street'],['Platz','masc','place'],['Zimmer','neut','room'],['Küche','fem','kitchen'],['Buch','neut','book'],['Zeitung','fem','newspaper'],
+  ['Lehrer','masc','teacher'],['Lehrerin','fem','female teacher'],['Arzt','masc','doctor'],['Ärztin','fem','female doctor'],['Freund','masc','friend'],['Freundin','fem','female friend'],['Kollege','masc','colleague'],['Kollegin','fem','female colleague'],['Chef','masc','boss'],['Chefin','fem','female boss'],
+  ['Essen','neut','food'],['Getränk','neut','drink'],['Kaffee','masc','coffee'],['Tee','masc','tea'],['Milch','fem','milk'],['Brot','neut','bread'],['Käse','masc','cheese'],['Fisch','masc','fish'],['Fleisch','neut','meat'],['Obst','neut','fruit'],
+  ['Apfel','masc','apple'],['Banane','fem','banana'],['Kartoffel','fem','potato'],['Suppe','fem','soup'],['Salat','masc','salad'],['Rechnung','fem','bill'],['Preis','masc','price'],['Geld','neut','money'],['Karte','fem','card'],['Ticket','neut','ticket'],
+  ['Arbeit','fem','work'],['Beruf','masc','job'],['Aufgabe','fem','task'],['Termin','masc','appointment'],['Meeting','neut','meeting'],['Projekt','neut','project'],['Bericht','masc','report'],['Idee','fem','idea'],['Frage','fem','question'],['Antwort','fem','answer'],
+  ['Sprache','fem','language'],['Satz','masc','sentence'],['Wort','neut','word'],['Grammatik','fem','grammar'],['Regel','fem','rule'],['Übung','fem','exercise'],['Prüfung','fem','exam'],['Ergebnis','neut','result'],['Fehler','masc','mistake'],['Hilfe','fem','help'],
+  ['Mutter','fem','mother'],['Vater','masc','father'],['Bruder','masc','brother'],['Schwester','fem','sister'],['Sohn','masc','son'],['Tochter','fem','daughter'],['Familie','fem','family'],['Name','masc','name'],['Adresse','fem','address'],['Telefon','neut','telephone'],
+  ['Uhr','fem','clock'],['Minute','fem','minute'],['Stunde','fem','hour'],['Morgen','masc','morning'],['Abend','masc','evening'],['Nacht','fem','night'],['Wetter','neut','weather'],['Farbe','fem','color'],['Tier','neut','animal'],['Hund','masc','dog'],
+  ['Katze','fem','cat'],['Vogel','masc','bird'],['Baum','masc','tree'],['Blume','fem','flower'],['Wasser','neut','water'],['Luft','fem','air'],['Sonne','fem','sun'],['Himmel','masc','sky'],['Land','neut','country'],['Welt','fem','world']
+];
+
+const forms = {
+  masc: { nom: 'der', akk: 'den', dat: 'dem', gen: 'des' },
+  fem:  { nom: 'die', akk: 'die', dat: 'der', gen: 'der' },
+  neut: { nom: 'das', akk: 'das', dat: 'dem', gen: 'des' }
+};
+function speakGerman(text) {
+  if (!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = 'de-DE';
+  u.rate = 0.9;
+  window.speechSynthesis.speak(u);
+}
+
+function fillTable() {
+  const tbody = document.getElementById('nounTable');
+  tbody.innerHTML = nouns.map(([n,g,en]) => `<tr><td>${n}</td><td>${forms[g].nom} ${n}</td><td>${forms[g].akk} ${n}</td><td>${forms[g].dat} ${n}</td><td>${forms[g].gen} ${n}</td><td>${en}</td></tr>`).join('');
+}
+
+let current = null;
+let hintStep = 0;
+const cases = ['nom','akk','dat','gen'];
+const labels = { nom:'Nominative', akk:'Accusative', dat:'Dative', gen:'Genitive' };
+
+function nextPrompt() {
+  const noun = nouns[Math.floor(Math.random() * nouns.length)];
+  const targetCase = cases[Math.floor(Math.random() * cases.length)];
+  current = { noun, targetCase, answer: forms[noun[1]][targetCase] };
+  document.getElementById('prompt').textContent = `Choose article for ${labels[targetCase]}: ___ ${noun[0]} (${noun[2]})`;
+  document.getElementById('answer').value = '';
+  document.getElementById('msg').textContent = '';
+  document.getElementById('hint').textContent = '';
+  hintStep = 0;
+}
+
+function caseExplain(gender, k) {
+  const map = {
+    nom: 'Subject form. Use dictionary article.',
+    akk: 'Direct object form after many verbs.',
+    dat: 'Indirect object form or after dative prepositions.',
+    gen: 'Possession form (written/formal use).'
+  };
+  return `${map[k]} Gender: ${gender}.`;
+}
+
+document.getElementById('checkBtn').addEventListener('click', () => {
+  const val = document.getElementById('answer').value.trim().toLowerCase();
+  if (!val) {
+    document.getElementById('msg').textContent = 'Type an article first.';
+    document.getElementById('msg').className = 'msg bad';
+    return;
+  }
+  if (val === current.answer) {
+    document.getElementById('msg').textContent = 'Correct.';
+    document.getElementById('msg').className = 'msg ok';
+    document.getElementById('hint').textContent = caseExplain(current.noun[1], current.targetCase);
+  } else {
+    document.getElementById('msg').textContent = `Incorrect. Correct answer: ${current.answer}.`;
+    document.getElementById('msg').className = 'msg bad';
+    document.getElementById('hint').textContent = caseExplain(current.noun[1], current.targetCase);
+  }
+});
+
+document.getElementById('hintBtn').addEventListener('click', () => {
+  hintStep += 1;
+  if (hintStep === 1) {
+    document.getElementById('hint').textContent = `Hint 1: case = ${labels[current.targetCase]}.`;
+  } else if (hintStep === 2) {
+    document.getElementById('hint').textContent = `Hint 2: gender = ${current.noun[1]}.`;
+  } else {
+    document.getElementById('hint').textContent = `Hint 3: answer = ${current.answer}. ${caseExplain(current.noun[1], current.targetCase)}`;
+  }
+});
+document.getElementById('listenBtn').addEventListener('click', () => {
+  if (!current) return;
+  speakGerman(`${current.answer} ${current.noun[0]}`);
+});
+
+document.getElementById('nextBtn').addEventListener('click', nextPrompt);
+
+fillTable();
+nextPrompt();
+</script>
+
+<script src="menu-settings.js"></script>
+<div class="settings-fab" id="settingsFab" aria-label="Open settings">⚙</div>
+<div class="settings-panel" id="settingsPanel"><h4>Settings</h4><div class="settings-row"><label for="settingsTheme" style="font-weight:600;">Theme</label><select id="settingsTheme"><option value="system">System</option><option value="light">Light</option><option value="dark">Dark</option></select></div><div class="debug-box" id="deeplDebug">DeepL debug available on Translate page.</div><div class="settings-actions"><button id="debugTestBtn">Test DeepL</button><button id="debugClearBtn">Clear cache</button></div><div class="settings-note">Theme settings apply across all pages.</div></div>
+</body>
+</html>

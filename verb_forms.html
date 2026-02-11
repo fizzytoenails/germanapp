@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <title>DeutscheTag | Verb Forms</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;600;700&family=Playfair+Display:wght@500;600&display=swap');
+    :root { --bg: linear-gradient(135deg,#f7f4ff 0%,#f9f6ef 45%,#eef5ff 100%); --card:#fff; --ink:#0f172a; --muted:#64748b; --accent:#6d4bff; --accent2:#2b72ff; --soft:rgba(109,75,255,.12); --border:rgba(148,163,184,.2); --shadow:0 18px 45px rgba(15,23,42,.12); --ok:#16a34a; --bad:#dc2626; }
+    body.theme-dark { --bg: linear-gradient(135deg,#0b1120 0%,#0f172a 45%,#111827 100%); --card:#101827; --ink:#e2e8f0; --muted:#94a3b8; --soft:rgba(139,92,246,.2); }
+    *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+    body{font-family:'Manrope','Segoe UI',sans-serif;background:var(--bg);color:var(--ink);padding:16px;display:flex;justify-content:center;overflow-x:hidden}
+    .container{width:100%;max-width:1200px;display:grid;gap:14px}
+    .nav{position:relative;background:rgba(255,255,255,.82);border:1px solid var(--border);border-radius:24px;padding:12px 18px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;box-shadow:0 12px 24px rgba(15,23,42,.08);backdrop-filter:blur(12px)}
+    .brand{display:flex;gap:12px;align-items:center;text-decoration:none;color:inherit}.brand img{width:44px;height:44px;border-radius:14px}.brand h1{font-family:'Playfair Display',serif;font-size:clamp(1.2rem,2.5vw,1.8rem)}
+    .menu-toggle{display:inline-flex;border:none;background:rgba(148,163,184,.2);width:44px;height:44px;border-radius:12px;cursor:pointer;align-items:center;justify-content:center;gap:4px;flex-direction:column;position:absolute;right:16px;top:16px;z-index:40}.menu-toggle span{width:20px;height:2px;background:var(--ink);border-radius:999px}
+    .nav-links{display:none;position:absolute;right:16px;top:68px;background:var(--card);padding:12px;border:1px solid var(--border);border-radius:16px;z-index:45;min-width:220px}.nav-links.open{display:flex;flex-direction:column}.nav-links a{text-decoration:none;color:var(--muted);padding:8px 12px;border-radius:999px;font-weight:600}.nav-links a.active,.nav-links a:hover{background:var(--soft);color:var(--accent)}
+    .nav-actions{margin-right:68px;width:100%;display:flex;justify-content:flex-start}.timer{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:10px 14px;display:grid;gap:6px;min-width:220px}.timer .row{display:flex;justify-content:space-between;font-size:.85rem;color:var(--muted)}.timer button{border:none;border-radius:10px;padding:6px 10px;font-weight:600;cursor:pointer;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff}.timer .note{font-size:.8rem;color:#f59e0b;min-height:18px}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:16px;box-shadow:var(--shadow);display:grid;gap:10px}
+    .lead{color:var(--muted)}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:12px}
+    .table-wrap{overflow:auto;border:1px solid var(--border);border-radius:12px}
+    table{width:100%;border-collapse:collapse;font-size:.88rem}th,td{padding:7px;border-bottom:1px solid var(--border);text-align:left;white-space:nowrap}th{color:var(--muted)}
+    .suffix{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px}.suffix .chip{background:rgba(148,163,184,.12);border-radius:10px;padding:8px;font-size:.86rem}
+    .controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+    .controls select{border:1px solid var(--border);background:var(--card);color:var(--ink);padding:8px 10px;border-radius:10px;font-weight:600}
+    .board{display:grid;grid-template-columns:1fr 1fr;gap:12px}.col{background:rgba(148,163,184,.1);border-radius:14px;padding:10px}
+    .item{padding:10px;border-radius:12px;background:var(--card);border:1px solid transparent;cursor:pointer;margin-bottom:8px;font-weight:600;display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
+    .item-main{display:grid;gap:4px;min-width:0}
+    .item-hint{display:none;color:var(--muted);font-size:.82rem;font-weight:500}
+    .item.flipped .item-hint{display:block}
+    .item-tools{display:flex;gap:6px}
+    .icon-btn{cursor:pointer;opacity:.85;font-size:1rem}
+    .item small{display:block;color:var(--muted);font-weight:500}.item.selected{border-color:var(--accent);background:var(--soft)}.item.matched{border-color:var(--ok);background:rgba(22,163,74,.15);pointer-events:none}.item.wrong{border-color:var(--bad);background:rgba(220,38,38,.14)}
+    .msg{min-height:20px;font-weight:700}.msg.ok{color:var(--ok)}.msg.bad{color:var(--bad)}
+    .btns{display:flex;gap:8px;flex-wrap:wrap}.btn{border:none;border-radius:12px;padding:10px 14px;font-weight:700;cursor:pointer;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff}
+    .settings-fab{position:fixed;right:22px;bottom:22px;width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;display:grid;place-items:center;box-shadow:var(--shadow);cursor:pointer;z-index:60}
+    .settings-panel{position:fixed;right:22px;bottom:88px;width:min(320px,90vw);background:var(--card);border-radius:18px;border:1px solid var(--border);box-shadow:var(--shadow);padding:14px;display:none;flex-direction:column;gap:12px;z-index:60}.settings-panel.open{display:flex}.settings-row{display:flex;gap:8px;align-items:center}.settings-row select{border:1px solid var(--border);background:var(--card);color:var(--ink);padding:8px 10px;border-radius:10px;font-weight:600}.debug-box{background:rgba(148,163,184,.12);padding:10px;border-radius:10px;font-size:.85rem;color:var(--muted)}.settings-actions{display:flex;gap:8px}.settings-actions button{border:none;border-radius:10px;padding:8px 12px;font-weight:600;cursor:pointer;background:rgba(148,163,184,.2);color:var(--ink)}
+    @media (max-width:900px){.board{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+<div class="container">
+  <nav class="nav">
+    <a class="brand" href="index.html"><img src="apple-touch-icon.png" alt="DeutscheTag logo"><div><h1>DeutscheTag</h1><div style="color:var(--muted);font-size:.9rem">Verb forms and conjugation</div></div></a>
+    <button class="menu-toggle" id="menuToggle" aria-label="Open navigation"><span></span><span></span><span></span></button>
+    <div class="nav-links"><a href="index.html">Home</a><a class="active" href="verb_forms.html">Verb Forms</a></div>
+    <div class="nav-actions"><div class="timer" id="timerWidget"><div class="row"><span>Session</span><strong id="sessionTime">00:00</strong></div><div class="row"><span>Today</span><strong id="todayTime">00:00</strong></div><div class="row"><span>Streak</span><strong id="streakCount">0 days</strong></div><div class="note" id="timerNote"></div><button id="timerToggle">Start</button></div></div>
+  </nav>
+
+  <section class="card">
+    <h2>Verb Types and Suffixes</h2>
+    <p class="lead">Core present-tense endings are predictable in many verbs: person + ending. Irregular verbs change stems and must be memorized as full forms.</p>
+    <div class="suffix">
+      <div class="chip"><strong>ich</strong>: -e (I)</div>
+      <div class="chip"><strong>du</strong>: -st (you singular)</div>
+      <div class="chip"><strong>er/sie/es</strong>: -t (he/she/it)</div>
+      <div class="chip"><strong>wir</strong>: -en (we)</div>
+      <div class="chip"><strong>ihr</strong>: -t (you plural)</div>
+      <div class="chip"><strong>sie/Sie</strong>: -en (they / formal you)</div>
+    </div>
+  </section>
+
+  <section class="grid" id="tables"></section>
+
+  <section class="card">
+    <h2>Verb Form Match</h2>
+    <p class="lead">Instructions: pick one prompt and one form. Use Hint for one reveal. Sound and color feedback match the main matching tools.</p>
+    <div class="controls">
+      <label for="difficulty"><strong>Difficulty</strong></label>
+      <select id="difficulty"><option value="A2">A2</option><option value="B1">B1</option><option value="B2">B2</option></select>
+      <span id="stat" style="color:var(--muted)">0/0</span>
+    </div>
+    <div class="msg" id="msg"></div>
+    <div class="board"><div class="col"><h4>Prompt</h4><div id="left"></div></div><div class="col"><h4>Form</h4><div id="right"></div></div></div>
+    <div class="btns"><button class="btn" id="listenBtn">Sound</button><button class="btn" id="hintBtn">Hint</button><button class="btn" id="nextBtn">Next Round</button></div>
+  </section>
+</div>
+
+<script>
+const verbTables = [
+  {
+    title: 'Regular Verbs (Prasens)',
+    verbs: [
+      { verb: 'lernen', en: 'to learn', forms: ['lerne','lernst','lernt','lernen','lernt','lernen'] },
+      { verb: 'machen', en: 'to do/make', forms: ['mache','machst','macht','machen','macht','machen'] },
+      { verb: 'arbeiten', en: 'to work', forms: ['arbeite','arbeitest','arbeitet','arbeiten','arbeitet','arbeiten'] },
+      { verb: 'kaufen', en: 'to buy', forms: ['kaufe','kaufst','kauft','kaufen','kauft','kaufen'] }
+    ]
+  },
+  {
+    title: 'Stem-Change Verbs (Irregular Stem)',
+    verbs: [
+      { verb: 'fahren', en: 'to drive/go', forms: ['fahre','fährst','fährt','fahren','fahrt','fahren'], note: 'Irregular stem in du/er: fährst, fährt.' },
+      { verb: 'sehen', en: 'to see', forms: ['sehe','siehst','sieht','sehen','seht','sehen'] },
+      { verb: 'nehmen', en: 'to take', forms: ['nehme','nimmst','nimmt','nehmen','nehmt','nehmen'] },
+      { verb: 'sprechen', en: 'to speak', forms: ['spreche','sprichst','spricht','sprechen','sprecht','sprechen'] }
+    ]
+  },
+  {
+    title: 'Modal Verbs (with Infinitive at sentence end)',
+    verbs: [
+      { verb: 'wollen', en: 'to want', forms: ['will','willst','will','wollen','wollt','wollen'] },
+      { verb: 'konnen', en: 'can', forms: ['kann','kannst','kann','konnen','konnt','konnen'] },
+      { verb: 'mussen', en: 'must', forms: ['muss','musst','muss','mussen','musst','mussen'] },
+      { verb: 'durfen', en: 'may / be allowed', forms: ['darf','darfst','darf','durfen','durft','durfen'] },
+      { verb: 'sollen', en: 'should', forms: ['soll','sollst','soll','sollen','sollt','sollen'] },
+      { verb: 'mochten', en: 'would like', forms: ['mochte','mochtest','mochte','mochten','mochtet','mochten'] }
+    ]
+  },
+  {
+    title: 'Auxiliaries and High-Frequency Irregulars',
+    verbs: [
+      { verb: 'sein', en: 'to be', forms: ['bin','bist','ist','sind','seid','sind'] },
+      { verb: 'haben', en: 'to have', forms: ['habe','hast','hat','haben','habt','haben'] },
+      { verb: 'werden', en: 'to become / future', forms: ['werde','wirst','wird','werden','werdet','werden'] },
+      { verb: 'wissen', en: 'to know (facts)', forms: ['weiss','weisst','weiss','wissen','wisst','wissen'] }
+    ]
+  },
+  {
+    title: 'Prateritum and Partizip II (Irregular + Mixed)',
+    verbs: [
+      { verb: 'gehen', en: 'to go', forms: ['ging','gegangen'] },
+      { verb: 'kommen', en: 'to come', forms: ['kam','gekommen'] },
+      { verb: 'bringen', en: 'to bring', forms: ['brachte','gebracht'] },
+      { verb: 'denken', en: 'to think', forms: ['dachte','gedacht'] },
+      { verb: 'finden', en: 'to find', forms: ['fand','gefunden'] },
+      { verb: 'bleiben', en: 'to stay', forms: ['blieb','geblieben'] }
+    ]
+  }
+];
+
+const pronouns = ['ich','du','er/sie/es','wir','ihr','sie/Sie'];
+const safe = (s) => s
+  .replace(/konnen/g, 'können').replace(/konnt/g, 'könnt')
+  .replace(/mussen/g, 'müssen').replace(/durfen/g, 'dürfen').replace(/durft/g, 'dürft')
+  .replace(/mochten/g, 'möchten').replace(/mochte/g, 'möchte').replace(/mochtest/g, 'möchtest').replace(/mochtet/g, 'möchtet')
+  .replace(/weiss/g, 'weiß').replace(/weisst/g, 'weißt')
+  .replace(/fahrst/g, 'fährst');
+
+function buildTables() {
+  const host = document.getElementById('tables');
+  host.innerHTML = verbTables.map((block) => {
+    if (block.title.includes('Prateritum')) {
+      const rows = block.verbs.map((v) => `<tr><td>${safe(v.verb)}</td><td>${safe(v.forms[0])}</td><td>${safe(v.forms[1])}</td><td>${v.en}</td></tr>`).join('');
+      return `<article class="card"><h3>${safe(block.title)}</h3><div class="table-wrap"><table><thead><tr><th>Verb</th><th>Prateritum</th><th>Partizip II</th><th>English</th></tr></thead><tbody>${rows}</tbody></table></div></article>`;
+    }
+    const rows = block.verbs.map((v) => {
+      const forms = v.forms.map((f, i) => `${pronouns[i]}: ${safe(f)}`).join('<br>');
+      const note = v.note ? `<br><small style="color:var(--muted)">${safe(v.note)}</small>` : '';
+      return `<tr><td>${safe(v.verb)}</td><td>${forms}${note}</td><td>${v.en}</td></tr>`;
+    }).join('');
+    return `<article class="card"><h3>${safe(block.title)}</h3><div class="table-wrap"><table><thead><tr><th>Verb</th><th>Forms</th><th>English</th></tr></thead><tbody>${rows}</tbody></table></div></article>`;
+  }).join('');
+}
+
+const matchPools = {
+  A2: [
+    ['ich + wollen','will'],['du + wollen','willst'],['wir + wollen','wollen'],['ihr + wollen','wollt'],
+    ['ich + machen','mache'],['du + machen','machst'],['er + machen','macht'],['wir + machen','machen'],
+    ['ich + sein','bin'],['du + sein','bist'],['er + sein','ist'],['wir + sein','sind'],['ihr + sein','seid'],
+    ['ich + haben','habe'],['du + haben','hast'],['er + haben','hat'],['wir + haben','haben'],['ihr + haben','habt']
+  ],
+  B1: [
+    ['du + fahren','fährst'],['er + fahren','fährt'],['du + sehen','siehst'],['er + sehen','sieht'],
+    ['du + nehmen','nimmst'],['er + nehmen','nimmt'],['du + sprechen','sprichst'],['er + sprechen','spricht'],
+    ['ich + konnen','kann'],['du + konnen','kannst'],['wir + konnen','können'],['ihr + konnen','könnt'],
+    ['ich + mussen','muss'],['du + mussen','musst'],['wir + mussen','müssen'],['ihr + mussen','müsst']
+  ],
+  B2: [
+    ['Prateritum von bringen','brachte'],['Partizip II von bringen','gebracht'],
+    ['Prateritum von denken','dachte'],['Partizip II von denken','gedacht'],
+    ['Prateritum von bleiben','blieb'],['Partizip II von bleiben','geblieben'],
+    ['ich + werden','werde'],['du + werden','wirst'],['er + werden','wird'],['wir + werden','werden'],['ihr + werden','werdet'],
+    ['Konjunktiv II von konnen (ich)','konnte'],['Konjunktiv II von mussen (ich)','musste'],['Konjunktiv II von sollen (ich)','sollte']
+  ]
+};
+
+let selL = null;
+let selR = null;
+let currentMap = {};
+let hintPair = null;
+let total = 0;
+let correct = 0;
+let hintStep = 0;
+const $ = (id) => document.getElementById(id);
+
+function shuffle(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];}return b;}
+
+const AudioCtx = window.AudioContext || window.webkitAudioContext;
+const audioCtx = AudioCtx ? new AudioCtx() : null;
+function unlockAudio(){ if(audioCtx && audioCtx.state === 'suspended'){ audioCtx.resume().catch(()=>{}); } }
+function tone(ok){ if(!audioCtx) return; unlockAudio(); const o=audioCtx.createOscillator(); const g=audioCtx.createGain(); o.type='triangle'; o.frequency.value=ok?700:220; g.gain.value=0.001; o.connect(g); g.connect(audioCtx.destination); const now=audioCtx.currentTime; g.gain.exponentialRampToValueAtTime(0.08,now+0.01); g.gain.exponentialRampToValueAtTime(0.0001,now+0.2); o.start(now); o.stop(now+0.21);} 
+function speak(text){ if(!('speechSynthesis' in window)) return; speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(text); u.lang='de-DE'; u.rate=.9; speechSynthesis.speak(u); }
+
+function loadRound() {
+  const level = $('difficulty').value;
+  const pool = shuffle(matchPools[level]).slice(0, 10);
+  const left = pool.map((p) => safe(p[0]));
+  const right = shuffle(pool.map((p) => safe(p[1])));
+  currentMap = Object.fromEntries(pool.map((p) => [safe(p[0]), safe(p[1])]));
+  hintPair = pool[Math.floor(Math.random() * pool.length)];
+  $('left').innerHTML = '';
+  $('right').innerHTML = '';
+  $('msg').textContent = '';
+  hintStep = 0;
+  selL = null;
+  selR = null;
+  left.forEach((t) => {
+    const d = document.createElement('div');
+    d.className = 'item';
+    d.dataset.v = t;
+    const hint = currentMap[t] || '';
+    d.innerHTML = `<div class="item-main"><div>${t}</div><div class="item-hint">${t} -> ${hint}</div></div><div class="item-tools"><span class="icon-btn" title="Sound">🔊</span><span class="icon-btn" title="Hint">💡</span></div>`;
+    const [soundBtn, hintBtn] = d.querySelectorAll('.icon-btn');
+    soundBtn.onclick = (e) => { e.stopPropagation(); unlockAudio(); speak(t); };
+    hintBtn.onclick = (e) => { e.stopPropagation(); d.classList.toggle('flipped'); };
+    d.onclick = () => { unlockAudio(); document.querySelectorAll('#left .item').forEach((x) => x.classList.remove('selected')); d.classList.add('selected'); selL = d; check(); };
+    $('left').appendChild(d);
+  });
+  right.forEach((t) => {
+    const d = document.createElement('div');
+    d.className = 'item';
+    d.dataset.v = t;
+    const prompt = Object.keys(currentMap).find((k) => currentMap[k] === t) || '';
+    d.innerHTML = `<div class="item-main"><div>${t}</div><div class="item-hint">${t} fits ${prompt}</div></div><div class="item-tools"><span class="icon-btn" title="Sound">🔊</span><span class="icon-btn" title="Hint">💡</span></div>`;
+    const [soundBtn, hintBtn] = d.querySelectorAll('.icon-btn');
+    soundBtn.onclick = (e) => { e.stopPropagation(); unlockAudio(); speak(t); };
+    hintBtn.onclick = (e) => { e.stopPropagation(); d.classList.toggle('flipped'); };
+    d.onclick = () => { unlockAudio(); document.querySelectorAll('#right .item').forEach((x) => x.classList.remove('selected')); d.classList.add('selected'); selR = d; check(); };
+    $('right').appendChild(d);
+  });
+}
+
+function check() {
+  if (!selL || !selR) return;
+  total += 1;
+  const expected = currentMap[selL.dataset.v];
+  if (expected === selR.dataset.v) {
+    correct += 1;
+    tone(true);
+    selL.classList.add('matched');
+    selR.classList.add('matched');
+    selL.classList.remove('selected');
+    selR.classList.remove('selected');
+    $('msg').textContent = 'Correct.';
+    $('msg').className = 'msg ok';
+    speak(selL.dataset.v.split(' + ')[1] || selL.dataset.v);
+    selL = null;
+    selR = null;
+  } else {
+    tone(false);
+    $('msg').textContent = `Incorrect. Hint: ${selL.dataset.v.split(' ')[0]} often uses ending "${expected.slice(-1)}" here.`;
+    $('msg').className = 'msg bad';
+    selL.classList.add('wrong');
+    selR.classList.add('wrong');
+    setTimeout(() => {
+      if (selL) selL.classList.remove('wrong', 'selected');
+      if (selR) selR.classList.remove('wrong', 'selected');
+      selL = null;
+      selR = null;
+    }, 700);
+  }
+  $('stat').textContent = `${correct}/${total} correct`;
+}
+
+$('difficulty').addEventListener('change', loadRound);
+$('nextBtn').addEventListener('click', loadRound);
+$('hintBtn').addEventListener('click', () => {
+  unlockAudio();
+  if (!hintPair) return;
+  hintStep += 1;
+  $('msg').className = 'msg';
+  if (hintStep === 1) {
+    $('msg').textContent = `Hint 1: prompt starts with "${safe(hintPair[0]).split(' ')[0]}".`;
+  } else if (hintStep === 2) {
+    $('msg').textContent = `Hint 2: ending clue "${safe(hintPair[1]).slice(-1)}".`;
+  } else {
+    $('msg').textContent = `Hint 3: ${safe(hintPair[0])} -> ${safe(hintPair[1])}`;
+  }
+});
+$('listenBtn').addEventListener('click', () => {
+  unlockAudio();
+  const active = selL || [...document.querySelectorAll('#left .item')].find((x) => !x.classList.contains('matched'));
+  if (!active) return;
+  speak(active.dataset.v);
+});
+
+buildTables();
+loadRound();
+</script>
+
+<script src="menu-settings.js"></script>
+<div class="settings-fab" id="settingsFab" aria-label="Open settings">⚙</div>
+<div class="settings-panel" id="settingsPanel"><h4>Settings</h4><div class="settings-row"><label for="settingsTheme" style="font-weight:600;">Theme</label><select id="settingsTheme"><option value="system">System</option><option value="light">Light</option><option value="dark">Dark</option></select></div><div class="debug-box" id="deeplDebug">DeepL debug available on Translate page.</div><div class="settings-actions"><button id="debugTestBtn">Test DeepL</button><button id="debugClearBtn">Clear cache</button></div><div class="settings-note">Theme settings apply across all pages.</div></div>
+</body>
+</html>

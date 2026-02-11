@@ -241,6 +241,21 @@
             font-size: 1.05rem;
             font-weight: 600;
         }
+        .prompt-meta {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .meta-badge {
+            display: inline-block;
+            font-size: 0.72rem;
+            font-weight: 700;
+            padding: 4px 8px;
+            border-radius: 999px;
+            background: rgba(109, 75, 255, 0.18);
+            color: var(--ink);
+        }
+        .prompt-grammar { display: none; }
 
         .input-row {
             display: grid;
@@ -469,6 +484,8 @@
                 <a href="fundamentals.html">Time & Alphabet</a>
                 <a href="number_time_match.html">Number/Time Match</a>
                 <a href="grammar_guide.html">Grammar Guide</a>
+                <a href="verb_forms.html">Verb Forms</a>
+                <a href="article_prefix_practice.html">Articles</a>
                 <a href="falling_match.html">Falling Match</a>
                             <a href="german_2048.html">2048</a>
                             <a href="translate_parse.html">Translate</a>
@@ -496,6 +513,8 @@
                 <div class="count" id="sentenceCount">0 sentences available</div>
             </div>
             <div class="prompt" id="englishPrompt"></div>
+            <div class="prompt-meta" id="promptMeta"></div>
+            <div class="prompt-grammar" id="promptGrammar"></div>
             <div class="input-row">
                 <input type="text" id="germanInput" placeholder="Type the German sentence...">
                 <div class="feedback" id="feedback"></div>
@@ -678,6 +697,29 @@ const a2Sentences = [
             { de: 'Soweit ich informiert bin, wurde die Veranstaltung verschoben.', en: 'As far as I am informed, the event was postponed.', lit: 'As-far-as I informed am was the event moved', level: 'B2' }
         ];
 
+        const b2CoreCommon = [
+            { de: 'Ich gehe davon aus, dass wir den Termin einhalten können.', en: 'I assume that we can keep the appointment.', lit: 'I go from-that out that we the appointment keep can', level: 'B2' },
+            { de: 'Es kommt darauf an, wie schnell wir eine Lösung finden.', en: 'It depends on how quickly we find a solution.', lit: 'It comes on-that on how quickly we a solution find', level: 'B2' },
+            { de: 'Je früher wir anfangen, desto besser wird das Ergebnis.', en: 'The earlier we start, the better the result will be.', lit: 'The earlier we start the better becomes the result', level: 'B2' },
+            { de: 'Ich bin überzeugt, dass wir das gemeinsam schaffen.', en: 'I am convinced that we can do this together.', lit: 'I am convinced that we that together manage', level: 'B2' },
+            { de: 'Unter diesen Umständen wäre eine Verschiebung sinnvoll.', en: 'Under these circumstances, a postponement would be sensible.', lit: 'Under these circumstances would a postponement sensible be', level: 'B2' },
+            { de: 'Einer der wichtigsten Punkte ist die klare Kommunikation.', en: 'One of the most important points is clear communication.', lit: 'One of the most important points is the clear communication', level: 'B2' },
+            { de: 'Falls es zu Problemen kommt, informieren Sie mich bitte sofort.', en: 'If problems arise, please inform me immediately.', lit: 'If it to problems comes inform you me please immediately', level: 'B2' },
+            { de: 'Die Unterlagen, die Sie angefordert haben, sind bereits unterwegs.', en: 'The documents you requested are already on the way.', lit: 'The documents that you requested have are already on-the-way', level: 'B2' },
+            { de: 'Ich würde vorschlagen, dass wir zuerst die Prioritäten klären.', en: 'I would suggest that we first clarify the priorities.', lit: 'I would suggest that we first the priorities clarify', level: 'B2' },
+            { de: 'Sobald die Entscheidung getroffen ist, informiere ich das Team.', en: 'As soon as the decision is made, I inform the team.', lit: 'As soon as the decision made is inform I the team', level: 'B2' },
+            { de: 'Obwohl die Lage schwierig ist, bleiben wir handlungsfähig.', en: 'Although the situation is difficult, we remain able to act.', lit: 'Although the situation difficult is remain we able-to-act', level: 'B2' },
+            { de: 'Ich habe den Eindruck, dass die Nachfrage weiter steigt.', en: 'I have the impression that demand continues to rise.', lit: 'I have the impression that the demand further rises', level: 'B2' },
+            { de: 'Es wäre hilfreich, wenn Sie die Daten bis Freitag schicken könnten.', en: 'It would be helpful if you could send the data by Friday.', lit: 'It would helpful be if you the data by Friday send could', level: 'B2' },
+            { de: 'Im Vergleich zum letzten Jahr sind die Kosten deutlich gesunken.', en: 'Compared to last year, costs have dropped significantly.', lit: 'In comparison to-the last year are the costs clearly fallen', level: 'B2' },
+            { de: 'Die Frage, ob wir erweitern, wird nächste Woche entschieden.', en: 'The question of whether we expand will be decided next week.', lit: 'The question whether we expand is next week decided', level: 'B2' },
+            { de: 'Ich möchte betonen, dass Qualität vor Geschwindigkeit geht.', en: 'I want to emphasize that quality comes before speed.', lit: 'I want emphasize that quality before speed goes', level: 'B2' },
+            { de: 'Sofern keine Einwände bestehen, setzen wir den Plan um.', en: 'If there are no objections, we will implement the plan.', lit: 'Provided no objections exist implement we the plan', level: 'B2' },
+            { de: 'Der Bericht enthält mehrere Aspekte, die wir noch prüfen müssen.', en: 'The report contains several aspects that we still need to review.', lit: 'The report contains several aspects that we still check must', level: 'B2' },
+            { de: 'Es lässt sich nicht ausschließen, dass es zu Verzögerungen kommt.', en: 'It cannot be ruled out that delays may occur.', lit: 'It lets itself not exclude that it to delays comes', level: 'B2' },
+            { de: 'Anstatt sofort zu reagieren, sollten wir die Situation analysieren.', en: 'Instead of reacting immediately, we should analyze the situation.', lit: 'Instead immediately to react should we the situation analyze', level: 'B2' }
+        ];
+
         a2Sentences.push(...a2ExamSentences);
 
         const pdfTypingSentences = [
@@ -787,8 +829,9 @@ const a2Sentences = [
         const b2Sentences = [
             ...pdfB2,
             ...b2ExamSentences,
+            ...b2CoreCommon,
             ...buildB2Sentences(150)
-        ].slice(0, 150);
+        ].slice(0, 180);
 
         const baseSentences = [
             ...a2Final,
@@ -796,7 +839,13 @@ const a2Sentences = [
             ...b2Sentences
         ];
 
-        const sentences = baseSentences;
+        const sentences = baseSentences.map((entry) => {
+            const s = { ...entry };
+            if (!s.register) s.register = s.level === 'B2' ? 'written' : 'both';
+            if (!s.formality) s.formality = s.level === 'A2' ? 'informal' : 'both';
+            if (!s.usage) s.usage = s.register === 'written' ? 'written-priority' : 'spoken-priority';
+            return s;
+        });
 
         function progressiveHint(sentence, step) {
             const words = sentence.split(' ');
@@ -823,11 +872,17 @@ const a2Sentences = [
         }
 
         const englishPrompt = document.getElementById('englishPrompt');
+        const promptMeta = document.getElementById('promptMeta');
+        const promptGrammar = document.getElementById('promptGrammar');
         const germanInput = document.getElementById('germanInput');
         const feedback = document.getElementById('feedback');
         const hintBox = document.getElementById('hintBox');
         const difficultySelect = document.getElementById('difficultySelect');
         const sentenceCount = document.getElementById('sentenceCount');
+
+        function annotateSentence() {
+            return '';
+        }
 
         let currentSentence = null;
         let hintIndex = 0;
@@ -857,9 +912,13 @@ const a2Sentences = [
                 const fallback = sentences[0];
                 if (fallback) {
                     englishPrompt.textContent = fallback.en;
+                    promptMeta.innerHTML = `<span class=\"meta-badge\">${fallback.register}</span><span class=\"meta-badge\">${fallback.formality}</span><span class=\"meta-badge\">${fallback.usage}</span>`;
+                    promptGrammar.textContent = '';
                     currentSentence = fallback;
                 } else {
                     englishPrompt.textContent = 'No sentences available.';
+                    promptMeta.innerHTML = '';
+                    promptGrammar.textContent = '';
                 }
                 return;
             }
@@ -870,6 +929,8 @@ const a2Sentences = [
                 currentSentence = pool[index];
             }
             englishPrompt.textContent = currentSentence.en;
+            promptMeta.innerHTML = `<span class=\"meta-badge\">${currentSentence.register}</span><span class=\"meta-badge\">${currentSentence.formality}</span><span class=\"meta-badge\">${currentSentence.usage}</span>`;
+            promptGrammar.textContent = '';
             germanInput.value = '';
             feedback.textContent = '';
             feedback.className = 'feedback';

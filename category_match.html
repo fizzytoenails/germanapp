@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <title>DeutscheTag | Category Match</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;600;700&family=Playfair+Display:wght@500;600&display=swap');
+    :root{--bg:linear-gradient(135deg,#f7f4ff 0%,#f9f6ef 45%,#eef5ff 100%);--card:#fff;--ink:#0f172a;--muted:#64748b;--accent:#6d4bff;--accent2:#2b72ff;--soft:rgba(109,75,255,.12);--border:rgba(148,163,184,.2);--shadow:0 18px 45px rgba(15,23,42,.12);--ok:#16a34a;--bad:#dc2626}
+    body.theme-dark{--bg:linear-gradient(135deg,#0b1120 0%,#0f172a 45%,#111827 100%);--card:#101827;--ink:#e2e8f0;--muted:#94a3b8;--soft:rgba(139,92,246,.2)}
+    *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+    body{font-family:'Manrope','Segoe UI',sans-serif;background:var(--bg);color:var(--ink);padding:16px;display:flex;justify-content:center;overflow-x:hidden}
+    .container{width:100%;max-width:1200px;display:grid;gap:14px}
+    .nav{position:relative;background:rgba(255,255,255,.82);border:1px solid var(--border);border-radius:24px;padding:12px 18px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;box-shadow:0 12px 24px rgba(15,23,42,.08);backdrop-filter:blur(12px)}
+    .brand{display:flex;gap:12px;align-items:center;text-decoration:none;color:inherit}.brand img{width:44px;height:44px;border-radius:14px}.brand h1{font-family:'Playfair Display',serif;font-size:clamp(1.2rem,2.5vw,1.8rem)}
+    .menu-toggle{display:inline-flex;border:none;background:rgba(148,163,184,.2);width:44px;height:44px;border-radius:12px;cursor:pointer;align-items:center;justify-content:center;gap:4px;flex-direction:column;position:absolute;right:16px;top:16px;z-index:40}.menu-toggle span{width:20px;height:2px;background:var(--ink);border-radius:999px}
+    .nav-links{display:none;position:absolute;right:16px;top:68px;background:var(--card);padding:12px;border:1px solid var(--border);border-radius:16px;z-index:45;min-width:220px}.nav-links.open{display:flex;flex-direction:column}.nav-links a{text-decoration:none;color:var(--muted);padding:8px 12px;border-radius:999px;font-weight:600}.nav-links a.active,.nav-links a:hover{background:var(--soft);color:var(--accent)}
+    .nav-actions{margin-right:68px;width:100%;display:flex;justify-content:flex-start}.timer{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:10px 14px;display:grid;gap:6px;min-width:220px}.timer .row{display:flex;justify-content:space-between;font-size:.85rem;color:var(--muted)}.timer button{border:none;border-radius:10px;padding:6px 10px;font-weight:600;cursor:pointer;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff}.timer .note{font-size:.8rem;color:#f59e0b;min-height:18px}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:16px;box-shadow:var(--shadow);display:grid;gap:10px}
+    .stats{display:grid;grid-template-columns:repeat(4,minmax(120px,1fr));gap:8px}.stat{background:rgba(148,163,184,.12);border-radius:10px;padding:8px;text-align:center}.stat strong{display:block}
+    .controls{display:flex;flex-wrap:wrap;gap:8px}.controls label{display:flex;align-items:center;gap:6px;background:rgba(148,163,184,.12);padding:8px 10px;border-radius:10px;font-size:.9rem}
+    .message{font-weight:700;min-height:20px}
+    .board{display:grid;grid-template-columns:1fr 1fr;gap:12px}.col{background:rgba(148,163,184,.1);border-radius:14px;padding:12px}.list{display:grid;gap:8px}
+    .item{padding:10px;border-radius:12px;background:var(--card);border:1px solid transparent;cursor:pointer;font-weight:600;display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
+    .item-main{display:grid;gap:4px;min-width:0}
+    .item small{display:block;color:var(--muted);font-weight:500}
+    .item-hint{display:none;font-size:.8rem;color:var(--muted)}
+    .item.flipped .item-hint{display:block}
+    .item-tools{display:flex;gap:6px}
+    .icon-btn{cursor:pointer;opacity:.85;font-size:1rem}
+    .item.selected{border-color:var(--accent);background:var(--soft)}.item.matched{border-color:var(--ok);background:rgba(22,163,74,.16);pointer-events:none}.item.wrong{border-color:var(--bad);background:rgba(220,38,38,.14)}
+    .btns{display:flex;gap:8px;flex-wrap:wrap}.btn{border:none;border-radius:12px;padding:10px 14px;font-weight:700;cursor:pointer;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff}
+    .settings-fab{position:fixed;right:22px;bottom:22px;width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;display:grid;place-items:center;box-shadow:var(--shadow);cursor:pointer;z-index:60}
+    .settings-panel{position:fixed;right:22px;bottom:88px;width:min(320px,90vw);background:var(--card);border-radius:18px;border:1px solid var(--border);box-shadow:var(--shadow);padding:14px;display:none;flex-direction:column;gap:12px;z-index:60}.settings-panel.open{display:flex}.settings-row{display:flex;gap:8px;align-items:center}.settings-row select{border:1px solid var(--border);background:var(--card);color:var(--ink);padding:8px 10px;border-radius:10px;font-weight:600}.debug-box{background:rgba(148,163,184,.12);padding:10px;border-radius:10px;font-size:.85rem;color:var(--muted)}.settings-actions{display:flex;gap:8px}.settings-actions button{border:none;border-radius:10px;padding:8px 12px;font-weight:600;cursor:pointer;background:rgba(148,163,184,.2);color:var(--ink)}
+    @media (max-width:900px){.board{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,minmax(120px,1fr))}}
+  </style>
+</head>
+<body>
+<div class="container">
+  <nav class="nav">
+    <a class="brand" href="index.html"><img src="apple-touch-icon.png" alt="DeutscheTag logo"><div><h1>DeutscheTag</h1><div style="color:var(--muted);font-size:.9rem">Colors, weather, food, animals</div></div></a>
+    <button class="menu-toggle" id="menuToggle" aria-label="Open navigation"><span></span><span></span><span></span></button>
+    <div class="nav-links"><a href="index.html">Home</a><a class="active" href="category_match.html">Category Match</a></div>
+    <div class="nav-actions"><div class="timer" id="timerWidget"><div class="row"><span>Session</span><strong id="sessionTime">00:00</strong></div><div class="row"><span>Today</span><strong id="todayTime">00:00</strong></div><div class="row"><span>Streak</span><strong id="streakCount">0 days</strong></div><div class="note" id="timerNote"></div><button id="timerToggle">Start</button></div></div>
+  </nav>
+
+  <section class="card">
+    <h2>Category Match</h2>
+    <p style="color:var(--muted)">Same mechanics as vocabulary/number matching: repeat missed items, review-only loop, hint + audio.</p>
+    <div class="stats"><div class="stat"><strong id="matched">0</strong><span>Matched</span></div><div class="stat"><strong id="roundScore">0/10</strong><span>Round score</span></div><div class="stat"><strong id="missed">0</strong><span>Missed queue</span></div><div class="stat"><strong id="roundNo">1</strong><span>Round</span></div></div>
+    <div class="controls">
+      <label><input type="checkbox" id="repeatToggle"> repeat missed</label>
+      <label><input type="checkbox" id="reviewToggle"> review-only</label>
+      <label><input type="checkbox" id="hintToggle" checked> show category label</label>
+    </div>
+    <div class="message" id="message"></div>
+  </section>
+
+  <section class="card board">
+    <div class="col"><h3>Deutsch</h3><div class="list" id="left"></div></div>
+    <div class="col"><h3>English</h3><div class="list" id="right"></div></div>
+  </section>
+
+  <section class="card"><div class="btns"><button class="btn" id="listenBtn">Sound</button><button class="btn" id="hintBtn">Hint</button><button class="btn" id="nextBtn">Next Round</button></div></section>
+</div>
+
+<script>
+const categories = {
+  colors: [['rot','red'],['blau','blue'],['gelb','yellow'],['grün','green'],['schwarz','black'],['weiß','white'],['grau','gray'],['braun','brown'],['orange','orange'],['lila','purple'],['rosa','pink'],['beige','beige'],['golden','golden'],['silbern','silver']],
+  weather: [['es regnet','it is raining'],['es schneit','it is snowing'],['es ist sonnig','it is sunny'],['es ist bewölkt','it is cloudy'],['es ist windig','it is windy'],['es ist neblig','it is foggy'],['es ist kalt','it is cold'],['es ist warm','it is warm'],['es ist heiß','it is hot'],['es ist trocken','it is dry'],['es gibt ein Gewitter','there is a thunderstorm'],['es friert','it is freezing']],
+  food: [['das Brot','the bread'],['der Käse','the cheese'],['die Suppe','the soup'],['der Salat','the salad'],['das Wasser','the water'],['der Kaffee','the coffee'],['der Tee','the tea'],['das Frühstück','the breakfast'],['das Abendessen','the dinner'],['die Kartoffel','the potato'],['der Apfel','the apple'],['die Banane','the banana'],['das Fleisch','the meat'],['der Fisch','the fish']],
+  animals: [['der Hund','the dog'],['die Katze','the cat'],['der Vogel','the bird'],['das Pferd','the horse'],['die Kuh','the cow'],['das Schaf','the sheep'],['der Bär','the bear'],['der Fuchs','the fox'],['der Hase','the rabbit'],['der Löwe','the lion'],['der Elefant','the elephant'],['die Maus','the mouse'],['die Biene','the bee'],['der Fisch','the fish']]
+};
+
+const allPairs = Object.entries(categories).flatMap(([cat, pairs]) => pairs.map((p) => ({ de: p[0], en: p[1], cat })));
+let selectedL = null, selectedR = null, round = 1, totalMatched = 0, roundMatched = 0;
+let missedQueue = [];
+let currentRound = [];
+let hintPair = null;
+let hintStep = 0;
+
+const AudioCtx = window.AudioContext || window.webkitAudioContext;
+const audioCtx = AudioCtx ? new AudioCtx() : null;
+function tone(ok){ if(!audioCtx) return; unlockAudio(); const o=audioCtx.createOscillator(); const g=audioCtx.createGain(); o.type='triangle'; o.frequency.value=ok?720:220; g.gain.value=.001; o.connect(g); g.connect(audioCtx.destination); const t=audioCtx.currentTime; g.gain.exponentialRampToValueAtTime(.08,t+.01); g.gain.exponentialRampToValueAtTime(.0001,t+.2); o.start(t); o.stop(t+.21);} 
+function unlockAudio(){ if(audioCtx && audioCtx.state==='suspended'){ audioCtx.resume().catch(()=>{}); } }
+function speak(text, lang='de-DE'){ unlockAudio(); if(!('speechSynthesis' in window)) return; speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(text); u.lang=lang; u.rate=.9; speechSynthesis.speak(u); }
+function shuffle(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];}return b;}
+
+function pickRound() {
+  if (document.getElementById('reviewToggle').checked) {
+    return missedQueue.slice(0, 10).map((idx) => allPairs[idx]);
+  }
+  const fromMissed = document.getElementById('repeatToggle').checked ? missedQueue.slice(0, 3).map((idx) => allPairs[idx]) : [];
+  const random = shuffle(allPairs).slice(0, 10 - fromMissed.length);
+  return shuffle([...fromMissed, ...random]).slice(0, 10);
+}
+
+function updateStats() {
+  document.getElementById('matched').textContent = totalMatched;
+  document.getElementById('roundScore').textContent = `${roundMatched}/10`;
+  document.getElementById('missed').textContent = missedQueue.length;
+  document.getElementById('roundNo').textContent = round;
+}
+
+function buildCard(side, item) {
+  const card = document.createElement('div');
+  card.className = 'item';
+  card.dataset.de = item.de;
+  card.dataset.en = item.en;
+  card.dataset.cat = item.cat;
+  const text = side === 'de' ? item.de : item.en;
+  const hint = side === 'de' ? `${item.de} -> ${item.en} (${item.cat})` : `${item.en} -> ${item.de} (${item.cat})`;
+  const lang = side === 'de' ? 'de-DE' : 'en-US';
+  card.innerHTML = `<div class="item-main"><div>${text}</div>${document.getElementById('hintToggle').checked ? `<small>${item.cat}</small>` : ''}<div class="item-hint">${hint}</div></div><div class="item-tools"><span class="icon-btn" title="Sound">🔊</span><span class="icon-btn" title="Hint">💡</span></div>`;
+  const [soundBtn, hintBtn] = card.querySelectorAll('.icon-btn');
+  soundBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    speak(text, lang);
+  });
+  hintBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    card.classList.toggle('flipped');
+  });
+  return card;
+}
+
+function loadRound() {
+  currentRound = pickRound();
+  selectedL = null;
+  selectedR = null;
+  roundMatched = 0;
+  hintStep = 0;
+  document.getElementById('message').textContent = '';
+  const left = document.getElementById('left');
+  const right = document.getElementById('right');
+  left.innerHTML = '';
+  right.innerHTML = '';
+  const rightPool = shuffle(currentRound);
+  currentRound.forEach((item) => {
+    const c = buildCard('de', item);
+    c.onclick = () => { if(c.classList.contains('matched')) return; document.querySelectorAll('#left .item').forEach((x) => x.classList.remove('selected')); c.classList.add('selected'); selectedL = c; speak(item.de,'de-DE'); check(); };
+    left.appendChild(c);
+  });
+  rightPool.forEach((item) => {
+    const c = buildCard('en', item);
+    c.onclick = () => { if(c.classList.contains('matched')) return; document.querySelectorAll('#right .item').forEach((x) => x.classList.remove('selected')); c.classList.add('selected'); selectedR = c; speak(item.en,'en-US'); check(); };
+    right.appendChild(c);
+  });
+  hintPair = currentRound[Math.floor(Math.random() * currentRound.length)];
+  updateStats();
+}
+
+function queueMissed(item) {
+  const idx = allPairs.findIndex((x) => x.de === item.de && x.en === item.en && x.cat === item.cat);
+  if (idx >= 0 && !missedQueue.includes(idx)) missedQueue.push(idx);
+}
+function clearMissed(item) {
+  const idx = allPairs.findIndex((x) => x.de === item.de && x.en === item.en && x.cat === item.cat);
+  missedQueue = missedQueue.filter((x) => x !== idx);
+}
+
+function check() {
+  if (!selectedL || !selectedR) return;
+  const ok = selectedL.dataset.en === selectedR.dataset.en;
+  if (ok) {
+    tone(true);
+    selectedL.classList.add('matched');
+    selectedR.classList.add('matched');
+    const item = { de: selectedL.dataset.de, en: selectedL.dataset.en, cat: selectedL.dataset.cat };
+    clearMissed(item);
+    roundMatched += 1;
+    totalMatched += 1;
+    document.getElementById('message').textContent = 'Correct.';
+    if (roundMatched === 10) document.getElementById('message').textContent = 'Round complete. Move to next round.';
+  } else {
+    tone(false);
+    selectedL.classList.add('wrong');
+    selectedR.classList.add('wrong');
+    queueMissed({ de: selectedL.dataset.de, en: selectedL.dataset.en, cat: selectedL.dataset.cat });
+    document.getElementById('message').textContent = 'Incorrect. It was added to missed queue.';
+    setTimeout(() => {
+      if (selectedL) selectedL.classList.remove('wrong', 'selected');
+      if (selectedR) selectedR.classList.remove('wrong', 'selected');
+      selectedL = null;
+      selectedR = null;
+    }, 700);
+    updateStats();
+    return;
+  }
+  selectedL.classList.remove('selected');
+  selectedR.classList.remove('selected');
+  selectedL = null;
+  selectedR = null;
+  updateStats();
+}
+
+document.getElementById('hintBtn').addEventListener('click', () => {
+  if (!hintPair) return;
+  hintStep += 1;
+  if (hintStep === 1) {
+    document.getElementById('message').textContent = `Hint 1: category is ${hintPair.cat}.`;
+  } else if (hintStep === 2) {
+    document.getElementById('message').textContent = `Hint 2: English starts with "${hintPair.en.charAt(0)}".`;
+  } else {
+    document.getElementById('message').textContent = `Hint 3: ${hintPair.de} -> ${hintPair.en} (${hintPair.cat})`;
+  }
+});
+document.getElementById('listenBtn').addEventListener('click', () => {
+  unlockAudio();
+  const leftCard = selectedL || [...document.querySelectorAll('#left .item')].find((x) => !x.classList.contains('matched'));
+  if (!leftCard) return;
+  speak(leftCard.dataset.de, 'de-DE');
+});
+document.getElementById('nextBtn').addEventListener('click', () => { round += 1; loadRound(); });
+document.getElementById('repeatToggle').addEventListener('change', loadRound);
+document.getElementById('reviewToggle').addEventListener('change', loadRound);
+document.getElementById('hintToggle').addEventListener('change', loadRound);
+
+loadRound();
+</script>
+
+<script src="menu-settings.js"></script>
+<div class="settings-fab" id="settingsFab" aria-label="Open settings">⚙</div>
+<div class="settings-panel" id="settingsPanel"><h4>Settings</h4><div class="settings-row"><label for="settingsTheme" style="font-weight:600;">Theme</label><select id="settingsTheme"><option value="system">System</option><option value="light">Light</option><option value="dark">Dark</option></select></div><div class="debug-box" id="deeplDebug">DeepL debug available on Translate page.</div><div class="settings-actions"><button id="debugTestBtn">Test DeepL</button><button id="debugClearBtn">Clear cache</button></div><div class="settings-note">Theme settings apply across all pages.</div></div>
+</body>
+</html>

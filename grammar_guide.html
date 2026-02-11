@@ -427,7 +427,11 @@
     <script>
 
 
-const rules = [
+        const rules = [
+            { title: 'Case overview (easy map)', text: 'Nominative = subject (who does action). Accusative = direct object (what/who receives action). Dative = indirect object (to/for whom). Genitive = possession (whose).', example: 'Der Mann (Nom) gibt den Ball (Akk) dem Kind (Dat).' },
+            { title: 'Possessive forms', text: 'Possessives change with gender/case of the noun: mein/meine/meinen/meinem. Start by learning dictionary form first.', example: 'mein Tisch, meine Tasche, mein Buch, meinen Bruder' },
+            { title: 'Infinitive form', text: 'The infinitive is the base verb form, usually ending in -en/-n, and appears at clause end with modal verbs.', example: 'Ich will heute arbeiten.' },
+            { title: 'Dative forms in practice', text: 'Use dative pronouns for indirect recipients: mir, dir, ihm, ihr, uns, euch, ihnen/Ihnen.', example: 'Kannst du mir bitte helfen?' },
             { title: 'Main clause (V2)', text: 'German main clauses follow verb-second (V2). Only one element can be in position 1.', example: 'Heute <strong>gehe</strong> ich nach Hause.' },
             { title: 'Yes/No questions', text: 'The conjugated verb moves to position 1. Subject follows immediately after.', example: '<strong>Kommst</strong> du heute?' },
             { title: 'W-questions', text: 'W-word in slot 1, verb in slot 2. Keep the rest in normal order.', example: '<strong>Warum</strong> kommst du so spät?' },
@@ -497,6 +501,22 @@ const rules = [
             { title: 'Functional writing blocks', text: 'From letter/email worksheets: keep Absender, Empfänger, Betreff, and polite request line in task writing.', example: 'Bitte überweisen Sie das Geld bis zum 31. Dezember.' }
         ];
         rules.push(...pdfDrivenRules);
+
+        const tenseAndWordTypeRules = [
+            { title: 'Present tense (Prasens)', text: 'Use Prasens for current actions, routines, and near-future plans with time markers.', example: 'Ich <strong>arbeite</strong> heute im Büro.' },
+            { title: 'Perfect tense (Perfekt) for spoken past', text: 'In spoken German, Perfekt is the default past: haben/sein + Partizip II.', example: 'Wir <strong>haben</strong> gestern lange <strong>gearbeitet</strong>.' },
+            { title: 'Simple past (Prateritum) in writing', text: 'Prateritum is frequent in news/writing and with sein, haben, modal verbs in speech.', example: 'Früher <strong>war</strong> alles einfacher.' },
+            { title: 'Past perfect (Plusquamperfekt)', text: 'Use for an action completed before another past action.', example: 'Nachdem ich gegessen <strong>hatte</strong>, ging ich los.' },
+            { title: 'Future with werden', text: 'Future meaning often comes from context; use werden + infinitive for emphasis/plans.', example: 'Ich <strong>werde</strong> morgen früher <strong>gehen</strong>.' },
+            { title: 'Konjunktiv II for polite and hypothetical', text: 'Use Konjunktiv II for politeness, wishes, and unreal conditions.', example: 'Ich <strong>würde</strong> gern mehr Deutsch sprechen.' },
+            { title: 'Noun + article learning rule', text: 'Always learn nouns with article and plural form: der Tisch, die Tische.', example: 'Ich brauche <strong>den Tisch</strong> im Büro.' },
+            { title: 'Verb valency (what case a verb needs)', text: 'Many verbs require a fixed case or preposition; memorize with pattern examples.', example: 'helfen + Dativ: Ich helfe <strong>dem Kollegen</strong>.' },
+            { title: 'Adjective role in sentence', text: 'Attributive adjectives stand before nouns and take endings; predicative adjectives stay unchanged.', example: 'ein <strong>großes</strong> Haus / Das Haus ist <strong>groß</strong>.' },
+            { title: 'Adverb position in clauses', text: 'Time-manner-place order is common, but topic can move to position 1 while verb stays second.', example: '<strong>Heute</strong> arbeite ich ruhig zu Hause.' },
+            { title: 'Spoken vs written style', text: 'Spoken style uses shorter clauses and particles; written style prefers denser structures and connectors.', example: 'Gesprochen: \"Kommst du?\" Geschrieben: \"Könnten Sie mir bitte mitteilen ...\"' },
+            { title: 'Formal vs informal address', text: 'Use Sie/Ihnen in formal contexts; du/dir in informal contexts. Verb form must match.', example: 'Informal: \"Kannst du kommen?\" Formal: \"Können Sie kommen?\"' }
+        ];
+        rules.push(...tenseAndWordTypeRules);
 
         const grammarTitle = document.getElementById('grammarTitle');
         const grammarText = document.getElementById('grammarText');

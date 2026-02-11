@@ -627,6 +627,8 @@
                 <a href="fundamentals.html">Time & Alphabet</a>
                 <a href="number_time_match.html">Number/Time Match</a>
                 <a href="grammar_guide.html">Grammar Guide</a>
+                <a href="verb_forms.html">Verb Forms</a>
+                <a href="article_prefix_practice.html">Articles</a>
                 <a href="falling_match.html">Falling Match</a>
                             <a href="german_2048.html">2048</a>
                             <a href="translate_parse.html">Translate</a>
@@ -686,6 +688,8 @@
         </section>
 
         <div class="actions">
+            <button class="secondary-btn" id="matchListenBtn">Sound</button>
+            <button class="secondary-btn" id="matchHintBtn">Hint</button>
             <button class="secondary-btn" id="skipBtn">Skip Round →</button>
             <button class="primary-btn" id="nextBtn" style="display: none;">Continue →</button>
         </div>
@@ -724,6 +728,7 @@ const allWords = [['der', 'the (masculine)'], ['die', 'the (feminine/plural)'], 
         let roundMatches = 0;
         let totalMatches = 0;
         let roundAdvance = 10;
+        let hintStep = 0;
         const missedQueue = [];
         const missedSet = new Set();
         const missedStorageKey = 'dt-vocab-missed';
@@ -752,6 +757,7 @@ const allWords = [['der', 'the (masculine)'], ['die', 'the (feminine/plural)'], 
         }
 
         function speakText(text, lang, e) {
+            unlockAudio();
             if (e) e.stopPropagation();
             if ('speechSynthesis' in window) {
                 window.speechSynthesis.cancel();
@@ -777,6 +783,18 @@ const allWords = [['der', 'the (masculine)'], ['die', 'the (feminine/plural)'], 
                 setTimeout(() => ctx.close(), duration * 1000 + 60);
             } catch (e) {
                 // ignore audio errors
+            }
+        }
+
+        function unlockAudio() {
+            try {
+                const Ctx = window.AudioContext || window.webkitAudioContext;
+                if (!Ctx) return;
+                const ctx = new Ctx();
+                if (ctx.state === 'suspended') ctx.resume().catch(() => {});
+                setTimeout(() => ctx.close(), 40);
+            } catch (e) {
+                // ignore
             }
         }
 
@@ -822,6 +840,7 @@ const allWords = [['der', 'the (masculine)'], ['die', 'the (feminine/plural)'], 
             roundMatches = 0;
             selectedGerman = null;
             selectedEnglish = null;
+            hintStep = 0;
 
             const indices = getRoundIndices();
             if (indices.length === 0) {
@@ -1045,6 +1064,35 @@ const allWords = [['der', 'the (masculine)'], ['die', 'the (feminine/plural)'], 
             document.getElementById('missedCount').textContent = `${missedQueue.length} to revisit`;
         }
 
+        function getFirstUnmatchedGermanCard() {
+            return [...document.querySelectorAll('#germanWords .word-card')].find((card) => !card.classList.contains('matched')) || null;
+        }
+
+        function globalListen() {
+            unlockAudio();
+            const card = selectedGerman || getFirstUnmatchedGermanCard();
+            if (!card) return;
+            speakText(card.dataset.german, 'de');
+        }
+
+        function globalHint() {
+            const card = selectedGerman || getFirstUnmatchedGermanCard();
+            if (!card) return;
+            hintStep += 1;
+            const md = document.getElementById('message');
+            if (hintStep === 1) {
+                md.textContent = `Hint 1: translation starts with "${(card.dataset.english || '').charAt(0)}".`;
+                md.className = 'message';
+            } else if (hintStep === 2) {
+                md.textContent = `Hint 2: German starts with "${(card.dataset.german || '').charAt(0)}".`;
+                md.className = 'message';
+            } else {
+                card.classList.add('flipped');
+                md.textContent = 'Hint 3: answer revealed on selected card.';
+                md.className = 'message';
+            }
+        }
+
         function nextRound() {
             if (!reviewToggle.checked) {
                 currentIndex = Math.min(allWords.length, currentIndex + roundAdvance);
@@ -1088,6 +1136,8 @@ const allWords = [['der', 'the (masculine)'], ['die', 'the (feminine/plural)'], 
 
         document.getElementById('nextBtn').addEventListener('click', nextRound);
         document.getElementById('skipBtn').addEventListener('click', skipRound);
+        document.getElementById('matchListenBtn').addEventListener('click', globalListen);
+        document.getElementById('matchHintBtn').addEventListener('click', globalHint);
 
         loadMissedFromStorage();
         setSwitchState(document.getElementById('exampleSwitch'), true);

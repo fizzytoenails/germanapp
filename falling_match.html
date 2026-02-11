@@ -508,6 +508,8 @@
                 <a href="fundamentals.html">Time & Alphabet</a>
                 <a href="number_time_match.html">Number/Time Match</a>
                 <a href="grammar_guide.html">Grammar Guide</a>
+                <a href="verb_forms.html">Verb Forms</a>
+                <a href="article_prefix_practice.html">Articles</a>
                 <a class="active" href="falling_match.html">Falling Match</a>
                             <a href="german_2048.html">2048</a>
                             <a href="translate_parse.html">Translate</a>
@@ -540,6 +542,7 @@
                 </select>
                 <button id="startGame">Start game</button>
                 <button id="pauseGame">Pause</button>
+                <button id="hintBtn">Hint</button>
                 <div class="stats">
                     <span>Time: <strong id="timeLeft">0</strong>s</span>
                     <span>Score: <strong id="score">0</strong></span>
@@ -578,6 +581,7 @@ const wordPairs = [
         const arena = document.getElementById('arena');
         const startGameBtn = document.getElementById('startGame');
         const pauseGameBtn = document.getElementById('pauseGame');
+        const hintBtn = document.getElementById('hintBtn');
         const durationSelect = document.getElementById('durationSelect');
         const difficultySelect = document.getElementById('difficultySelect');
         const timeLeftEl = document.getElementById('timeLeft');
@@ -605,23 +609,7 @@ const wordPairs = [
             impossible: { speed: 80, spawn: 900, lanes: 8, batch: 5 }
         };
 
-        function playTone(freq, duration) {
-            try {
-                const ctx = new (window.AudioContext || window.webkitAudioContext)();
-                const osc = ctx.createOscillator();
-                const gain = ctx.createGain();
-                osc.type = 'square';
-                osc.frequency.value = freq;
-                gain.gain.value = 0.08;
-                osc.connect(gain);
-                gain.connect(ctx.destination);
-                osc.start();
-                osc.stop(ctx.currentTime + duration);
-                setTimeout(() => ctx.close(), duration * 1000 + 60);
-            } catch (e) {
-                // ignore audio errors
-            }
-        }
+        function playTone() {}
 
         function createChip(text, pairId, lang, speed, laneIndex, lanes, yOverride = null) {
             const chip = document.createElement('div');
@@ -666,7 +654,6 @@ const wordPairs = [
                     score += 5;
                     matches += 1;
                     gameMessage.textContent = 'Match confirmed.';
-                    playTone(540, 0.08);
                     setTimeout(() => {
                         removeChip(first);
                         removeChip(second);
@@ -674,7 +661,6 @@ const wordPairs = [
                 } else {
                     score = Math.max(0, score - 2);
                     gameMessage.textContent = 'Not a match. Try again.';
-                    playTone(220, 0.08);
                     first.classList.remove('selected');
                     second.classList.remove('selected');
                 }
@@ -686,6 +672,33 @@ const wordPairs = [
         function removeChip(chip) {
             chips = chips.filter((c) => c.el !== chip);
             chip.remove();
+        }
+
+        function getHintPair() {
+            const groups = new Map();
+            chips.forEach((chipData) => {
+                const bucket = groups.get(chipData.pairId) || [];
+                bucket.push(chipData);
+                groups.set(chipData.pairId, bucket);
+            });
+            for (const [, group] of groups) {
+                const de = group.find((g) => g.el.dataset.lang === 'DE');
+                const en = group.find((g) => g.el.dataset.lang === 'EN');
+                if (de && en) return { de, en };
+            }
+            return null;
+        }
+
+        function globalHint() {
+            const pair = getHintPair();
+            if (!pair) {
+                gameMessage.textContent = 'No hint available right now.';
+                return;
+            }
+            chips.forEach((c) => c.el.classList.remove('selected'));
+            pair.de.el.classList.add('selected');
+            pair.en.el.classList.add('selected');
+            gameMessage.textContent = `Hint: match "${pair.de.el.textContent.replace(/^DE/, '').trim()}" with "${pair.en.el.textContent.replace(/^EN/, '').trim()}".`;
         }
 
         function beginDrag(event, chipData) {
@@ -867,7 +880,6 @@ const wordPairs = [
             paused = false;
             pauseGameBtn.textContent = 'Pause';
             gameMessage.textContent = message;
-            playTone(140, 0.2);
             lastTime = null;
         }
 
@@ -875,6 +887,7 @@ const wordPairs = [
 
         startGameBtn.addEventListener('click', startGame);
         pauseGameBtn.addEventListener('click', togglePause);
+        hintBtn.addEventListener('click', globalHint);
 
     </script>
     <script src="menu-settings.js"></script>

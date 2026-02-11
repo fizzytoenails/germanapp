@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <title>DeutscheTag | Article Practice</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;600;700&family=Playfair+Display:wght@500;600&display=swap');
+    :root { --bg: linear-gradient(135deg,#f7f4ff 0%,#f9f6ef 45%,#eef5ff 100%); --card:#fff; --ink:#0f172a; --muted:#64748b; --accent:#6d4bff; --accent-2:#2b72ff; --soft:rgba(109,75,255,.12); --border:rgba(148,163,184,.2); --shadow:0 18px 45px rgba(15,23,42,.12); --ok:#16a34a; --bad:#dc2626; }
+    body.theme-dark { --bg: linear-gradient(135deg,#0b1120 0%,#0f172a 45%,#111827 100%); --card:#101827; --ink:#e2e8f0; --muted:#94a3b8; --soft:rgba(139,92,246,.18); }
+    *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+    body{font-family:'Manrope','Segoe UI',sans-serif;background:var(--bg);color:var(--ink);padding:20px;display:flex;justify-content:center;overflow-x:hidden}
+    .container{width:100%;max-width:1200px;display:grid;gap:16px}
+    .nav{position:relative;background:rgba(255,255,255,.82);border:1px solid var(--border);border-radius:24px;padding:12px 18px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;box-shadow:0 12px 24px rgba(15,23,42,.08);backdrop-filter:blur(12px)}
+    .brand{display:flex;gap:12px;align-items:center;text-decoration:none;color:inherit}.brand img{width:44px;height:44px;border-radius:14px}.brand h1{font-family:'Playfair Display',serif;font-size:clamp(1.2rem,2.4vw,1.8rem)}
+    .menu-toggle{display:inline-flex;border:none;background:rgba(148,163,184,.2);width:44px;height:44px;border-radius:12px;cursor:pointer;align-items:center;justify-content:center;gap:4px;flex-direction:column;position:absolute;right:16px;top:16px;z-index:40}.menu-toggle span{width:20px;height:2px;background:var(--ink);border-radius:999px}
+    .nav-links{display:none;position:absolute;right:16px;top:68px;background:var(--card);padding:12px;border:1px solid var(--border);border-radius:16px;z-index:45;min-width:220px}.nav-links.open{display:flex;flex-direction:column}.nav-links a{text-decoration:none;color:var(--muted);padding:8px 12px;border-radius:999px;font-weight:600}.nav-links a.active,.nav-links a:hover{background:var(--soft);color:var(--accent)}
+    .nav-actions{margin-right:68px;width:100%;display:flex;justify-content:flex-start}.timer{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:10px 14px;display:grid;gap:6px;min-width:220px}.timer .row{display:flex;justify-content:space-between;font-size:.85rem;color:var(--muted)}.timer button{border:none;border-radius:10px;padding:6px 10px;font-weight:600;cursor:pointer;background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#fff}.timer .note{font-size:.8rem;color:#f59e0b;min-height:18px}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:18px;box-shadow:var(--shadow)}
+    .card h2{font-size:1.3rem}.card p{color:var(--muted)}
+    .explain{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-top:10px}.pill{padding:8px;border-radius:10px;background:rgba(148,163,184,.12);font-size:.86rem}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    table{width:100%;border-collapse:collapse;font-size:.86rem}th,td{border-bottom:1px solid var(--border);padding:6px;text-align:left}th{color:var(--muted)}
+    .scroll{max-height:320px;overflow:auto;border:1px solid var(--border);border-radius:12px}
+    .quiz{display:grid;gap:8px}.quiz input{padding:10px;border-radius:10px;border:1px solid var(--border);background:var(--card);color:var(--ink)}
+    .btns{display:flex;gap:8px;flex-wrap:wrap}.btn{border:none;border-radius:12px;padding:10px 14px;font-weight:700;cursor:pointer;background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#fff}
+    .hint{font-size:.9rem;color:var(--muted);min-height:20px}.ok{color:var(--ok)}.bad{color:var(--bad)}
+    .board{display:grid;grid-template-columns:1fr 1fr;gap:12px}.col{background:rgba(148,163,184,.1);border-radius:14px;padding:12px}
+    .item{padding:10px;border-radius:12px;background:var(--card);border:1px solid transparent;cursor:pointer;margin-bottom:8px;display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
+    .item-main{display:grid;gap:4px;min-width:0}
+    .item-hint{display:none;font-size:.82rem;color:var(--muted)}
+    .item.flipped .item-hint{display:block}
+    .item-tools{display:flex;gap:6px}
+    .icon-btn{cursor:pointer;opacity:.85;font-size:1rem}
+    .item.selected{border-color:var(--accent);background:var(--soft)}.item.matched{border-color:var(--ok);background:rgba(22,163,74,.13);pointer-events:none}.item.wrong{border-color:var(--bad);background:rgba(220,38,38,.12)}
+    .settings-fab{position:fixed;right:22px;bottom:22px;width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#fff;display:grid;place-items:center;box-shadow:var(--shadow);cursor:pointer;z-index:60}
+    .settings-panel{position:fixed;right:22px;bottom:88px;width:min(320px,90vw);background:var(--card);border-radius:18px;border:1px solid var(--border);box-shadow:var(--shadow);padding:14px;display:none;flex-direction:column;gap:12px;z-index:60}.settings-panel.open{display:flex}.settings-row{display:flex;gap:8px;align-items:center}.settings-row select{border:1px solid var(--border);background:var(--card);color:var(--ink);padding:8px 10px;border-radius:10px;font-weight:600}.debug-box{background:rgba(148,163,184,.12);padding:10px;border-radius:10px;font-size:.85rem;color:var(--muted)}.settings-actions{display:flex;gap:8px}.settings-actions button{border:none;border-radius:10px;padding:8px 12px;font-weight:600;cursor:pointer;background:rgba(148,163,184,.2);color:var(--ink)}
+    @media (max-width:980px){.grid,.board{grid-template-columns:1fr}.explain{grid-template-columns:repeat(2,1fr)}body{padding:12px}}
+  </style>
+</head>
+<body>
+<div class="container">
+  <nav class="nav">
+    <a class="brand" href="index.html"><img src="apple-touch-icon.png" alt="DeutscheTag logo"><div><h1>DeutscheTag</h1><div style="color:var(--muted);font-size:.9rem">Article practice</div></div></a>
+    <button class="menu-toggle" id="menuToggle" aria-label="Open navigation"><span></span><span></span><span></span></button>
+    <div class="nav-links"><a href="index.html">Home</a><a href="german_matching_game.html">Vocabulary</a><a href="german_grammar_game.html">Sentence Match</a><a href="typing_practice.html">Typing</a><a href="dictionary.html">Dictionary</a><a href="fundamentals.html">Time & Alphabet</a><a href="number_time_match.html">Number/Time Match</a><a href="grammar_guide.html">Grammar Guide</a><a href="verb_forms.html">Verb Forms</a><a class="active" href="article_prefix_practice.html">Articles</a><a href="falling_match.html">Falling Match</a><a href="german_2048.html">2048</a><a href="translate_parse.html">Translate</a></div>
+    <div class="nav-actions"><div class="timer" id="timerWidget"><div class="row"><span>Session</span><strong id="sessionTime">00:00</strong></div><div class="row"><span>Today</span><strong id="todayTime">00:00</strong></div><div class="row"><span>Streak</span><strong id="streakCount">0 days</strong></div><div class="note" id="timerNote"></div><button id="timerToggle">Start</button></div></div>
+  </nav>
+
+  <section class="card">
+    <h2>Article System (der / die / das / den / dem / des)</h2>
+    <p>Use this quick map while practicing. Nominative marks the subject; accusative marks direct object; dative marks indirect object/object after dative prepositions; genitive shows possession.</p>
+    <div class="explain">
+      <div class="pill"><strong>der</strong>: nominative masculine</div>
+      <div class="pill"><strong>die</strong>: nominative feminine/plural, accusative feminine/plural</div>
+      <div class="pill"><strong>das</strong>: nominative/accusative neuter</div>
+      <div class="pill"><strong>den</strong>: accusative masculine</div>
+      <div class="pill"><strong>dem</strong>: dative masculine/neuter</div>
+      <div class="pill"><strong>des</strong>: genitive masculine/neuter</div>
+    </div>
+  </section>
+
+  <section class="grid">
+    <div class="card">
+      <h3>500 Common Words + Articles</h3>
+      <p>For non-nouns, article is shown as "-". For nouns, default dictionary article is shown.</p>
+      <div class="scroll"><table><thead><tr><th>#</th><th>Article</th><th>Word</th><th>English</th></tr></thead><tbody id="wordTable"></tbody></table></div>
+    </div>
+    <div class="card quiz">
+      <h3>Type The Correct Article</h3>
+      <div class="hint">Instructions: 1) Read the noun. 2) Type the dictionary article (`der`, `die`, or `das`). 3) If wrong, you get the correct answer, one hint step, and a short reason. 4) Use "Hint" repeatedly for one-step-at-a-time reveal.</div>
+      <div id="quizWord" style="font-weight:700;font-size:1.1rem"></div>
+      <div id="quizEnglish" style="color:var(--muted)"></div>
+      <input id="articleInput" placeholder="Type der / die / das ..." autocomplete="off">
+      <div class="btns"><button class="btn" id="checkArticleBtn">Check</button><button class="btn" id="hintArticleBtn">Hint</button><button class="btn" id="nextArticleBtn">Next</button></div>
+      <div class="hint" id="articleFeedback"></div>
+      <div class="hint" id="articleExplain"></div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Article Matching</h3>
+    <div class="hint" id="matchMsg">Tap one noun and one article. Use Hint for one reveal.</div>
+    <div class="board"><div class="col"><h4>Prompt</h4><div id="left"></div></div><div class="col"><h4>Article</h4><div id="right"></div></div></div>
+    <div class="btns"><button class="btn" id="matchListenBtn">Sound</button><button class="btn" id="matchHintBtn">Hint</button><button class="btn" id="nextMatchBtn">Next Match Round</button></div>
+  </section>
+</div>
+
+<script>
+const allWords = [['der', 'the (masculine)'], ['die', 'the (feminine/plural)'], ['das', 'the (neuter)'], ['und', 'and'], ['in', 'in'], ['sein', 'to be / his'], ['ein', 'a/an'], ['zu', 'to'], ['haben', 'to have'], ['ich', 'I'], ['werden', 'to become'], ['sie', 'she/they'], ['von', 'from/of'], ['nicht', 'not'], ['mit', 'with'], ['es', 'it'], ['sich', 'oneself'], ['auch', 'also'], ['auf', 'on'], ['für', 'for'], ['an', 'at/on'], ['er', 'he'], ['so', 'so'], ['dass', 'that'], ['können', 'can'], ['dies', 'this'], ['als', 'as/when'], ['ihr', 'you(pl)/her'], ['ja', 'yes'], ['wie', 'how'], ['bei', 'at/with'], ['oder', 'or'], ['wir', 'we'], ['aber', 'but'], ['dann', 'then'], ['man', 'one/you'], ['da', 'there/since'], ['noch', 'still/yet'], ['nach', 'after/to'], ['was', 'what'], ['also', 'so/thus'], ['aus', 'out/from'], ['alle', 'all'], ['wenn', 'if/when'], ['nur', 'only'], ['müssen', 'must'], ['sagen', 'to say'], ['um', 'around/at'], ['über', 'over/about'], ['machen', 'to make/do'], ['kein', 'no/none'], ['Jahr', 'year'], ['du', 'you(singular)'], ['mein', 'my'], ['schon', 'already'], ['vor', 'before/in front'], ['durch', 'through'], ['geben', 'to give'], ['mehr', 'more'], ['andere', 'other'], ['viel', 'much/many'], ['kommen', 'to come'], ['jetzt', 'now'], ['sollen', 'should'], ['mir', 'me/to me'], ['wollen', 'to want'], ['ganz', 'whole/quite'], ['mich', 'me'], ['immer', 'always'], ['gehen', 'to go'], ['sehr', 'very'], ['hier', 'here'], ['doch', 'but/however'], ['bis', 'until'], ['groß', 'big/tall'], ['wieder', 'again'], ['Mal', 'time'], ['zwei', 'two'], ['gut', 'good'], ['wissen', 'to know'], ['neu', 'new'], ['sehen', 'to see'], ['lassen', 'to let'], ['uns', 'us'], ['weil', 'because'], ['unter', 'under'], ['denn', 'because'], ['stehen', 'to stand'], ['jede', 'every'], ['Beispiel', 'example'], ['Zeit', 'time'], ['erste', 'first'], ['ihm', 'him/to him'], ['ihn', 'him'], ['wo', 'where'], ['lang', 'long'], ['eigentlich', 'actually'], ['damit', 'with it/so that'], ['selbst', 'self/even'], ['unser', 'our'], ['oben', 'above'], ['Mann', 'man'], ['solch', 'such'], ['dürfen', 'may/to be allowed'], ['sollte', 'should'], ['konnte', 'could'], ['beim', 'at the'], ['weit', 'far'], ['Leben', 'life'], ['zurück', 'back'], ['jedoch', 'however'], ['etwas', 'something'], ['ohne', 'without'], ['heute', 'today'], ['gegen', 'against'], ['gleich', 'same/right away'], ['einfach', 'simple'], ['neben', 'next to'], ['Tag', 'day'], ['während', 'during/while'], ['finden', 'to find'], ['nichts', 'nothing'], ['bleiben', 'to stay'], ['sondern', 'but rather'], ['natürlich', 'naturally'], ['zwischen', 'between'], ['zusammen', 'together'], ['Frau', 'woman/wife'], ['letzt', 'last'], ['nein', 'no'], ['dazu', 'to it/for that'], ['eben', 'just/exactly'], ['Hand', 'hand'], ['fragen', 'to ask'], ['zeigen', 'to show'], ['zwar', 'indeed/to be sure'], ['Herr', 'Mr./gentleman'], ['Teil', 'part'], ['nächste', 'next'], ['sicherlich', 'certainly'], ['gering', 'small/minor'], ['Kind', 'child'], ['dabei', 'in doing so'], ['allein', 'alone'], ['innerhalb', 'within'], ['halten', 'to hold/stop'], ['alt', 'old'], ['nennen', 'to call/name'], ['sicher', 'sure/safe'], ['Weg', 'way/path'], ['nie', 'never'], ['Welt', 'world'], ['Ende', 'end'], ['Sache', 'thing/matter'], ['Haus', 'house'], ['gerade', 'just/straight'], ['weiter', 'further'], ['soweit', 'as far as'], ['Auge', 'eye'], ['liegen', 'to lie/be located'], ['Frage', 'question'], ['kennen', 'to know (people)'], ['Arbeit', 'work'], ['heißen', 'to be called'], ['Wasser', 'water'], ['gar', 'quite/at all'], ['nah', 'near'], ['wirklich', 'really'], ['denken', 'to think'], ['Platz', 'place/square'], ['vielleicht', 'maybe'], ['Grund', 'reason/ground'], ['Art', 'type/kind'], ['darauf', 'on it/thereupon'], ['los', 'loose/off'], ['davon', 'of it/from it'], ['Menschen', 'people/humans'], ['Staat', 'state'], ['mögen', 'to like'], ['Land', 'country/land'], ['stellen', 'to place/put'], ['junger', 'young'], ['führen', 'to lead'], ['ob', 'whether'], ['Ort', 'place/location'], ['setzen', 'to set/sit'], ['Geld', 'money'], ['recht', 'right/quite'], ['drei', 'three'], ['hoch', 'high'], ['bestehen', 'to exist/pass'], ['Stadt', 'city'], ['verschieden', 'different'], ['Seite', 'side/page'], ['seitdem', 'since then'], ['bringen', 'to bring'], ['Wort', 'word'], ['Zahl', 'number'], ['nehmen', 'to take'], ['sprechen', 'to speak'], ['kam', 'came'], ['Bild', 'picture/image'], ['völlig', 'completely'], ['darin', 'in it'], ['Name', 'name'], ['möglich', 'possible'], ['tun', 'to do'], ['einige', 'some'], ['deshalb', 'therefore'], ['Prozent', 'percent'], ['eher', 'rather/sooner'], ['glauben', 'to believe'], ['zuerst', 'first/at first'], ['Buch', 'book'], ['Gesicht', 'face'], ['je', 'ever/each'], ['Meter', 'meter'], ['etwa', 'about/approximately'], ['wahr', 'true'], ['Weise', 'way/manner'], ['spät', 'late'], ['oft', 'often'], ['daher', 'therefore'], ['dennoch', 'nevertheless'], ['inzwischen', 'meanwhile'], ['fast', 'almost'], ['Kopf', 'head'], ['beide', 'both'], ['spielen', 'to play'], ['nachdem', 'after'], ['verstehen', 'to understand'], ['gegenüber', 'opposite/toward'], ['Musik', 'music'], ['vier', 'four'], ['Uhr', 'clock/hour'], ['höher', 'higher'], ['Stelle', 'position/place'], ['erreichen', 'to reach'], ['Geschichte', 'story/history'], ['warum', 'why'], ['plötzlich', 'suddenly'], ['laufen', 'to run/walk'], ['beginnen', 'to begin'], ['lieber', 'rather/preferably'], ['Raum', 'room/space'], ['gelten', 'to be valid'], ['zugleich', 'at the same time'], ['aufgrund', 'due to'], ['Mutter', 'mother'], ['entgegen', 'toward/contrary'], ['vergehen', 'to pass (time)'], ['Farbe', 'color'], ['klein', 'small'], ['Tür', 'door'], ['schließen', 'to close'], ['Minute', 'minute'], ['Vater', 'father'], ['legen', 'to lay/put'], ['ziehen', 'to pull/move'], ['brauchen', 'to need'], ['arbeiten', 'to work'], ['ergeben', 'to result in'], ['bilden', 'to form'], ['bereit', 'ready'], ['bestimmt', 'certain/definitely'], ['hinter', 'behind'], ['erhalten', 'to receive'], ['Mensch', 'human/person'], ['bedeuten', 'to mean'], ['scheinen', 'to shine/seem'], ['Zimmer', 'room'], ['meist', 'mostly'], ['Straße', 'street'], ['einzig', 'only/single'], ['Kraft', 'power/strength'], ['außer', 'except'], ['folgen', 'to follow'], ['enthalten', 'to contain'], ['schwer', 'heavy/difficult'], ['schließlich', 'finally'], ['falls', 'if/in case'], ['Nacht', 'night'], ['lernen', 'to learn'], ['wirken', 'to have an effect'], ['Ton', 'sound/tone'], ['zumindest', 'at least'], ['erscheinen', 'to appear'], ['würde', 'would'], ['weder', 'neither'], ['Sohn', 'son'], ['laut', 'loud/according to'], ['Fall', 'case/fall'], ['direkt', 'direct'], ['weg', 'away'], ['vergangen', 'past'], ['Monat', 'month'], ['bevor', 'before'], ['Woche', 'week'], ['tragen', 'to carry/wear'], ['gelingen', 'to succeed'], ['Fest', 'festival/firm'], ['Wesen', 'being/essence'], ['Richtung', 'direction'], ['Stimme', 'voice'], ['Luft', 'air'], ['früh', 'early'], ['warten', 'to wait'], ['rund', 'round'], ['Angst', 'fear'], ['gehören', 'to belong'], ['Tochter', 'daughter'], ['insbesondere', 'especially'], ['Gefühl', 'feeling'], ['Feld', 'field'], ['wenig', 'little/few'], ['Form', 'form/shape'], ['nämlich', 'namely'], ['entlang', 'along'], ['wünschen', 'to wish'], ['Entwicklung', 'development'], ['bieten', 'to offer'], ['treffen', 'to meet'], ['danach', 'after that'], ['zunächst', 'first/initially'], ['Natur', 'nature'], ['zuvor', 'before/previously'], ['bald', 'soon'], ['verlieren', 'to lose'], ['Sprache', 'language'], ['Ordnung', 'order'], ['Bereich', 'area/field'], ['Reihe', 'row/series'], ['damals', 'back then'], ['hinaus', 'out/beyond'], ['bereits', 'already'], ['betreffen', 'to concern'], ['mal', 'times/once'], ['fehlen', 'to be missing'], ['gewinnen', 'to win'], ['Krieg', 'war'], ['Boden', 'floor/ground'], ['Lage', 'situation/position'], ['schaffen', 'to create/manage'], ['ansehen', 'to look at'], ['erkennen', 'to recognize'], ['Problem', 'problem'], ['umso', 'all the more'], ['holen', 'to fetch/get'], ['sogar', 'even'], ['darum', 'therefore/about it'], ['kürzlich', 'recently'], ['Mittel', 'means/medium'], ['weiteren', 'further'], ['anfangen', 'to begin'], ['entsprechen', 'to correspond'], ['geschehen', 'to happen'], ['Gesellschaft', 'society'], ['Punkt', 'point/dot'], ['entstehen', 'to arise'], ['behalten', 'to keep'], ['einzeln', 'individual/single'], ['Interesse', 'interest'], ['Möglichkeit', 'possibility'], ['entwickeln', 'to develop'], ['ebenso', 'just as'], ['dunkel', 'dark'], ['aussehen', 'to look like'], ['Liebe', 'love'], ['Morgen', 'morning'], ['lesen', 'to read'], ['fühlen', 'to feel'], ['Gruppe', 'group'], ['suchen', 'to search'], ['allgemein', 'general'], ['erklären', 'to explain'], ['Ding', 'thing'], ['Gegenteil', 'opposite'], ['erzählen', 'to tell'], ['darstellen', 'to represent'], ['eigen', 'own'], ['halt', 'stop/just'], ['lediglich', 'merely'], ['Meinung', 'opinion'], ['Abend', 'evening'], ['Thema', 'topic/theme'], ['Rahmen', 'frame'], ['reden', 'to talk'], ['Schule', 'school'], ['Aufgabe', 'task'], ['Herz', 'heart'], ['Beruf', 'profession'], ['erwarten', 'to expect'], ['Gesetz', 'law'], ['wohnen', 'to live/reside'], ['interessieren', 'to interest'], ['richtig', 'correct'], ['Blick', 'glance/view'], ['Familie', 'family'], ['danken', 'to thank'], ['Freund', 'friend'], ['Ausland', 'foreign country'], ['Auto', 'car'], ['erinnern', 'to remember'], ['Rolle', 'role'], ['Gegenwart', 'present'], ['Stunde', 'hour'], ['öffnen', 'to open'], ['dafür', 'for it'], ['ungefähr', 'approximately'], ['sofort', 'immediately'], ['Markt', 'market'], ['Tisch', 'table'], ['Unterschied', 'difference'], ['Sinn', 'sense/meaning'], ['Stück', 'piece'], ['drehen', 'to turn'], ['glücklich', 'happy'], ['Preis', 'price/prize'], ['stark', 'strong'], ['Schwester', 'sister'], ['Bruder', 'brother'], ['ruhig', 'quiet/calm'], ['studieren', 'to study'], ['Regel', 'rule'], ['verbinden', 'to connect'], ['klar', 'clear'], ['Licht', 'light'], ['Hilfe', 'help'], ['offenbar', 'obviously'], ['hell', 'bright'], ['versuchen', 'to try'], ['Wohnung', 'apartment'], ['gewiss', 'certain'], ['gebrauchen', 'to use'], ['Recht', 'right/law'], ['anbieten', 'to offer'], ['Ziel', 'goal/destination'], ['Satz', 'sentence'], ['Leute', 'people'], ['teilen', 'to share/divide'], ['schreiben', 'to write'], ['Erfolg', 'success'], ['Spiel', 'game'], ['beziehen', 'to refer to'], ['verwenden', 'to use'], ['bewegen', 'to move'], ['hingegen', 'on the other hand'], ['Gedanke', 'thought'], ['wechseln', 'to change'], ['Bett', 'bed'], ['leicht', 'light/easy'], ['Gang', 'hallway/gear'], ['Verhältnis', 'relationship/ratio'], ['trinken', 'to drink'], ['Zukunft', 'future'], ['Bewegung', 'movement'], ['anschauen', 'to look at'], ['Grad', 'degree'], ['überhaupt', 'at all'], ['fallen', 'to fall'], ['erfahren', 'to experience'], ['Ansicht', 'view/opinion'], ['Kampf', 'fight/struggle'], ['Mund', 'mouth'], ['klingen', 'to sound'], ['vergleichen', 'to compare'], ['verändern', 'to change'], ['Idee', 'idea'], ['verlassen', 'to leave'], ['benutzen', 'to use'], ['steigen', 'to climb/rise'], ['hinten', 'back/behind'], ['wachsen', 'to grow'], ['Aufmerksamkeit', 'attention'], ['schweigen', 'to be silent'], ['wählen', 'to choose/vote'], ['längst', 'long ago'], ['nötig', 'necessary'], ['Körper', 'body'], ['handeln', 'to act/deal'], ['helfen', 'to help'], ['kurz', 'short'], ['vorstellen', 'to introduce/imagine']];
+    const nounArticles = {
+      jahr:'das', beispiel:'das', zeit:'die', mann:'der', leben:'das', tag:'der', frau:'die', hand:'die', herr:'der', kind:'das',
+      weg:'der', welt:'die', ende:'das', sache:'die', haus:'das', auge:'das', frage:'die', arbeit:'die', wasser:'das', platz:'der',
+      grund:'der', art:'die', staat:'der', land:'das', ort:'der', geld:'das', stadt:'die', seite:'die', wort:'das', zahl:'die',
+      bild:'das', name:'der', buch:'das', gesicht:'das', meter:'der', weise:'die', kopf:'der', musik:'die', uhr:'die', stelle:'die',
+      geschichte:'die', raum:'der', mutter:'die', farbe:'die', tür:'die', minute:'die', vater:'der', mensch:'der', zimmer:'das',
+      straße:'die', kraft:'die', nacht:'die', sohn:'der', fall:'der', monat:'der', woche:'die', fest:'das', wesen:'das', richtung:'die',
+      stimme:'die', luft:'die', angst:'die', tochter:'die', gefühl:'das', feld:'das', form:'die', entwicklung:'die', natur:'die',
+      sprache:'die', ordnung:'die', bereich:'der', reihe:'die', krieg:'der', boden:'der', lage:'die', problem:'das', mittel:'das',
+      gesellschaft:'die', punkt:'der', interesse:'das', möglichkeit:'die', liebe:'die', morgen:'der', gruppe:'die', ding:'das',
+      gegenteil:'das', meinung:'die', abend:'der', thema:'das', rahmen:'der', schule:'die', aufgabe:'die', herz:'das', beruf:'der',
+      gesetz:'das', blick:'der', familie:'die', freund:'der', ausland:'das', auto:'das', rolle:'die', gegenwart:'die', stunde:'die',
+      markt:'der', tisch:'der', unterschied:'der', sinn:'der', stück:'das', preis:'der', schwester:'die', bruder:'der', regel:'die',
+      licht:'das', hilfe:'die', wohnung:'die', recht:'das', ziel:'das', satz:'der', leute:'die', erfolg:'der', spiel:'das', gedanke:'der',
+      bett:'das', gang:'der', verhältnis:'das', zukunft:'die', bewegung:'die', grad:'der', ansicht:'die', kampf:'der', mund:'der',
+      idee:'die', aufmerksamkeit:'die', körper:'der'
+    };
+
+    const entries = allWords.map(([w,en], idx) => {
+      const key = w.toLowerCase();
+      const isNoun = /^[A-ZÄÖÜ]/.test(w);
+      const article = nounArticles[key] || (isNoun ? 'der/die/das' : '-');
+      return { idx: idx + 1, word: w, en, article, isNoun };
+    });
+
+    const wordTable = document.getElementById('wordTable');
+    wordTable.innerHTML = entries.map((e) => `<tr><td>${e.idx}</td><td>${e.article}</td><td>${e.word}</td><td>${e.en}</td></tr>`).join('');
+
+    const nounPool = entries.filter((e) => e.article !== '-');
+    let current = null;
+    let hintStep = 0;
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    const audioCtx = AudioCtx ? new AudioCtx() : null;
+
+    function playTone(ok) {
+      if (!audioCtx) return;
+      if (audioCtx.state === 'suspended') audioCtx.resume().catch(() => {});
+      const o = audioCtx.createOscillator();
+      const g = audioCtx.createGain();
+      o.type = 'triangle';
+      o.frequency.value = ok ? 760 : 230;
+      g.gain.value = 0.001;
+      o.connect(g);
+      g.connect(audioCtx.destination);
+      const now = audioCtx.currentTime;
+      g.gain.exponentialRampToValueAtTime(0.08, now + 0.01);
+      g.gain.exponentialRampToValueAtTime(0.0001, now + 0.2);
+      o.start(now);
+      o.stop(now + 0.21);
+    }
+
+    function speakGerman(text) {
+      if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume().catch(() => {});
+      if (!('speechSynthesis' in window)) return;
+      speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = 'de-DE';
+      u.rate = 0.9;
+      speechSynthesis.speak(u);
+    }
+
+    function nextQuiz() {
+      const i = Math.floor(Math.random() * nounPool.length);
+      current = nounPool[i];
+      document.getElementById('quizWord').textContent = current.word;
+      document.getElementById('quizEnglish').textContent = current.en;
+      document.getElementById('articleInput').value = '';
+      document.getElementById('articleFeedback').textContent = '';
+      document.getElementById('articleExplain').textContent = '';
+      hintStep = 0;
+    }
+
+    function articleExplanation(article) {
+      if (article === 'der') return 'Correct because the word is treated as masculine in nominative dictionary form.';
+      if (article === 'die') return 'Correct because the word is feminine (or plural in some contexts) in dictionary form.';
+      if (article === 'das') return 'Correct because the word is neuter in nominative dictionary form.';
+      return 'Use the dictionary article for nominative singular.';
+    }
+
+    document.getElementById('checkArticleBtn').addEventListener('click', () => {
+      if (!current) return;
+      const val = document.getElementById('articleInput').value.trim().toLowerCase();
+      const answer = current.article.toLowerCase();
+      if (!val) {
+        document.getElementById('articleFeedback').textContent = 'Type an article first.';
+        document.getElementById('articleFeedback').className = 'hint bad';
+        return;
+      }
+      if (val === answer || (answer === 'der/die/das' && ['der','die','das'].includes(val))) {
+        document.getElementById('articleFeedback').textContent = 'Correct.';
+        document.getElementById('articleFeedback').className = 'hint ok';
+        document.getElementById('articleExplain').textContent = articleExplanation(val);
+        playTone(true);
+        speakGerman(`${current.article} ${current.word}`);
+      } else {
+        document.getElementById('articleFeedback').textContent = `Incorrect. Correct answer: ${current.article}`;
+        document.getElementById('articleFeedback').className = 'hint bad';
+        document.getElementById('articleExplain').textContent = `${articleExplanation(current.article)} Hint: ${current.word} starts with ${current.word.slice(0, 1)}...`;
+        playTone(false);
+      }
+    });
+
+    document.getElementById('hintArticleBtn').addEventListener('click', () => {
+      if (!current) return;
+      hintStep += 1;
+      if (hintStep === 1) {
+        document.getElementById('articleFeedback').textContent = `Hint 1: article starts with "${current.article.charAt(0)}".`;
+      } else if (hintStep === 2) {
+        document.getElementById('articleFeedback').textContent = `Hint 2: noun starts "${current.word.slice(0, 2)}..."`;
+      } else {
+        document.getElementById('articleFeedback').textContent = `Hint 3: answer is ${current.article}.`;
+      }
+      document.getElementById('articleFeedback').className = 'hint';
+    });
+    document.getElementById('nextArticleBtn').addEventListener('click', nextQuiz);
+    nextQuiz();
+
+    const matchPairs = nounPool.slice(0, 220).map((e) => [`${e.word} (${e.en})`, e.article]);
+    let lSel = null, rSel = null;
+    let hintPair = null;
+    let matchHintStep = 0;
+    function shuffle(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];}return b;}
+    function loadMatchRound() {
+      const sample = shuffle(matchPairs).slice(0, 10);
+      const left = sample.map((x) => x[0]);
+      const right = shuffle(sample.map((x) => x[1]));
+      document.getElementById('left').innerHTML = '';
+      document.getElementById('right').innerHTML = '';
+      document.getElementById('matchMsg').textContent = '';
+      matchHintStep = 0;
+      lSel = null; rSel = null;
+      left.forEach((t) => {
+        const d = document.createElement('div');
+        d.className = 'item'; d.dataset.v = t;
+        const answer = Object.fromEntries(sample)[t];
+        const bare = t.split(' (')[0];
+        d.innerHTML = `<div class="item-main"><div>${t}</div><div class="item-hint">${bare} -> ${answer}</div></div><div class="item-tools"><span class="icon-btn" title="Sound">🔊</span><span class="icon-btn" title="Hint">💡</span></div>`;
+        const [soundBtn, hintBtn] = d.querySelectorAll('.icon-btn');
+        soundBtn.addEventListener('click', (e) => { e.stopPropagation(); speakGerman(bare); });
+        hintBtn.addEventListener('click', (e) => { e.stopPropagation(); d.classList.toggle('flipped'); });
+        d.onclick = () => { document.querySelectorAll('#left .item').forEach((x) => x.classList.remove('selected')); d.classList.add('selected'); lSel = d; check(); };
+        document.getElementById('left').appendChild(d);
+      });
+      right.forEach((t) => {
+        const d = document.createElement('div');
+        d.className = 'item'; d.dataset.v = t;
+        const prompt = sample.find((x) => x[1] === t)?.[0] || '';
+        d.innerHTML = `<div class="item-main"><div>${t}</div><div class="item-hint">${t} pairs with ${prompt}</div></div><div class="item-tools"><span class="icon-btn" title="Sound">🔊</span><span class="icon-btn" title="Hint">💡</span></div>`;
+        const [soundBtn, hintBtn] = d.querySelectorAll('.icon-btn');
+        soundBtn.addEventListener('click', (e) => { e.stopPropagation(); speakGerman(t); });
+        hintBtn.addEventListener('click', (e) => { e.stopPropagation(); d.classList.toggle('flipped'); });
+        d.onclick = () => { document.querySelectorAll('#right .item').forEach((x) => x.classList.remove('selected')); d.classList.add('selected'); rSel = d; check(); };
+        document.getElementById('right').appendChild(d);
+      });
+      window._matchLookup = Object.fromEntries(sample);
+      hintPair = sample[Math.floor(Math.random() * sample.length)];
+    }
+
+    function check() {
+      if (!lSel || !rSel) return;
+      const exp = window._matchLookup[lSel.dataset.v];
+      if (exp === rSel.dataset.v) {
+        lSel.classList.add('matched'); rSel.classList.add('matched');
+        lSel.classList.remove('selected'); rSel.classList.remove('selected');
+        lSel = null; rSel = null;
+        document.getElementById('matchMsg').textContent = 'Correct match.';
+        playTone(true);
+      } else {
+        lSel.classList.add('wrong'); rSel.classList.add('wrong');
+        document.getElementById('matchMsg').textContent = 'Try again.';
+        playTone(false);
+        setTimeout(() => {
+          if (lSel) lSel.classList.remove('wrong', 'selected');
+          if (rSel) rSel.classList.remove('wrong', 'selected');
+          lSel = null; rSel = null;
+          document.getElementById('matchMsg').textContent = '';
+        }, 650);
+      }
+    }
+
+    document.getElementById('matchHintBtn').addEventListener('click', () => {
+      if (!hintPair) return;
+      const [prompt, answer] = hintPair;
+      matchHintStep += 1;
+      if (matchHintStep === 1) {
+        document.getElementById('matchMsg').textContent = `Hint 1: noun starts with "${prompt.charAt(0)}".`;
+      } else if (matchHintStep === 2) {
+        document.getElementById('matchMsg').textContent = `Hint 2: article starts with "${answer.charAt(0)}".`;
+      } else {
+        document.getElementById('matchMsg').textContent = `Hint 3: "${prompt}" pairs with "${answer}".`;
+      }
+      const left = [...document.querySelectorAll('#left .item')].find((x) => x.dataset.v === prompt);
+      const right = [...document.querySelectorAll('#right .item')].find((x) => x.dataset.v === answer);
+      if (left) left.classList.add('selected');
+      if (right) right.classList.add('selected');
+      speakGerman(prompt.split(' (')[0]);
+    });
+
+    document.getElementById('matchListenBtn').addEventListener('click', () => {
+      const selected = lSel || [...document.querySelectorAll('#left .item')].find((x) => !x.classList.contains('matched'));
+      if (!selected) return;
+      speakGerman(selected.dataset.v.split(' (')[0]);
+    });
+
+    document.getElementById('nextMatchBtn').addEventListener('click', loadMatchRound);
+    loadMatchRound();
+</script>
+
+<script src="menu-settings.js"></script>
+<div class="settings-fab" id="settingsFab" aria-label="Open settings">⚙</div>
+<div class="settings-panel" id="settingsPanel"><h4>Settings</h4><div class="settings-row"><label for="settingsTheme" style="font-weight:600;">Theme</label><select id="settingsTheme"><option value="system">System</option><option value="light">Light</option><option value="dark">Dark</option></select></div><div class="debug-box" id="deeplDebug">DeepL debug available on Translate page.</div><div class="settings-actions"><button id="debugTestBtn">Test DeepL</button><button id="debugClearBtn">Clear cache</button></div><div class="settings-note">Theme settings apply across all pages.</div></div>
+</body>
+</html>

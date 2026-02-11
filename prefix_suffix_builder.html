@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <title>DeutscheTag | Prefixes & Suffixes</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;600;700&family=Playfair+Display:wght@500;600&display=swap');
+    :root{--bg:linear-gradient(135deg,#f7f4ff 0%,#f9f6ef 45%,#eef5ff 100%);--card:#fff;--ink:#0f172a;--muted:#64748b;--accent:#6d4bff;--accent2:#2b72ff;--soft:rgba(109,75,255,.12);--border:rgba(148,163,184,.2);--shadow:0 18px 45px rgba(15,23,42,.12);--ok:#16a34a;--bad:#dc2626}
+    body.theme-dark{--bg:linear-gradient(135deg,#0b1120 0%,#0f172a 45%,#111827 100%);--card:#101827;--ink:#e2e8f0;--muted:#94a3b8;--soft:rgba(139,92,246,.2)}
+    *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+    body{font-family:'Manrope','Segoe UI',sans-serif;background:var(--bg);color:var(--ink);padding:16px;display:flex;justify-content:center;overflow-x:hidden}
+    .container{width:100%;max-width:1200px;display:grid;gap:14px}
+    .nav{position:relative;background:rgba(255,255,255,.82);border:1px solid var(--border);border-radius:24px;padding:12px 18px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;box-shadow:0 12px 24px rgba(15,23,42,.08);backdrop-filter:blur(12px)}
+    .brand{display:flex;gap:12px;align-items:center;text-decoration:none;color:inherit}.brand img{width:44px;height:44px;border-radius:14px}.brand h1{font-family:'Playfair Display',serif;font-size:clamp(1.2rem,2.5vw,1.8rem)}
+    .menu-toggle{display:inline-flex;border:none;background:rgba(148,163,184,.2);width:44px;height:44px;border-radius:12px;cursor:pointer;align-items:center;justify-content:center;gap:4px;flex-direction:column;position:absolute;right:16px;top:16px;z-index:40}.menu-toggle span{width:20px;height:2px;background:var(--ink);border-radius:999px}
+    .nav-links{display:none;position:absolute;right:16px;top:68px;background:var(--card);padding:12px;border:1px solid var(--border);border-radius:16px;z-index:45;min-width:220px}.nav-links.open{display:flex;flex-direction:column}.nav-links a{text-decoration:none;color:var(--muted);padding:8px 12px;border-radius:999px;font-weight:600}.nav-links a.active,.nav-links a:hover{background:var(--soft);color:var(--accent)}
+    .nav-actions{margin-right:68px;width:100%;display:flex;justify-content:flex-start}.timer{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:10px 14px;display:grid;gap:6px;min-width:220px}.timer .row{display:flex;justify-content:space-between;font-size:.85rem;color:var(--muted)}.timer button{border:none;border-radius:10px;padding:6px 10px;font-weight:600;cursor:pointer;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff}.timer .note{font-size:.8rem;color:#f59e0b;min-height:18px}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:16px;box-shadow:var(--shadow);display:grid;gap:10px}
+    .lead{color:var(--muted)}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .scroll{max-height:300px;overflow:auto;border:1px solid var(--border);border-radius:12px}
+    table{width:100%;border-collapse:collapse;font-size:.88rem}th,td{padding:7px;border-bottom:1px solid var(--border);text-align:left}th{color:var(--muted)}
+    .builder{display:grid;gap:10px}
+    .target{font-weight:700;font-size:1.05rem}
+    .build-grid{display:grid;grid-template-columns:repeat(3,minmax(180px,1fr));gap:10px}
+    .part-box{border:1px solid var(--border);border-radius:12px;padding:10px;background:rgba(148,163,184,.08);display:grid;gap:8px}
+    .part-title{font-weight:700;font-size:.9rem}
+    .choice{padding:10px;border-radius:12px;border:1px solid var(--border);background:var(--card);cursor:pointer;font-weight:600;color:var(--ink);text-align:left}
+    .choice.selected{border-color:var(--accent);background:var(--soft)}
+    .assembled{font-weight:700;font-size:1.05rem;padding:10px;border:1px solid var(--border);border-radius:10px;background:rgba(148,163,184,.1)}
+    .hint{color:var(--muted);font-size:.92rem;min-height:20px}
+    .msg{font-weight:700;min-height:20px}.ok{color:var(--ok)}.bad{color:var(--bad)}
+    .btns{display:flex;gap:8px;flex-wrap:wrap}.btn{border:none;border-radius:12px;padding:10px 14px;font-weight:700;cursor:pointer;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff}
+    .settings-fab{position:fixed;right:22px;bottom:22px;width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;display:grid;place-items:center;box-shadow:var(--shadow);cursor:pointer;z-index:60}
+    .settings-panel{position:fixed;right:22px;bottom:88px;width:min(320px,90vw);background:var(--card);border-radius:18px;border:1px solid var(--border);box-shadow:var(--shadow);padding:14px;display:none;flex-direction:column;gap:12px;z-index:60}.settings-panel.open{display:flex}.settings-row{display:flex;gap:8px;align-items:center}.settings-row select{border:1px solid var(--border);background:var(--card);color:var(--ink);padding:8px 10px;border-radius:10px;font-weight:600}.debug-box{background:rgba(148,163,184,.12);padding:10px;border-radius:10px;font-size:.85rem;color:var(--muted)}.settings-actions{display:flex;gap:8px}.settings-actions button{border:none;border-radius:10px;padding:8px 12px;font-weight:600;cursor:pointer;background:rgba(148,163,184,.2);color:var(--ink)}
+    @media (max-width:980px){.grid{grid-template-columns:1fr}.build-grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+<div class="container">
+  <nav class="nav">
+    <a class="brand" href="index.html"><img src="apple-touch-icon.png" alt="DeutscheTag logo"><div><h1>DeutscheTag</h1><div style="color:var(--muted);font-size:.9rem">Prefix + suffix builder</div></div></a>
+    <button class="menu-toggle" id="menuToggle" aria-label="Open navigation"><span></span><span></span><span></span></button>
+    <div class="nav-links"><a href="index.html">Home</a><a class="active" href="prefix_suffix_builder.html">Prefixes & Suffixes</a></div>
+    <div class="nav-actions"><div class="timer" id="timerWidget"><div class="row"><span>Session</span><strong id="sessionTime">00:00</strong></div><div class="row"><span>Today</span><strong id="todayTime">00:00</strong></div><div class="row"><span>Streak</span><strong id="streakCount">0 days</strong></div><div class="note" id="timerNote"></div><button id="timerToggle">Start</button></div></div>
+  </nav>
+
+  <section class="card">
+    <h2>Top Prefixes and Suffixes</h2>
+    <p class="lead">Each round shows one target meaning. Build the German word by choosing the correct <strong>prefix</strong>, <strong>root</strong>, and <strong>suffix</strong>. One word at a time.</p>
+  </section>
+
+  <section class="grid">
+    <article class="card"><h3>50 Prefixes</h3><div class="scroll"><table><thead><tr><th>Prefix</th><th>Meaning</th><th>Example</th></tr></thead><tbody id="prefixTable"></tbody></table></div></article>
+    <article class="card"><h3>50 Suffixes</h3><div class="scroll"><table><thead><tr><th>Suffix</th><th>Meaning</th><th>Example</th></tr></thead><tbody id="suffixTable"></tbody></table></div></article>
+  </section>
+
+  <section class="card builder">
+    <h3>Word Builder (300 words)</h3>
+    <div class="target" id="builderPrompt"></div>
+    <div class="assembled" id="assembled">Word parts: _ + _ + _</div>
+    <div class="build-grid">
+      <div class="part-box"><div class="part-title">Prefix choice</div><div id="prefixChoices"></div></div>
+      <div class="part-box"><div class="part-title">Root choice</div><div id="rootChoices"></div></div>
+      <div class="part-box"><div class="part-title">Suffix choice</div><div id="suffixChoices"></div></div>
+    </div>
+    <div class="msg" id="builderMsg"></div>
+    <div class="hint" id="builderHint"></div>
+    <div class="btns"><button class="btn" id="checkBtn">Check</button><button class="btn" id="hintBtn">Hint</button><button class="btn" id="nextBtn">Next</button></div>
+    <div class="lead" id="counter"></div>
+  </section>
+</div>
+
+<script>
+const prefixes = [
+  ['ab','off/away','abfahren'],['an','at/on','ankommen'],['auf','up/open','aufmachen'],['aus','out','ausgehen'],['bei','near/with','beitragen'],['be','direct action on object','bezahlen'],['dar','there-','darauf'],['durch','through','durchgehen'],['ein','in/into','einkaufen'],['emp','receiving','empfangen'],['ent','away/dis-','entfernen'],['er','result/achievement','erklären'],['ge','collective/result','gefallen'],['her','toward speaker','herkommen'],['hin','away from speaker','hingehen'],['hinter','behind','hinterlassen'],['los','away/start','losfahren'],['mit','with/co-','mitkommen'],['nach','after','nachdenken'],['neben','beside','nebenstehen'],['ober','upper','oberhalb'],['rad','wheel/bike','radfahren'],['rück','back','rückfragen'],['um','around/change','umsteigen'],['unter','under/sub-','unterhalten'],['ur','original','Ursprung'],['ver','change/mis-','verkaufen'],['vor','before/fore-','vorstellen'],['weg','away','wegnehmen'],['wider','against','widersprechen'],['wieder','again','wiederholen'],['zer','apart','zerbrechen'],['zu','toward/close','zumachen'],['zusammen','together','zusammenarbeiten'],['zwischen','between','zwischendurch'],['all','all-','allgemein'],['fehl','missing','Fehlalarm'],['haupt','main','Hauptbahnhof'],['hoch','high','Hochhaus'],['klein','small','Kleingeld'],['lieblings','favorite','Lieblingsessen'],['mehr','more','Mehrarbeit'],['mindestens','at least','Mindestpreis'],['neu','new','Neubau'],['sonder','special','Sonderangebot'],['super','super','Supermarkt'],['über','over','übernachten'],['ultra','ultra','ultrakurz'],['voll','full','Vollzeit'],['weiter','further','weiterarbeiten']
+];
+
+const suffixes = [
+  ['en','verb infinitive','lernen'],['er','person/agent','Lehrer'],['ung','result/action noun','Übung'],['heit','state','Freiheit'],['keit','quality/state','Möglichkeit'],['lich','-ly/-like','freundlich'],['ig','-y/-ish','wichtig'],['bar','can be','machbar'],['los','without','arbeitslos'],['sam','characterized by','langsam'],['schaft','collective/state','Freundschaft'],['chen','small/diminutive','Brötchen'],['lein','small/diminutive','Fräulein'],['in','female person','Lehrerin'],['isch','-ic/-ish','typisch'],['end','ongoing','laufend'],['frei','free of','zuckerfrei'],['voll','full of','liebevoll'],['weise','manner','teilweise'],['tum','domain/state','Eigentum'],['plan','plan','Fahrplan'],['zeit','time','Freizeit'],['raum','space','Wohnraum'],['stelle','place/position','Haltestelle'],['punkt','point','Zeitpunkt'],['werk','work/system','Kraftwerk'],['land','country','Ausland'],['name','name','Vorname'],['bild','image','Leitbild'],['zug','movement','Umzug'],['zeug','tool','Werkzeug'],['ment','result','Dokument'],['nis','result','Ergebnis'],['or','agent/device','Motor'],['ist','person','Journalist'],['ion','abstract noun','Information'],['ität','abstract quality','Qualität'],['iv','adjective ending','aktiv'],['haft','characteristic','märchenhaft'],['erei','shop/process','Bäckerei'],['ei','place','Bäckerei'],['mut','mood','Wehmut'],['wärts','direction','vorwärts'],['fähig','capable','leistungsfähig'],['haltig','containing','wasserhaltig'],['schrift','writing','Unterschrift'],['tag','day','Arbeitstag'],['mann','person','Kaufmann'],['chen','small','Mädchen'],['ling','person/thing','Liebling']
+];
+
+function shuffle(a) {
+  const b = [...a];
+  for (let i = b.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [b[i], b[j]] = [b[j], b[i]];
+  }
+  return b;
+}
+
+function escHtml(value) {
+  return String(value)
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#39;');
+}
+
+function renderTables() {
+  const prefixHost = document.getElementById('prefixTable');
+  const suffixHost = document.getElementById('suffixTable');
+  if (!prefixHost || !suffixHost) return;
+  prefixHost.innerHTML = prefixes.slice(0, 50).map((x) => `<tr><td>${escHtml(x[0])}</td><td>${escHtml(x[1])}</td><td>${escHtml(x[2])}</td></tr>`).join('');
+  suffixHost.innerHTML = suffixes.slice(0, 50).map((x) => `<tr><td>${escHtml(x[0])}</td><td>${escHtml(x[1])}</td><td>${escHtml(x[2])}</td></tr>`).join('');
+}
+
+const realWordPairs = [
+  ['der', 'the (masculine)'],
+  ['die', 'the (feminine/plural)'],
+  ['das', 'the (neuter)'],
+  ['und', 'and'],
+  ['in', 'in'],
+  ['sein', 'to be / his'],
+  ['ein', 'a/an'],
+  ['zu', 'to'],
+  ['haben', 'to have'],
+  ['ich', 'I'],
+  ['werden', 'to become'],
+  ['sie', 'she/they'],
+  ['von', 'from/of'],
+  ['nicht', 'not'],
+  ['mit', 'with'],
+  ['es', 'it'],
+  ['sich', 'oneself'],
+  ['auch', 'also'],
+  ['auf', 'on'],
+  ['für', 'for'],
+  ['an', 'at/on'],
+  ['er', 'he'],
+  ['so', 'so'],
+  ['dass', 'that'],
+  ['können', 'can'],
+  ['dies', 'this'],
+  ['als', 'as/when'],
+  ['ihr', 'you(pl)/her'],
+  ['ja', 'yes'],
+  ['wie', 'how'],
+  ['bei', 'at/with'],
+  ['oder', 'or'],
+  ['wir', 'we'],
+  ['aber', 'but'],
+  ['dann', 'then'],
+  ['man', 'one/you'],
+  ['da', 'there/since'],
+  ['noch', 'still/yet'],
+  ['nach', 'after/to'],
+  ['was', 'what'],
+  ['also', 'so/thus'],
+  ['aus', 'out/from'],
+  ['alle', 'all'],
+  ['wenn', 'if/when'],
+  ['nur', 'only'],
+  ['müssen', 'must'],
+  ['sagen', 'to say'],
+  ['um', 'around/at'],
+  ['über', 'over/about'],
+  ['machen', 'to make/do'],
+  ['kein', 'no/none'],
+  ['Jahr', 'year'],
+  ['du', 'you(singular)'],
+  ['mein', 'my'],
+  ['schon', 'already'],
+  ['vor', 'before/in front'],
+  ['durch', 'through'],
+  ['geben', 'to give'],
+  ['mehr', 'more'],
+  ['andere', 'other'],
+  ['viel', 'much/many'],
+  ['kommen', 'to come'],
+  ['jetzt', 'now'],
+  ['sollen', 'should'],
+  ['mir', 'me/to me'],
+  ['wollen', 'to want'],
+  ['ganz', 'whole/quite'],
+  ['mich', 'me'],
+  ['immer', 'always'],
+  ['gehen', 'to go'],
+  ['sehr', 'very'],
+  ['hier', 'here'],
+  ['doch', 'but/however'],
+  ['bis', 'until'],
+  ['groß', 'big/tall'],
+  ['wieder', 'again'],
+  ['Mal', 'time'],
+  ['zwei', 'two'],
+  ['gut', 'good'],
+  ['wissen', 'to know'],
+  ['neu', 'new'],
+  ['sehen', 'to see'],
+  ['lassen', 'to let'],
+  ['uns', 'us'],
+  ['weil', 'because'],
+  ['unter', 'under'],
+  ['denn', 'because'],
+  ['stehen', 'to stand'],
+  ['jede', 'every'],
+  ['Beispiel', 'example'],
+  ['Zeit', 'time'],
+  ['erste', 'first'],
+  ['ihm', 'him/to him'],
+  ['ihn', 'him'],
+  ['wo', 'where'],
+  ['lang', 'long'],
+  ['eigentlich', 'actually'],
+  ['damit', 'with it/so that'],
+  ['selbst', 'self/even'],
+  ['unser', 'our'],
+  ['oben', 'above'],
+  ['Mann', 'man'],
+  ['solch', 'such'],
+  ['dürfen', 'may/to be allowed'],
+  ['sollte', 'should'],
+  ['konnte', 'could'],
+  ['beim', 'at the'],
+  ['weit', 'far'],
+  ['Leben', 'life'],
+  ['zurück', 'back'],
+  ['jedoch', 'however'],
+  ['etwas', 'something'],
+  ['ohne', 'without'],
+  ['heute', 'today'],
+  ['gegen', 'against'],
+  ['gleich', 'same/right away'],
+  ['einfach', 'simple'],
+  ['neben', 'next to'],
+  ['Tag', 'day'],
+  ['während', 'during/while'],
+  ['finden', 'to find'],
+  ['nichts', 'nothing'],
+  ['bleiben', 'to stay'],
+  ['sondern', 'but rather'],
+  ['natürlich', 'naturally'],
+  ['zwischen', 'between'],
+  ['zusammen', 'together'],
+  ['Frau', 'woman/wife'],
+  ['letzt', 'last'],
+  ['nein', 'no'],
+  ['dazu', 'to it/for that'],
+  ['eben', 'just/exactly'],
+  ['Hand', 'hand'],
+  ['fragen', 'to ask'],
+  ['zeigen', 'to show'],
+  ['zwar', 'indeed/to be sure'],
+  ['Herr', 'Mr./gentleman'],
+  ['Teil', 'part'],
+  ['nächste', 'next'],
+  ['sicherlich', 'certainly'],
+  ['gering', 'small/minor'],
+  ['Kind', 'child'],
+  ['dabei', 'in doing so'],
+  ['allein', 'alone'],
+  ['innerhalb', 'within'],
+  ['halten', 'to hold/stop'],
+  ['alt', 'old'],
+  ['nennen', 'to call/name'],
+  ['sicher', 'sure/safe'],
+  ['Weg', 'way/path'],
+  ['nie', 'never'],
+  ['Welt', 'world'],
+  ['Ende', 'end'],
+  ['Sache', 'thing/matter'],
+  ['Haus', 'house'],
+  ['gerade', 'just/straight'],
+  ['weiter', 'further'],
+  ['soweit', 'as far as'],
+  ['Auge', 'eye'],
+  ['liegen', 'to lie/be located'],
+  ['Frage', 'question'],
+  ['kennen', 'to know (people)'],
+  ['Arbeit', 'work'],
+  ['heißen', 'to be called'],
+  ['Wasser', 'water'],
+  ['gar', 'quite/at all'],
+  ['nah', 'near'],
+  ['wirklich', 'really'],
+  ['denken', 'to think'],
+  ['Platz', 'place/square'],
+  ['vielleicht', 'maybe'],
+  ['Grund', 'reason/ground'],
+  ['Art', 'type/kind'],
+  ['darauf', 'on it/thereupon'],
+  ['los', 'loose/off'],
+  ['davon', 'of it/from it'],
+  ['Menschen', 'people/humans'],
+  ['Staat', 'state'],
+  ['mögen', 'to like'],
+  ['Land', 'country/land'],
+  ['stellen', 'to place/put'],
+  ['junger', 'young'],
+  ['führen', 'to lead'],
+  ['ob', 'whether'],
+  ['Ort', 'place/location'],
+  ['setzen', 'to set/sit'],
+  ['Geld', 'money'],
+  ['recht', 'right/quite'],
+  ['drei', 'three'],
+  ['hoch', 'high'],
+  ['bestehen', 'to exist/pass'],
+  ['Stadt', 'city'],
+  ['verschieden', 'different'],
+  ['Seite', 'side/page'],
+  ['seitdem', 'since then'],
+  ['bringen', 'to bring'],
+  ['Wort', 'word'],
+  ['Zahl', 'number'],
+  ['nehmen', 'to take'],
+  ['sprechen', 'to speak'],
+  ['kam', 'came'],
+  ['Bild', 'picture/image'],
+  ['völlig', 'completely'],
+  ['darin', 'in it'],
+  ['Name', 'name'],
+  ['möglich', 'possible'],
+  ['tun', 'to do'],
+  ['einige', 'some'],
+  ['deshalb', 'therefore'],
+  ['Prozent', 'percent'],
+  ['eher', 'rather/sooner'],
+  ['glauben', 'to believe'],
+  ['zuerst', 'first/at first'],
+  ['Buch', 'book'],
+  ['Gesicht', 'face'],
+  ['je', 'ever/each'],
+  ['Meter', 'meter'],
+  ['etwa', 'about/approximately'],
+  ['wahr', 'true'],
+  ['Weise', 'way/manner'],
+  ['spät', 'late'],
+  ['oft', 'often'],
+  ['daher', 'therefore'],
+  ['dennoch', 'nevertheless'],
+  ['inzwischen', 'meanwhile'],
+  ['fast', 'almost'],
+  ['Kopf', 'head'],
+  ['beide', 'both'],
+  ['spielen', 'to play'],
+  ['nachdem', 'after'],
+  ['verstehen', 'to understand'],
+  ['gegenüber', 'opposite/toward'],
+  ['Musik', 'music'],
+  ['vier', 'four'],
+  ['Uhr', 'clock/hour'],
+  ['höher', 'higher'],
+  ['Stelle', 'position/place'],
+  ['erreichen', 'to reach'],
+  ['Geschichte', 'story/history'],
+  ['warum', 'why'],
+  ['plötzlich', 'suddenly'],
+  ['laufen', 'to run/walk'],
+  ['beginnen', 'to begin'],
+  ['lieber', 'rather/preferably'],
+  ['Raum', 'room/space'],
+  ['gelten', 'to be valid'],
+  ['zugleich', 'at the same time'],
+  ['aufgrund', 'due to'],
+  ['Mutter', 'mother'],
+  ['entgegen', 'toward/contrary'],
+  ['vergehen', 'to pass (time)'],
+  ['Farbe', 'color'],
+  ['klein', 'small'],
+  ['Tür', 'door'],
+  ['schließen', 'to close'],
+  ['Minute', 'minute'],
+  ['Vater', 'father'],
+  ['legen', 'to lay/put'],
+  ['ziehen', 'to pull/move'],
+  ['brauchen', 'to need'],
+  ['arbeiten', 'to work'],
+  ['ergeben', 'to result in'],
+  ['bilden', 'to form'],
+  ['bereit', 'ready'],
+  ['bestimmt', 'certain/definitely'],
+  ['hinter', 'behind'],
+  ['erhalten', 'to receive'],
+  ['Mensch', 'human/person'],
+  ['bedeuten', 'to mean'],
+  ['scheinen', 'to shine/seem'],
+  ['Zimmer', 'room'],
+  ['meist', 'mostly'],
+  ['Straße', 'street'],
+  ['einzig', 'only/single'],
+  ['Kraft', 'power/strength'],
+  ['außer', 'except'],
+  ['folgen', 'to follow'],
+  ['enthalten', 'to contain'],
+  ['schwer', 'heavy/difficult'],
+  ['schließlich', 'finally'],
+  ['falls', 'if/in case'],
+  ['Nacht', 'night'],
+  ['lernen', 'to learn'],
+  ['wirken', 'to have an effect'],
+  ['Ton', 'sound/tone'],
+  ['zumindest', 'at least'],
+  ['erscheinen', 'to appear'],
+  ['würde', 'would'],
+  ['weder', 'neither'],
+  ['Sohn', 'son'],
+  ['laut', 'loud/according to'],
+  ['Fall', 'case/fall'],
+  ['direkt', 'direct'],
+  ['weg', 'away'],
+  ['vergangen', 'past'],
+  ['Monat', 'month'],
+  ['bevor', 'before'],
+  ['Woche', 'week'],
+  ['tragen', 'to carry/wear'],
+  ['gelingen', 'to succeed']
+];
+
+const prefixMap = new Map(prefixes.map((x) => [x[0].toLowerCase(), x[1]]));
+const suffixMap = new Map(suffixes.map((x) => [x[0].toLowerCase(), x[1]]));
+const prefixKeys = [...prefixMap.keys()].sort((a, b) => b.length - a.length);
+const suffixKeys = [...suffixMap.keys()].sort((a, b) => b.length - a.length);
+
+function splitRealWord(word, en) {
+  const raw = String(word || '').trim();
+  const lower = raw.toLowerCase();
+  let p = '∅';
+  let s = '∅';
+  let root = lower;
+
+  for (const candidate of prefixKeys) {
+    if (lower.startsWith(candidate) && lower.length > candidate.length + 2) {
+      p = candidate;
+      root = lower.slice(candidate.length);
+      break;
+    }
+  }
+
+  for (const candidate of suffixKeys) {
+    if (root.endsWith(candidate) && root.length > candidate.length + 1) {
+      s = candidate;
+      root = root.slice(0, root.length - candidate.length);
+      break;
+    }
+  }
+
+  if (!root) root = lower;
+
+  return {
+    word: raw,
+    en,
+    p,
+    pm: p === '∅' ? 'no prefix' : (prefixMap.get(p) || 'prefix'),
+    r: root,
+    rm: en,
+    s,
+    sm: s === '∅' ? 'no suffix' : (suffixMap.get(s) || 'suffix'),
+    gloss: en
+  };
+}
+
+const allCombos = realWordPairs.map(([de, en]) => splitRealWord(de, en)).filter((x) => x.word).slice(0, 300);
+const roots = [...new Map(allCombos.map((x) => [x.r, [x.r, x.rm]])).values()];
+const prefixChoicePool = [...new Map(allCombos.map((x) => [x.p, [x.p, x.pm]])).values()];
+const suffixChoicePool = [...new Map(allCombos.map((x) => [x.s, [x.s, x.sm]])).values()];
+
+let current = null;
+let selected = { p: '', r: '', s: '' };
+let hintStep = 0;
+let round = 0;
+
+function setSelected(type, value, button) {
+  selected[type] = value;
+  document.querySelectorAll(`[data-type="${type}"]`).forEach((b) => b.classList.remove('selected'));
+  button.classList.add('selected');
+  document.getElementById('assembled').textContent = `Word parts: ${selected.p || '_'} + ${selected.r || '_'} + ${selected.s || '_'}`;
+}
+
+function renderChoices() {
+  const pOpts = shuffle(prefixChoicePool.filter((x) => x[0] !== current.p)).slice(0, 2).concat([[current.p, current.pm]]);
+  const rOpts = shuffle(roots.filter((x) => x[0] !== current.r)).slice(0, 2).concat([[current.r, current.rm]]);
+  const sOpts = shuffle(suffixChoicePool.filter((x) => x[0] !== current.s)).slice(0, 2).concat([[current.s, current.sm]]);
+
+  document.getElementById('prefixChoices').innerHTML = shuffle(pOpts).map((x) => `<button class="choice" data-type="p" data-value="${escHtml(x[0])}">${escHtml(x[0])}<br><small>${escHtml(x[1])}</small></button>`).join('');
+  document.getElementById('rootChoices').innerHTML = shuffle(rOpts).map((x) => `<button class="choice" data-type="r" data-value="${escHtml(x[0])}">${escHtml(x[0])}<br><small>${escHtml(x[1])}</small></button>`).join('');
+  document.getElementById('suffixChoices').innerHTML = shuffle(sOpts).map((x) => `<button class="choice" data-type="s" data-value="${escHtml(x[0])}">${escHtml(x[0])}<br><small>${escHtml(x[1])}</small></button>`).join('');
+
+  document.querySelectorAll('.choice').forEach((b) => {
+    b.addEventListener('click', () => setSelected(b.dataset.type, b.dataset.value, b));
+  });
+}
+
+function nextRound() {
+  if (!allCombos.length) {
+    document.getElementById('builderPrompt').textContent = 'No word data loaded.';
+    document.getElementById('builderMsg').textContent = 'Unable to start word builder.';
+    document.getElementById('builderMsg').className = 'msg bad';
+    return;
+  }
+  current = allCombos[Math.floor(Math.random() * allCombos.length)];
+  selected = { p: '', r: '', s: '' };
+  hintStep = 0;
+  round += 1;
+  document.getElementById('builderPrompt').textContent = `Target meaning: ${current.en}`;
+  document.getElementById('assembled').textContent = 'Word parts: _ + _ + _';
+  document.getElementById('builderMsg').textContent = '';
+  document.getElementById('builderHint').textContent = '';
+  document.getElementById('counter').textContent = `Word bank: ${allCombos.length} • Round ${round}`;
+  renderChoices();
+}
+
+document.getElementById('checkBtn').addEventListener('click', () => {
+  const built = `${selected.p === '∅' ? '' : selected.p}${selected.r}${selected.s === '∅' ? '' : selected.s}`;
+  if (!selected.p || !selected.r || !selected.s) {
+    document.getElementById('builderMsg').textContent = 'Pick one prefix, one root, and one suffix first.';
+    document.getElementById('builderMsg').className = 'msg bad';
+    return;
+  }
+  if (built.toLowerCase() === String(current.word).toLowerCase()) {
+    document.getElementById('builderMsg').textContent = `Correct: ${built}`;
+    document.getElementById('builderMsg').className = 'msg ok';
+    document.getElementById('builderHint').textContent = `Breakdown: ${current.p} (${current.pm}) + ${current.r} + ${current.s} (${current.sm})`;
+  } else {
+    document.getElementById('builderMsg').textContent = `Incorrect. Correct build: ${current.word}`;
+    document.getElementById('builderMsg').className = 'msg bad';
+    document.getElementById('builderHint').textContent = `Correct parts: ${current.p} + ${current.r} + ${current.s}`;
+  }
+});
+
+document.getElementById('hintBtn').addEventListener('click', () => {
+  hintStep += 1;
+  if (hintStep === 1) {
+    document.getElementById('builderHint').textContent = `Hint 1: prefix = ${current.p} (${current.pm}).`;
+  } else if (hintStep === 2) {
+    document.getElementById('builderHint').textContent = `Hint 2: root = ${current.r} (${current.rm}).`;
+  } else {
+    document.getElementById('builderHint').textContent = `Hint 3: suffix = ${current.s} (${current.sm}).`;
+  }
+});
+
+document.getElementById('nextBtn').addEventListener('click', nextRound);
+
+renderTables();
+nextRound();
+</script>
+
+<script src="menu-settings.js"></script>
+<div class="settings-fab" id="settingsFab" aria-label="Open settings">⚙</div>
+<div class="settings-panel" id="settingsPanel"><h4>Settings</h4><div class="settings-row"><label for="settingsTheme" style="font-weight:600;">Theme</label><select id="settingsTheme"><option value="system">System</option><option value="light">Light</option><option value="dark">Dark</option></select></div><div class="debug-box" id="deeplDebug">DeepL debug available on Translate page.</div><div class="settings-actions"><button id="debugTestBtn">Test DeepL</button><button id="debugClearBtn">Clear cache</button></div><div class="settings-note">Theme settings apply across all pages.</div></div>
+</body>
+</html>
