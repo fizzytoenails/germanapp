@@ -194,9 +194,6 @@
       const holder = soundBtn.parentElement;
       if (holder && hintBtn.parentElement === holder && nextBtn.parentElement === holder) {
         holder.classList.add('dt-match-actionbar');
-        holder.appendChild(soundBtn);
-        holder.appendChild(hintBtn);
-        holder.appendChild(nextBtn);
       }
     }
   }
@@ -220,8 +217,10 @@
       normalizeMatchIcons(page);
     };
     run();
-    const observer = new MutationObserver(() => run());
-    observer.observe(document.body, { childList: true, subtree: true, attributes: false });
+    // Bounded follow-up passes catch dynamic render updates without long-lived observers.
+    setTimeout(run, 150);
+    setTimeout(run, 500);
+    setTimeout(run, 1200);
   }
 
   function currentPage() {
