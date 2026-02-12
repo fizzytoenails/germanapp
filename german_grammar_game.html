@@ -272,19 +272,36 @@
             { de: 'Hier darf man nicht rauchen.', en: 'Smoking is not allowed here.', lit: 'Here may one not smoke', register: 'spoken', formality: 'both', grammarHint: 'Modal verb in second position, infinitive at clause end, negation before infinitive.' },
             { de: 'Wir müssen heute lange arbeiten.', en: 'We have to work long today.', lit: 'We must today long work', register: 'both', formality: 'both', grammarHint: 'Modal sentence: finite modal in position 2 and lexical infinitive at end.' },
             { de: 'Du sollst dein Zimmer aufräumen.', en: 'You should tidy your room.', lit: 'You should your room tidy up', register: 'spoken', formality: 'informal', grammarHint: 'Modal construction with accusative object before infinitive.' },
-            { de: 'Als Kind konnte ich nicht Auto fahren.', en: 'As a child I could not drive a car.', lit: 'As child could I not car drive', register: 'both', formality: 'neutral', grammarHint: 'Time phrase fronted; finite modal remains in second position.' }
+            { de: 'Als Kind konnte ich nicht Auto fahren.', en: 'As a child I could not drive a car.', lit: 'As child could I not car drive', register: 'both', formality: 'neutral', grammarHint: 'Time phrase fronted; finite modal remains in second position.' },
+            { de: 'War das ein Tor?', en: 'Was that a goal?', lit: 'Was that a goal', register: 'spoken', formality: 'both', grammarHint: 'Nominative neuter with ein-word in identification question.' },
+            { de: 'Nein, das war leider kein Tor.', en: 'No, unfortunately that was not a goal.', lit: 'No that was unfortunately no goal', register: 'spoken', formality: 'both', grammarHint: 'Negation of an indefinite noun uses kein, matching gender/case.' },
+            { de: 'Soll sie in ein Fitnessstudio gehen?', en: 'Should she go to a gym?', lit: 'Should she into a gym go', register: 'spoken', formality: 'both', grammarHint: 'Accusative after direction preposition in + movement.' },
+            { de: 'Gibst du mir meine Handtasche?', en: 'Are you giving me my handbag?', lit: 'Give you me my handbag', register: 'spoken', formality: 'informal', grammarHint: 'Dative pronoun mir plus possessive ein-word meine.' },
+            { de: 'Sind das eure Basketbälle?', en: 'Are those your basketballs?', lit: 'Are that your basketballs', register: 'spoken', formality: 'informal', grammarHint: 'Plural noun with possessive article eure.' },
+            { de: 'Sie fahren mit dem Bus.', en: 'They are traveling by bus.', lit: 'They travel with the bus', register: 'both', formality: 'both', grammarHint: 'mit always takes dative: dem Bus.' },
+            { de: 'Das Auto ist leider kaputt.', en: 'The car is unfortunately broken.', lit: 'The car is unfortunately broken', register: 'both', formality: 'both', grammarHint: 'Nominative subject with definite article das.' },
+            { de: 'Sarah kennt den Weg zum Startpunkt.', en: 'Sarah knows the way to the start point.', lit: 'Sarah knows the way to-the start-point', register: 'both', formality: 'both', grammarHint: 'kennen takes accusative object: den Weg.' },
+            { de: 'Er ist in der Nähe ihrer Arbeit.', en: 'It is near her workplace.', lit: 'He is in the proximity her work', register: 'written', formality: 'neutral', grammarHint: 'Fixed phrase in der Nähe + genitive possessive phrase.' },
+            { de: 'Jens läuft den Marathon.', en: 'Jens is running the marathon.', lit: 'Jens runs the marathon', register: 'both', formality: 'both', grammarHint: 'Direct object in accusative: den Marathon.' },
+            { de: 'Jeder Gast bekommt ein Stück Kuchen.', en: 'Every guest gets a piece of cake.', lit: 'Every guest gets a piece cake', register: 'written', formality: 'neutral', grammarHint: 'jeder is singular determiner; object uses ein-word form.' },
+            { de: 'Manche Frauen mögen diesen Film.', en: 'Some women like this film.', lit: 'Some women like this film', register: 'both', formality: 'both', grammarHint: 'manche marks subset; diesen is accusative masculine der-word.' },
+            { de: 'Alle Spieler sind talentiert.', en: 'All players are talented.', lit: 'All players are talented', register: 'both', formality: 'both', grammarHint: 'alle is plural determiner replacing singular jeder pattern.' },
+            { de: 'Welchen Sitzplatz sollen wir nehmen?', en: 'Which seat should we take?', lit: 'Which seat should we take', register: 'spoken', formality: 'both', grammarHint: 'welch- asks for one option from a known set; accusative masculine welchen.' },
+            { de: 'Dieser Platz hier ist frei, aber jener dort ist besser.', en: 'This seat here is free, but that one there is better.', lit: 'This seat here is free but that there is better', register: 'spoken', formality: 'both', grammarHint: 'dies- = near speaker, jen- = farther away.' }
         ];
 
         const POS_LEXICON = {
             ich: 'PRON', du: 'PRON', er: 'PRON', sie: 'PRON', wir: 'PRON', ihr: 'PRON', man: 'PRON',
             mich: 'PRON', mir: 'PRON', dich: 'PRON', dir: 'PRON', uns: 'PRON', euch: 'PRON',
             der: 'ART', die: 'ART', das: 'ART', den: 'ART', dem: 'ART', des: 'ART', ein: 'ART', eine: 'ART', einen: 'ART', einem: 'ART',
-            mein: 'POSS', meine: 'POSS', dein: 'POSS', deine: 'POSS', ihr: 'POSS', unsere: 'POSS',
+            kein: 'ART', keine: 'ART', keinen: 'ART', keiner: 'ART', jeder: 'ART', jede: 'ART', jedes: 'ART', manchen: 'ART', manche: 'ART',
+            dieser: 'ART', diese: 'ART', dieses: 'ART', diesen: 'ART', jener: 'ART', jene: 'ART', jenes: 'ART', welchen: 'ART',
+            mein: 'POSS', meine: 'POSS', dein: 'POSS', deine: 'POSS', ihr: 'POSS', unsere: 'POSS', eure: 'POSS', ihrer: 'POSS',
             und: 'CONJ', aber: 'CONJ', oder: 'CONJ', denn: 'CONJ', weil: 'SCONJ', wenn: 'SCONJ', obwohl: 'SCONJ', ob: 'SCONJ',
             nicht: 'NEG', heute: 'ADV', morgen: 'ADV', hier: 'ADV', noch: 'ADV',
             zu: 'PREP', auf: 'PREP', mit: 'PREP', bei: 'PREP', für: 'PREP', nach: 'PREP', in: 'PREP', am: 'PREP', im: 'PREP', um: 'PREP',
-            kann: 'VMOD', kannst: 'VMOD', können: 'VMOD', könnte: 'VMOD', könnten: 'VMOD', muss: 'VMOD', musst: 'VMOD', dürfen: 'VMOD', darf: 'VMOD',
-            ist: 'VFIN', sind: 'VFIN', habe: 'VFIN', hast: 'VFIN', hat: 'VFIN', bin: 'VFIN', komme: 'VFIN', lernen: 'VINF',
+            kann: 'VMOD', kannst: 'VMOD', können: 'VMOD', konnte: 'VMOD', könnte: 'VMOD', könnten: 'VMOD', muss: 'VMOD', musst: 'VMOD', dürfen: 'VMOD', darf: 'VMOD', soll: 'VMOD', sollen: 'VMOD',
+            ist: 'VFIN', sind: 'VFIN', war: 'VFIN', habe: 'VFIN', hast: 'VFIN', hat: 'VFIN', bin: 'VFIN', komme: 'VFIN', gehen: 'VINF', läuft: 'VFIN', lernen: 'VINF',
             bitte: 'PART'
         };
 

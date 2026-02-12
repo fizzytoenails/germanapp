@@ -95,6 +95,17 @@
     </div>
   </section>
 
+  <section class="card quiz">
+    <h3>A2 Form Coach (der/ein, dies-/jen-/welch-, jeder/mancher/alle)</h3>
+    <div class="hint">Fill in the missing article form. The explanation tells you why that form is correct for case and word family.</div>
+    <div id="a2Prompt" style="font-weight:700;font-size:1.05rem"></div>
+    <div id="a2Rule" style="color:var(--muted)"></div>
+    <input id="a2Input" placeholder="Type the missing form..." autocomplete="off">
+    <div class="btns"><button class="btn" id="a2CheckBtn">Check</button><button class="btn" id="a2HintBtn">Hint</button><button class="btn" id="a2NextBtn">Next</button><button class="btn" id="a2ListenBtn">Sound</button></div>
+    <div class="hint" id="a2Feedback"></div>
+    <div class="hint" id="a2Explain"></div>
+  </section>
+
   <section class="card">
     <h3>Article Matching</h3>
     <div class="hint" id="matchMsg">Tap one noun and one article. Use Hint for one reveal.</div>
@@ -177,6 +188,40 @@ const allWords = [['der', 'the (masculine)'], ['die', 'the (feminine/plural)'], 
       hintStep = 0;
     }
 
+    const a2FormItems = [
+      { prompt: 'War das ___ Tor?', answer: 'ein', reason: 'Nominative neuter singular with ein-word.', hint: 'Indefinite article, neuter nominative.' },
+      { prompt: 'Nein, das war leider ___ Tor.', answer: 'kein', reason: 'Negation of an indefinite neuter noun uses kein.', hint: 'Negated form of "ein".' },
+      { prompt: 'Soll sie in ___ Fitnessstudio gehen?', answer: 'ein', reason: 'Movement with "in" takes accusative; neuter noun stays ein in accusative.', hint: 'Direction: accusative after "in".' },
+      { prompt: 'Ich habe heute ___ Sport gemacht.', answer: 'keinen', reason: 'Sport is masculine here in accusative singular after negation.', hint: 'Negated direct object in accusative.' },
+      { prompt: 'Gibst du mir ___ Handtasche?', answer: 'meine', reason: 'Possessive ein-word in accusative feminine singular.', hint: 'Possessive from "mein".' },
+      { prompt: 'Sind das ___ Basketbälle?', answer: 'eure', reason: 'Plural possessive determiner for ihr/euer in nominative plural.', hint: 'Plural possessive from euer.' },
+      { prompt: 'Sie fahren mit ___ Bus.', answer: 'dem', reason: '"mit" always takes dative.', hint: 'Preposition rule: mit + dative.' },
+      { prompt: 'Sarah kennt ___ Weg zum Startpunkt.', answer: 'den', reason: 'Direct object after kennen is accusative masculine.', hint: 'Accusative masculine definite article.' },
+      { prompt: 'Er ist in ___ Nähe ihrer Arbeit.', answer: 'der', reason: 'Fixed phrase "in der Nähe" uses dative feminine.', hint: 'Fixed chunk: in der Nähe.' },
+      { prompt: 'Jens läuft ___ Marathon.', answer: 'den', reason: 'Direct object in accusative masculine.', hint: 'Accusative masculine article.' },
+      { prompt: 'Jens beendet ___ Rennen glücklich.', answer: 'das', reason: 'Direct object accusative neuter uses das.', hint: 'Neuter noun in accusative.' },
+      { prompt: '___ Sitzplatz sollen wir nehmen?', answer: 'Welchen', reason: 'welch- asks for one option, accusative masculine here.', hint: 'Question determiner from welch-.' },
+      { prompt: '___ hier ist nicht schlecht.', answer: 'Dieser', reason: 'dies- marks something near the speaker.', hint: 'Near the speaker form.' },
+      { prompt: 'Aber ___ dort ist besser.', answer: 'jener', reason: 'jen- marks something farther away.', hint: 'Farther-away form.' },
+      { prompt: '___ Gast bekommt ein Stück Kuchen.', answer: 'Jeder', reason: 'jeder means every and is singular.', hint: 'Means every (singular).' },
+      { prompt: '___ Frauen gefällt der Film.', answer: 'manchen', reason: 'manch- means some; here dative plural with gefallen.', hint: 'Not all, just some.' },
+      { prompt: '___ Spieler sind talentiert.', answer: 'Alle', reason: 'alle is plural for group statements.', hint: 'Plural of "every/everyone".' },
+      { prompt: 'Ich kann in ___ Restaurants nicht essen.', answer: 'solchen', reason: 'solch- declines like der-words; dative plural here.', hint: 'solch- + dative plural.' }
+    ];
+
+    let a2Current = null;
+    let a2HintStep = 0;
+
+    function nextA2Form() {
+      a2Current = a2FormItems[Math.floor(Math.random() * a2FormItems.length)];
+      document.getElementById('a2Prompt').textContent = a2Current.prompt;
+      document.getElementById('a2Rule').textContent = 'A2 article-form drill.';
+      document.getElementById('a2Input').value = '';
+      document.getElementById('a2Feedback').textContent = '';
+      document.getElementById('a2Explain').textContent = '';
+      a2HintStep = 0;
+    }
+
     function articleExplanation(article) {
       if (article === 'der') return 'Correct because the word is treated as masculine in nominative dictionary form.';
       if (article === 'die') return 'Correct because the word is feminine (or plural in some contexts) in dictionary form.';
@@ -221,6 +266,48 @@ const allWords = [['der', 'the (masculine)'], ['die', 'the (feminine/plural)'], 
     });
     document.getElementById('nextArticleBtn').addEventListener('click', nextQuiz);
     nextQuiz();
+
+    document.getElementById('a2CheckBtn').addEventListener('click', () => {
+      if (!a2Current) return;
+      const val = document.getElementById('a2Input').value.trim();
+      if (!val) {
+        document.getElementById('a2Feedback').textContent = 'Type the missing form first.';
+        document.getElementById('a2Feedback').className = 'hint bad';
+        return;
+      }
+      if (val.toLowerCase() === a2Current.answer.toLowerCase()) {
+        document.getElementById('a2Feedback').textContent = 'Correct.';
+        document.getElementById('a2Feedback').className = 'hint ok';
+        document.getElementById('a2Explain').textContent = a2Current.reason;
+        playTone(true);
+      } else {
+        document.getElementById('a2Feedback').textContent = `Incorrect. Correct answer: ${a2Current.answer}`;
+        document.getElementById('a2Feedback').className = 'hint bad';
+        document.getElementById('a2Explain').textContent = `${a2Current.reason} Hint: ${a2Current.hint}`;
+        playTone(false);
+      }
+    });
+
+    document.getElementById('a2HintBtn').addEventListener('click', () => {
+      if (!a2Current) return;
+      a2HintStep += 1;
+      if (a2HintStep === 1) {
+        document.getElementById('a2Feedback').textContent = `Hint 1: form starts with "${a2Current.answer.charAt(0)}".`;
+      } else if (a2HintStep === 2) {
+        document.getElementById('a2Feedback').textContent = `Hint 2: ${a2Current.hint}`;
+      } else {
+        document.getElementById('a2Feedback').textContent = `Hint 3: answer is ${a2Current.answer}.`;
+      }
+      document.getElementById('a2Feedback').className = 'hint';
+    });
+
+    document.getElementById('a2NextBtn').addEventListener('click', nextA2Form);
+    document.getElementById('a2ListenBtn').addEventListener('click', () => {
+      if (!a2Current) return;
+      const spoken = a2Current.prompt.replace('___', a2Current.answer);
+      speakGerman(spoken);
+    });
+    nextA2Form();
 
     const matchPairs = nounPool.slice(0, 220).map((e) => [`${e.word} (${e.en})`, e.article]);
     let lSel = null, rSel = null;

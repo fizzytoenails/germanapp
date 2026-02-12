@@ -493,14 +493,26 @@
             { title: 'Singular vs plural possessives', text: 'From DE_A1_2012G: singular and plural endings differ; keep article+noun agreement visible in short statements.', example: 'Ist das <strong>deine</strong> Wohnung? Ja, das ist <strong>meine</strong> Wohnung.' },
             { title: 'Local prepositions with position', text: 'From bakery/location units (A1): use location prepositions for object positions in spaces.', example: 'Die Torte steht <strong>hinter</strong> dem Kuchen. Der Ball ist <strong>neben</strong> der Box.' },
             { title: 'bei vs in (A1/A2)', text: 'From worksheet instructions: choose preposition by context (person/place relation).', example: 'Ich bin <strong>bei</strong> meiner Mutter. Ich bin <strong>in</strong> der Schule.' },
-            { title: 'Modal verbs in present (A2)', text: 'From DE_A2_1123G: können/dürfen/müssen/sollen/wollen/möchten express ability, permission, obligation, request.', example: 'Wir <strong>müssen</strong> heute lange arbeiten. Hier <strong>darf</strong> man nicht rauchen.' },
-            { title: 'Modal verbs in Präteritum (A2)', text: 'From DE_A2_1123G: use Präteritum forms for past obligations/abilities in narratives.', example: 'Ich <strong>wollte</strong> früher Feierabend machen. Musstest du länger arbeiten?' },
+            { title: 'Modal verbs in present (A2)', text: 'A2 focus: können/dürfen/müssen/sollen/wollen/möchten express ability, permission, obligation, and requests.', example: 'Wir <strong>müssen</strong> heute lange arbeiten. Hier <strong>darf</strong> man nicht rauchen.' },
+            { title: 'Modal verbs in Präteritum (A2)', text: 'A2 past focus: use Präteritum forms for past obligations and abilities in narratives.', example: 'Ich <strong>wollte</strong> früher Feierabend machen. Musstest du länger arbeiten?' },
             { title: 'Modal verbs + infinitive end position', text: 'From A2 exercises: modal verb in slot 2, lexical verb at sentence end.', example: 'Du sollst dein Zimmer <strong>aufräumen</strong>.' },
             { title: 'Imperative in du-form', text: 'From command-task sheets: imperative used for direct instructions in practical contexts.', example: '<strong>Kopier</strong> bitte dieses Dokument! <strong>Räum</strong> bitte die Küche auf!' },
             { title: 'So sagt man das chunks', text: 'From PDF phrase boxes: fixed colloquial chunks improve fluency in spoken reactions.', example: 'Das darf doch nicht wahr sein! / Alles in Butter.' },
             { title: 'Functional writing blocks', text: 'From letter/email worksheets: keep Absender, Empfänger, Betreff, and polite request line in task writing.', example: 'Bitte überweisen Sie das Geld bis zum 31. Dezember.' }
         ];
         rules.push(...pdfDrivenRules);
+
+        const derEinA2Rules = [
+            { title: 'A2: der-Wort vs ein-Wort', text: 'der-Wörter follow the same endings as definite articles (`der/die/das` table). ein-Wörter follow the indefinite pattern (`ein/eine/ein`) and include `kein`, `mein`, `dein`, `sein`, `ihr`, `unser`, `euer`, `Ihr`.', example: 'der-Wort: <strong>dieser</strong> Mann. ein-Wort: <strong>mein</strong> Mann.' },
+            { title: 'A2: ein/kein pattern by case', text: 'Core A2 pattern: Nominative -> `ein/eine/ein`; Accusative -> `einen/eine/ein`; Dative -> `einem/einer/einem`; plural with ein-word family uses `keine/keinen`.', example: 'War das <strong>ein</strong> Tor? Nein, das war <strong>kein</strong> Tor.' },
+            { title: 'A2: definite article declension refresh', text: 'Definite articles must match case + gender + number. This is the reference pattern used by all der-words.', example: 'Nom: der/die/das/die, Akk: den/die/das/die, Dat: dem/der/dem/den' },
+            { title: 'A2: dies-/jen-/welch- meaning split', text: '`dies-` = near the speaker. `jen-` = farther away (less common in daily speech). `welch-` asks for one option from a known set.', example: 'Welchen Sitzplatz nehmen wir? <strong>Diesen</strong> hier oder <strong>jenen</strong> dort?' },
+            { title: 'A2: solcher forms and use', text: '`solch-` can behave as article-like determiner, adjective, or pronoun. It declines like der-words in the same case.', example: '<strong>Solche</strong> Schuhe finde ich bequem. Ich kenne <strong>solche</strong> Leute nicht.' },
+            { title: 'A2: jeder vs mancher vs alle', text: '`jeder` means every (singular). `mancher` means some (not all). `alle` is plural and corresponds semantically to every/all in group statements.', example: '<strong>Jeder</strong> Gast bekommt Kuchen, aber <strong>manche</strong> Gäste essen wenig; <strong>alle</strong> Gäste trinken Wasser.' },
+            { title: 'A2: case signal phrases for article choice', text: 'Use signal phrases to choose the correct article quickly: `mit` + dative, direct object after action verbs -> accusative, dictionary form for naming -> nominative.', example: 'mit <strong>dem</strong> Bus (Dat), Ich sehe <strong>den</strong> Weg (Akk), Das ist <strong>der</strong> Weg (Nom).' },
+            { title: 'A2: practical speaking formula', text: 'For quick spoken production, choose article in this order: 1) case role, 2) gender/number, 3) declension family (der-word vs ein-word).', example: 'auf <strong>dem</strong> Weg, in <strong>der</strong> Nähe, zu <strong>einem</strong> Marathonlauf' }
+        ];
+        rules.push(...derEinA2Rules);
 
         const tenseAndWordTypeRules = [
             { title: 'Present tense (Prasens)', text: 'Use Prasens for current actions, routines, and near-future plans with time markers.', example: 'Ich <strong>arbeite</strong> heute im Büro.' },
