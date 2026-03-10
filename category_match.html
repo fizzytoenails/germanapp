@@ -40,7 +40,7 @@
 <body>
 <div class="container">
   <nav class="nav">
-    <a class="brand" href="index.html"><img src="apple-touch-icon.png" alt="DeutscheTag logo"><div><h1>DeutscheTag</h1><div style="color:var(--muted);font-size:.9rem">Colors, weather, food, animals</div></div></a>
+    <a class="brand" href="index.html"><img src="apple-touch-icon.png" alt="DeutscheTag logo"><div><h1>DeutscheTag</h1><div style="color:var(--muted);font-size:.9rem">Colors, weather, food, animals, music</div></div></a>
     <button class="menu-toggle" id="menuToggle" aria-label="Open navigation"><span></span><span></span><span></span></button>
     <div class="nav-links"><a href="index.html">Home</a><a class="active" href="category_match.html">Category Match</a></div>
     <div class="nav-actions"><div class="timer" id="timerWidget"><div class="row"><span>Session</span><strong id="sessionTime">00:00</strong></div><div class="row"><span>Today</span><strong id="todayTime">00:00</strong></div><div class="row"><span>Streak</span><strong id="streakCount">0 days</strong></div><div class="note" id="timerNote"></div><button id="timerToggle">Start</button></div></div>
@@ -49,11 +49,19 @@
   <section class="card">
     <h2>Category Match</h2>
     <p style="color:var(--muted)">Same mechanics as vocabulary/number matching: repeat missed items, review-only loop, hint + audio.</p>
-    <div class="stats"><div class="stat"><strong id="matched">0</strong><span>Matched</span></div><div class="stat"><strong id="roundScore">0/10</strong><span>Round score</span></div><div class="stat"><strong id="missed">0</strong><span>Missed queue</span></div><div class="stat"><strong id="roundNo">1</strong><span>Round</span></div></div>
+    <div class="stats"><div class="stat"><strong id="matched">0</strong><span>Matched</span></div><div class="stat"><strong id="roundScore">0/10</strong><span>Round score</span></div><div class="stat"><strong id="missed">0</strong><span>Missed queue</span></div><div class="stat"><strong id="wordsCount">0</strong><span>Words</span></div></div>
     <div class="controls">
       <label><input type="checkbox" id="repeatToggle"> repeat missed</label>
       <label><input type="checkbox" id="reviewToggle"> review-only</label>
       <label><input type="checkbox" id="hintToggle" checked> show category label</label>
+    </div>
+    <div class="controls" id="categoryControls" aria-label="Choose categories">
+      <label><input type="checkbox" class="cat-toggle" data-cat="colors" checked> colors</label>
+      <label><input type="checkbox" class="cat-toggle" data-cat="weather" checked> weather</label>
+      <label><input type="checkbox" class="cat-toggle" data-cat="food" checked> food</label>
+      <label><input type="checkbox" class="cat-toggle" data-cat="animals" checked> animals</label>
+      <label><input type="checkbox" class="cat-toggle" data-cat="music" checked> music</label>
+      <label><input type="checkbox" id="catAll" checked> all</label>
     </div>
     <div class="message" id="message"></div>
   </section>
@@ -68,10 +76,180 @@
 
 <script>
 const categories = {
-  colors: [['rot','red'],['blau','blue'],['gelb','yellow'],['grün','green'],['schwarz','black'],['weiß','white'],['grau','gray'],['braun','brown'],['orange','orange'],['lila','purple'],['rosa','pink'],['beige','beige'],['golden','golden'],['silbern','silver']],
-  weather: [['es regnet','it is raining'],['es schneit','it is snowing'],['es ist sonnig','it is sunny'],['es ist bewölkt','it is cloudy'],['es ist windig','it is windy'],['es ist neblig','it is foggy'],['es ist kalt','it is cold'],['es ist warm','it is warm'],['es ist heiß','it is hot'],['es ist trocken','it is dry'],['es gibt ein Gewitter','there is a thunderstorm'],['es friert','it is freezing']],
-  food: [['das Brot','the bread'],['der Käse','the cheese'],['die Suppe','the soup'],['der Salat','the salad'],['das Wasser','the water'],['der Kaffee','the coffee'],['der Tee','the tea'],['das Frühstück','the breakfast'],['das Abendessen','the dinner'],['die Kartoffel','the potato'],['der Apfel','the apple'],['die Banane','the banana'],['das Fleisch','the meat'],['der Fisch','the fish']],
-  animals: [['der Hund','the dog'],['die Katze','the cat'],['der Vogel','the bird'],['das Pferd','the horse'],['die Kuh','the cow'],['das Schaf','the sheep'],['der Bär','the bear'],['der Fuchs','the fox'],['der Hase','the rabbit'],['der Löwe','the lion'],['der Elefant','the elephant'],['die Maus','the mouse'],['die Biene','the bee'],['der Fisch','the fish']]
+  colors: [['rot','red'],['blau','blue'],['gelb','yellow'],['grün','green'],['schwarz','black'],['weiß','white'],['grau','gray'],['braun','brown'],['orange','orange'],['lila','purple'],['rosa','pink'],['beige','beige'],['golden','golden'],['silbern','silver'],['türkis','turquoise'],['hellblau','light blue'],['dunkelblau','dark blue'],['hellgrün','light green'],['dunkelgrün','dark green'],['hellgrau','light gray'],['dunkelgrau','dark gray'],['bordeaux','burgundy'],['magenta','magenta'],['violett','violet'],['indigo','indigo'],['mintgrün','mint green'],['olivgrün','olive green'],['sandfarben','sand-colored'],['elfenbein','ivory'],['creme','cream'],['kupfer','copper'],['bronze','bronze'],['perlmutt','mother-of-pearl']],
+  weather: [['es regnet','it is raining'],['es schneit','it is snowing'],['es ist sonnig','it is sunny'],['es ist bewölkt','it is cloudy'],['es ist windig','it is windy'],['es ist neblig','it is foggy'],['es ist kalt','it is cold'],['es ist warm','it is warm'],['es ist heiß','it is hot'],['es ist trocken','it is dry'],['es gibt ein Gewitter','there is a thunderstorm'],['es friert','it is freezing'],['es ist schwül','it is humid'],['es ist stürmisch','it is stormy'],['es ist nass','it is wet'],['es ist glatt','it is icy'],['es gibt Hagel','there is hail'],['es ist frostig','it is frosty'],['es gibt Nieselregen','there is drizzle'],['es gibt Starkregen','there is heavy rain'],['es gibt einen Sturm','there is a storm'],['es gibt Eisregen','there is freezing rain'],['es klart auf','it is clearing up'],['es gibt Sonnenschein','there is sunshine'],['die Sicht ist schlecht','visibility is poor'],['die Sicht ist gut','visibility is good'],['es ist wechselhaft','it is changeable'],['es ist mild','it is mild'],['es ist frisch','it is cool and fresh']],
+  food: [['das Brot','the bread'],['der Käse','the cheese'],['die Suppe','the soup'],['der Salat','the salad'],['das Wasser','the water'],['der Kaffee','the coffee'],['der Tee','the tea'],['das Frühstück','the breakfast'],['das Abendessen','the dinner'],['die Kartoffel','the potato'],['der Apfel','the apple'],['die Banane','the banana'],['das Fleisch','the meat'],['der Fisch','the fish'],['das Gemüse','the vegetables'],['die Tomate','the tomato'],['die Zwiebel','the onion'],['der Knoblauch','the garlic'],['der Reis','the rice'],['die Nudeln','the pasta'],['das Ei','the egg'],['die Milch','the milk'],['die Butter','the butter'],['der Joghurt','the yogurt'],['das Öl','the oil'],['der Zucker','the sugar'],['das Salz','the salt'],['der Pfeffer','the pepper'],['das Brotchen','the bread roll'],['die Marmelade','the jam'],['der Honig','the honey'],['das Obst','the fruit'],['die Erdbeere','the strawberry'],['die Traube','the grape'],['die Orange','the orange'],['die Zitrone','the lemon'],['die Gurke','the cucumber'],['die Paprika','the bell pepper'],['die Karotte','the carrot'],['das Huhn','the chicken'],['das Rindfleisch','beef'],['das Schweinefleisch','pork'],['die Wurst','the sausage'],['die Pizza','the pizza'],['die Soße','the sauce'],['die Speisekarte','the menu'],['das Gericht','the dish'],['das Dessert','the dessert'],['der Kuchen','the cake'],['das Eis','the ice cream'],['die Schokolade','the chocolate']],
+  animals: [['der Hund','the dog'],['die Katze','the cat'],['der Vogel','the bird'],['das Pferd','the horse'],['die Kuh','the cow'],['das Schaf','the sheep'],['der Bär','the bear'],['der Fuchs','the fox'],['der Hase','the rabbit'],['der Löwe','the lion'],['der Elefant','the elephant'],['die Maus','the mouse'],['die Biene','the bee'],['der Fisch','the fish'],['der Wolf','the wolf'],['das Schwein','the pig'],['die Ziege','the goat'],['das Huhn','the chicken'],['die Ente','the duck'],['die Gans','the goose'],['der Hahn','the rooster'],['die Eule','the owl'],['der Adler','the eagle'],['der Delfin','the dolphin'],['der Wal','the whale'],['der Frosch','the frog'],['die Schlange','the snake'],['die Schildkröte','the turtle'],['das Kaninchen','the rabbit (pet)'],['die Spinne','the spider'],['die Ameise','the ant'],['die Fliege','the fly'],['die Mücke','the mosquito'],['das Reh','the deer'],['der Hirsch','the stag'],['der Igel','the hedgehog'],['der Affe','the monkey'],['der Tiger','the tiger'],['der Leopard','the leopard'],['das Kamel','the camel'],['die Giraffe','the giraffe'],['das Zebra','the zebra'],['das Krokodil','the crocodile'],['der Hummer','the lobster'],['die Krabbe','the crab'],['der Pinguin','the penguin']],
+  music: [
+    ['die Musik','music'],
+    ['das Lied','song'],
+    ['die Melodie','melody'],
+    ['der Rhythmus','rhythm'],
+    ['der Takt','beat'],
+    ['der Taktstrich','bar line'],
+    ['das Maß','measure'],
+    ['die Note','note'],
+    ['die Notenlinie','staff line'],
+    ['das Notensystem','staff'],
+    ['die Tonleiter','scale'],
+    ['der Ton','tone'],
+    ['die Tonart','key'],
+    ['das Tempo','tempo'],
+    ['der Akkord','chord'],
+    ['die Harmonie','harmony'],
+    ['die Dynamik','dynamics'],
+    ['der Einsatz','entry (musical)'],
+    ['die Pause','rest'],
+    ['das Crescendo','crescendo'],
+    ['das Decrescendo','decrescendo'],
+    ['das Forte','loud'],
+    ['das Piano','soft'],
+    ['das Legato','legato'],
+    ['das Staccato','staccato'],
+    ['das Vibrato','vibrato'],
+    ['der Taktgeber','conductor/timekeeper'],
+    ['der Dirigent','conductor'],
+    ['das Orchester','orchestra'],
+    ['die Band','band'],
+    ['der Chor','choir'],
+    ['der Musiker','musician'],
+    ['die Musikerin','musician (female)'],
+    ['das Instrument','instrument'],
+    ['die Geige','violin'],
+    ['die Bratsche','viola'],
+    ['das Cello','cello'],
+    ['der Kontrabass','double bass'],
+    ['die Flöte','flute'],
+    ['die Klarinette','clarinet'],
+    ['die Oboe','oboe'],
+    ['das Fagott','bassoon'],
+    ['die Trompete','trumpet'],
+    ['die Posaune','trombone'],
+    ['das Horn','horn'],
+    ['die Tuba','tuba'],
+    ['das Klavier','piano'],
+    ['der Flügel','grand piano'],
+    ['die Orgel','organ'],
+    ['die Gitarre','guitar'],
+    ['der Bass','bass'],
+    ['die Ukulele','ukulele'],
+    ['die Harfe','harp'],
+    ['die Trommel','drum'],
+    ['das Schlagzeug','drum kit'],
+    ['die Snare','snare drum'],
+    ['das Becken','cymbal'],
+    ['die Triangel','triangle'],
+    ['das Xylofon','xylophone'],
+    ['das Saxofon','saxophone'],
+    ['die Maraca','maraca'],
+    ['die Partitur','score'],
+    ['die Stimme','voice'],
+    ['der Gesang','singing'],
+    ['der Sänger','singer'],
+    ['die Sängerin','singer (female)'],
+    ['die Probe','rehearsal'],
+    ['das Konzert','concert'],
+    ['die Bühne','stage'],
+    ['der Applaus','applause'],
+    ['die Aufnahme','recording'],
+    ['die Lautstärke','volume'],
+    ['der Verstärker','amplifier'],
+    ['die Saite','string'],
+    ['der Bogen','bow'],
+    ['das Plektrum','pick'],
+    ['der Taktwechsel','time signature change'],
+    ['die Taktart','time signature'],
+    ['das Viertel','quarter note'],
+    ['das Achtel','eighth note'],
+    ['die Sechzehntel','sixteenth note'],
+    ['die Halbe','half note'],
+    ['die Ganze','whole note'],
+    ['die Oktave','octave'],
+    ['die Quinte','fifth'],
+    ['die Terz','third'],
+    ['die Sekunde','second (interval)'],
+    ['die Intervalle','intervals'],
+    ['das hohe C','high C'],
+    ['das tiefe C','low C'],
+    ['das Vorzeichen','accidental'],
+    ['das Kreuz','sharp'],
+    ['das Doppelkreuz','double sharp'],
+    ['das b','flat'],
+    ['das Doppel-b','double flat'],
+    ['das Auflösungszeichen','natural'],
+    ['die Note lesen','to read music'],
+    ['ein Lied singen','to sing a song'],
+    ['ein Instrument spielen','to play an instrument'],
+    ['im Takt bleiben','to stay in time'],
+    ['aus dem Takt sein','to be out of time'],
+    ['zu schnell spielen','to play too fast'],
+    ['zu langsam spielen','to play too slowly'],
+    ['den Einsatz verpassen','to miss the entry'],
+    ['leiser spielen','to play softer'],
+    ['lauter spielen','to play louder'],
+    ['eine Pause machen','to take a rest'],
+    ['eine Melodie wiederholen','to repeat a melody'],
+    ['die Saiten stimmen','to tune the strings'],
+    ['das Instrument stimmen','to tune the instrument'],
+    ['die Aufnahme starten','to start recording'],
+    ['die Aufnahme stoppen','to stop recording'],
+    ['das Mikrofon','microphone'],
+    ['die Lautsprecher','speakers'],
+    ['der Kopfhörer','headphones'],
+    ['der Lautsprecher','speaker'],
+    ['der Verstärker','amplifier'],
+    ['das Mischpult','mixing console'],
+    ['der Kanal','channel'],
+    ['die Spur','track'],
+    ['der Track','track'],
+    ['das Album','album'],
+    ['die Playlist','playlist'],
+    ['der Songtext','lyrics'],
+    ['die Strophe','verse'],
+    ['der Refrain','chorus'],
+    ['die Bridge','bridge'],
+    ['das Intro','intro'],
+    ['das Outro','outro'],
+    ['das Solo','solo'],
+    ['das Duett','duet'],
+    ['das Trio','trio'],
+    ['das Quartett','quartet'],
+    ['das Quintett','quintet'],
+    ['die Probe leiten','to lead a rehearsal'],
+    ['vom Blatt spielen','to sight-read'],
+    ['die Noten umblättern','to turn the pages'],
+    ['den Takt halten','to keep time'],
+    ['im richtigen Tempo','at the right tempo'],
+    ['die Stimmung','tuning'],
+    ['verstimmt','out of tune'],
+    ['sauber spielen','to play cleanly'],
+    ['schief spielen','to play out of tune'],
+    ['die Begleitung','accompaniment'],
+    ['der Begleiter','accompanist'],
+    ['die Begleitstimme','accompanying voice'],
+    ['die Hauptstimme','lead voice'],
+    ['das Playback','backing track'],
+    ['die Liveaufnahme','live recording'],
+    ['die Studioaufnahme','studio recording'],
+    ['das Konzertticket','concert ticket'],
+    ['das Publikum','audience'],
+    ['die Zugabe','encore'],
+    ['das Notenblatt','sheet music'],
+    ['die Saite reißen','string breaks'],
+    ['die Saite wechseln','to change a string'],
+    ['den Bogen spannen','to tighten the bow'],
+    ['den Bogen harzen','to rosin the bow'],
+    ['die Intonation','intonation'],
+    ['die Artikulation','articulation'],
+    ['die Betonung','stress/emphasis'],
+    ['der Taktwechsel','time signature change'],
+    ['die Taktart','time signature'],
+    ['der Auftakt','anacrusis'],
+    ['die Wiederholung','repeat'],
+    ['das Zeichen','symbol'],
+    ['die Partitur lesen','to read the score'],
+    ['die Noten lesen','to read the notes']
+  ]
 };
 
 const allPairs = Object.entries(categories).flatMap(([cat, pairs]) => pairs.map((p) => ({ de: p[0], en: p[1], cat })));
@@ -88,12 +266,28 @@ function unlockAudio(){ if(audioCtx && audioCtx.state==='suspended'){ audioCtx.r
 function speak(text, lang='de-DE'){ unlockAudio(); if(!('speechSynthesis' in window)) return; speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(text); u.lang=lang; u.rate=.9; speechSynthesis.speak(u); }
 function shuffle(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];}return b;}
 
+function getActiveCategories() {
+  const checks = [...document.querySelectorAll('.cat-toggle')];
+  const selected = checks.filter((c) => c.checked).map((c) => c.dataset.cat);
+  if (selected.length === 0) return Object.keys(categories);
+  return selected;
+}
+
+function getActivePairs() {
+  const activeCats = new Set(getActiveCategories());
+  return allPairs.filter((p) => activeCats.has(p.cat));
+}
+
 function pickRound() {
+  const activePairs = getActivePairs();
+  if (activePairs.length === 0) return [];
+  const activeIndexSet = new Set(activePairs.map((p) => allPairs.indexOf(p)));
+  const missedActive = missedQueue.filter((idx) => activeIndexSet.has(idx));
   if (document.getElementById('reviewToggle').checked) {
-    return missedQueue.slice(0, 10).map((idx) => allPairs[idx]);
+    return missedActive.slice(0, 10).map((idx) => allPairs[idx]);
   }
-  const fromMissed = document.getElementById('repeatToggle').checked ? missedQueue.slice(0, 3).map((idx) => allPairs[idx]) : [];
-  const random = shuffle(allPairs).slice(0, 10 - fromMissed.length);
+  const fromMissed = document.getElementById('repeatToggle').checked ? missedActive.slice(0, 3).map((idx) => allPairs[idx]) : [];
+  const random = shuffle(activePairs).slice(0, 10 - fromMissed.length);
   return shuffle([...fromMissed, ...random]).slice(0, 10);
 }
 
@@ -101,7 +295,7 @@ function updateStats() {
   document.getElementById('matched').textContent = totalMatched;
   document.getElementById('roundScore').textContent = `${roundMatched}/10`;
   document.getElementById('missed').textContent = missedQueue.length;
-  document.getElementById('roundNo').textContent = round;
+  document.getElementById('wordsCount').textContent = getActivePairs().length;
 }
 
 function buildCard(side, item) {
@@ -137,6 +331,11 @@ function loadRound() {
   const right = document.getElementById('right');
   left.innerHTML = '';
   right.innerHTML = '';
+  if (currentRound.length === 0) {
+    document.getElementById('message').textContent = 'No items in the selected categories.';
+    updateStats();
+    return;
+  }
   const rightPool = shuffle(currentRound);
   currentRound.forEach((item) => {
     const c = buildCard('de', item);
@@ -217,11 +416,35 @@ document.getElementById('nextBtn').addEventListener('click', () => { round += 1;
 document.getElementById('repeatToggle').addEventListener('change', loadRound);
 document.getElementById('reviewToggle').addEventListener('change', loadRound);
 document.getElementById('hintToggle').addEventListener('change', loadRound);
+document.getElementById('catAll').addEventListener('change', (e) => {
+  document.querySelectorAll('.cat-toggle').forEach((c) => { c.checked = e.target.checked; });
+  loadRound();
+});
+document.querySelectorAll('.cat-toggle').forEach((el) => {
+  el.addEventListener('change', () => {
+    const allToggle = document.getElementById('catAll');
+    const checks = [...document.querySelectorAll('.cat-toggle')];
+    allToggle.checked = checks.every((c) => c.checked);
+    loadRound();
+  });
+});
 
 loadRound();
 </script>
 
 <script src="menu-settings.js"></script>
+<script>
+  if (typeof document.querySelector === 'function') {
+    const checks = document.querySelectorAll('.cat-toggle');
+    if (checks.length) {
+      const allToggle = document.getElementById('catAll');
+      if (allToggle) {
+        allToggle.checked = [...checks].every((c) => c.checked);
+      }
+      loadRound();
+    }
+  }
+</script>
 <div class="settings-fab" id="settingsFab" aria-label="Open settings">⚙</div>
 <div class="settings-panel" id="settingsPanel"><h4>Settings</h4><div class="settings-row"><label for="settingsTheme" style="font-weight:600;">Theme</label><select id="settingsTheme"><option value="system">System</option><option value="light">Light</option><option value="dark">Dark</option></select></div><div class="debug-box" id="deeplDebug">DeepL debug available on Translate page.</div><div class="settings-actions"><button id="debugTestBtn">Test DeepL</button><button id="debugClearBtn">Clear cache</button></div><div class="settings-note">Theme settings apply across all pages.</div></div>
 </body>

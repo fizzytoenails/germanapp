@@ -16,7 +16,8 @@
     ['category_match.html', 'Category Match'],
     ['falling_match.html', 'Falling Match'],
     ['german_2048.html', '2048'],
-    ['translate_parse.html', 'Translate']
+    ['translate_parse.html', 'Translate'],
+    ['pronounce.html', 'Pronounce']
   ];
 
   function injectGlobalUiStyles() {

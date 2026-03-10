@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <title>DeutscheTag | Pronunciation Reader</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;600;700&family=Playfair+Display:wght@500;600&display=swap');
+
+        :root {
+            --bg: linear-gradient(135deg, #f7f4ff 0%, #f9f6ef 45%, #eef5ff 100%);
+            --card: #ffffff;
+            --ink: #0f172a;
+            --muted: #64748b;
+            --accent: #6d4bff;
+            --accent-2: #2b72ff;
+            --soft: rgba(109, 75, 255, 0.12);
+            --shadow: 0 18px 45px rgba(15, 23, 42, 0.12);
+            --soft-shadow: 0 12px 24px rgba(15, 23, 42, 0.08);
+            --radius-lg: 26px;
+            --radius-md: 18px;
+            --border: rgba(148, 163, 184, 0.2);
+            --warning: #f59e0b;
+        }
+
+        body.theme-dark {
+            --bg: linear-gradient(135deg, #0b1120 0%, #0f172a 45%, #111827 100%);
+            --card: #101827;
+            --ink: #e2e8f0;
+            --muted: #94a3b8;
+            --accent: #8b5cf6;
+            --accent-2: #38bdf8;
+            --soft: rgba(139, 92, 246, 0.18);
+            --shadow: 0 18px 45px rgba(0, 0, 0, 0.45);
+            --soft-shadow: 0 12px 24px rgba(0, 0, 0, 0.35);
+            --border: rgba(148, 163, 184, 0.2);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            min-height: 100vh;
+            background: var(--bg);
+            font-family: 'Manrope', 'Segoe UI', sans-serif;
+            color: var(--ink);
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(circle at 20% 20%, rgba(109, 75, 255, 0.18), transparent 55%),
+                        radial-gradient(circle at 80% 10%, rgba(43, 114, 255, 0.15), transparent 45%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .nav {
+            position: relative;
+            background: var(--card);
+            border-radius: var(--radius-lg);
+            padding: 12px 18px;
+            box-shadow: var(--soft-shadow);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border);
+        }
+
+        .brand {
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand img {
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
+            box-shadow: 0 8px 18px rgba(109, 75, 255, 0.2);
+        }
+
+        .brand h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.2rem, 2.4vw, 1.8rem);
+        }
+
+        .menu-toggle {
+            display: inline-flex;
+            border: none;
+            background: rgba(148, 163, 184, 0.2);
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            cursor: pointer;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            flex-direction: column;
+            position: absolute;
+            right: 16px;
+            top: 16px;
+            z-index: 40;
+        }
+
+        .menu-toggle span {
+            width: 20px;
+            height: 2px;
+            background: var(--ink);
+            border-radius: 999px;
+            display: block;
+        }
+
+        .nav-links {
+            display: none;
+            position: absolute;
+            right: 16px;
+            top: 68px;
+            flex-direction: column;
+            align-items: stretch;
+            background: var(--card);
+            padding: 12px;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            box-shadow: var(--soft-shadow);
+            z-index: 35;
+            min-width: 180px;
+        }
+
+        .nav-links.open { display: flex; }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--muted);
+            padding: 8px 12px;
+            border-radius: 999px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .nav-links a.active,
+        .nav-links a:hover {
+            background: var(--soft);
+            color: var(--accent);
+        }
+
+        .nav-actions {
+            margin-right: 68px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .timer {
+            background: var(--card);
+            border-radius: 14px;
+            padding: 10px 14px;
+            display: grid;
+            gap: 6px;
+            min-width: 220px;
+            border: 1px solid var(--border);
+        }
+
+        .timer .row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: var(--muted);
+        }
+
+        .timer strong { color: var(--ink); }
+
+        .timer button {
+            border: none;
+            border-radius: 10px;
+            padding: 6px 10px;
+            font-weight: 600;
+            cursor: pointer;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            color: white;
+            transition: transform 0.2s ease;
+        }
+
+        .timer button:hover { animation: bounce 0.6s; }
+
+        .timer .note {
+            font-size: 0.8rem;
+            color: var(--warning);
+            min-height: 18px;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-3px); }
+        }
+
+        .panel {
+            background: var(--card);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            box-shadow: var(--shadow);
+            display: grid;
+            gap: 14px;
+        }
+
+        .panel h2 { font-size: 1.4rem; }
+        .panel p { color: var(--muted); }
+
+        .input-wrap {
+            display: grid;
+            gap: 10px;
+        }
+
+        textarea {
+            min-height: 120px;
+            padding: 12px 14px;
+            border-radius: 14px;
+            border: 1px solid var(--border);
+            background: var(--card);
+            color: var(--ink);
+            font-size: 1rem;
+            resize: vertical;
+        }
+
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .controls select,
+        .controls input[type="range"] {
+            border: 1px solid var(--border);
+            background: var(--card);
+            color: var(--ink);
+            padding: 8px 10px;
+            border-radius: 12px;
+            font-weight: 600;
+        }
+
+        .btns {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            border: none;
+            border-radius: 12px;
+            padding: 10px 14px;
+            font-weight: 700;
+            cursor: pointer;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            color: white;
+        }
+
+        .secondary {
+            background: rgba(148, 163, 184, 0.2);
+            color: var(--ink);
+        }
+
+        .status {
+            min-height: 18px;
+            font-weight: 600;
+            color: var(--muted);
+        }
+
+        .settings-fab {
+            position: fixed;
+            right: 22px;
+            bottom: 22px;
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            color: white;
+            display: grid;
+            place-items: center;
+            box-shadow: var(--shadow);
+            cursor: pointer;
+            z-index: 60;
+        }
+
+        .settings-panel {
+            position: fixed;
+            right: 22px;
+            bottom: 88px;
+            width: min(320px, 90vw);
+            background: var(--card);
+            border-radius: 18px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+            padding: 14px;
+            display: none;
+            flex-direction: column;
+            gap: 12px;
+            z-index: 60;
+        }
+
+        .settings-panel.open { display: flex; }
+
+        .settings-row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+        .settings-row select {
+            border: 1px solid var(--border);
+            background: var(--card);
+            color: var(--ink);
+            padding: 8px 10px;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+        .debug-box { background: rgba(148, 163, 184, 0.12); padding: 10px; border-radius: 10px; font-size: 0.85rem; color: var(--muted); }
+        .settings-actions { display: flex; gap: 8px; }
+        .settings-actions button {
+            border: none;
+            border-radius: 10px;
+            padding: 8px 12px;
+            font-weight: 600;
+            cursor: pointer;
+            background: rgba(148, 163, 184, 0.2);
+            color: var(--ink);
+        }
+        .settings-note { font-size: 0.85rem; color: var(--muted); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav class="nav">
+            <a class="brand" href="index.html">
+                <img src="apple-touch-icon.png" alt="DeutscheTag logo">
+                <div>
+                    <h1>DeutscheTag</h1>
+                    <div style="color: var(--muted); font-size: 0.9rem;">Pronunciation reader</div>
+                </div>
+            </a>
+            <button class="menu-toggle" id="menuToggle" aria-label="Open navigation">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a class="active" href="pronounce.html">Pronounce</a>
+            </div>
+            <div class="nav-actions">
+                <div class="timer" id="timerWidget">
+                    <div class="row"><span>Session</span><strong id="sessionTime">00:00</strong></div>
+                    <div class="row"><span>Today</span><strong id="todayTime">00:00</strong></div>
+                    <div class="row"><span>Streak</span><strong id="streakCount">0 days</strong></div>
+                    <div class="note" id="timerNote"></div>
+                    <button id="timerToggle">Start</button>
+                </div>
+            </div>
+        </nav>
+
+        <section class="panel">
+            <h2>Pronunciation Reader</h2>
+            <p>Paste any German or English word or phrase, then play it aloud with natural pacing.</p>
+            <div class="input-wrap">
+                <textarea id="textInput" placeholder="Type or paste a word or phrase..."></textarea>
+                <div class="controls">
+                    <label for="langSelect" style="font-weight:600;">Language</label>
+                    <select id="langSelect">
+                        <option value="de-DE">German</option>
+                        <option value="en-US">English</option>
+                    </select>
+                    <label for="rateRange" style="font-weight:600;">Rate</label>
+                    <input type="range" id="rateRange" min="0.6" max="1.2" step="0.05" value="0.9">
+                    <span id="rateValue" style="font-weight:600;">0.90</span>
+                </div>
+                <div class="btns">
+                    <button class="btn" id="speakBtn">Speak</button>
+                    <button class="btn secondary" id="stopBtn">Stop</button>
+                    <button class="btn secondary" id="clearBtn">Clear</button>
+                </div>
+                <div class="status" id="statusText"></div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        const textInput = document.getElementById('textInput');
+        const langSelect = document.getElementById('langSelect');
+        const rateRange = document.getElementById('rateRange');
+        const rateValue = document.getElementById('rateValue');
+        const statusText = document.getElementById('statusText');
+
+        function speak() {
+            if (!('speechSynthesis' in window)) {
+                statusText.textContent = 'Speech synthesis is not available on this device.';
+                return;
+            }
+            const text = textInput.value.trim();
+            if (!text) {
+                statusText.textContent = 'Type or paste a word or phrase first.';
+                return;
+            }
+            window.speechSynthesis.cancel();
+            const u = new SpeechSynthesisUtterance(text);
+            u.lang = langSelect.value;
+            u.rate = parseFloat(rateRange.value);
+            u.onstart = () => { statusText.textContent = 'Speaking...'; };
+            u.onend = () => { statusText.textContent = 'Done.'; };
+            u.onerror = () => { statusText.textContent = 'Could not speak the text.'; };
+            window.speechSynthesis.speak(u);
+        }
+
+        document.getElementById('speakBtn').addEventListener('click', speak);
+        document.getElementById('stopBtn').addEventListener('click', () => {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                statusText.textContent = 'Stopped.';
+            }
+        });
+        document.getElementById('clearBtn').addEventListener('click', () => {
+            textInput.value = '';
+            statusText.textContent = '';
+        });
+        rateRange.addEventListener('input', () => {
+            rateValue.textContent = parseFloat(rateRange.value).toFixed(2);
+        });
+    </script>
+    <script src="menu-settings.js"></script>
+
+    <div class="settings-fab" id="settingsFab" aria-label="Open settings">⚙</div>
+    <div class="settings-panel" id="settingsPanel">
+        <h4>Settings</h4>
+        <div class="settings-row">
+            <label for="settingsTheme" style="font-weight:600;">Theme</label>
+            <select id="settingsTheme">
+                <option value="system">System</option>
+                <option value="light">Light</option>
+                <option value="dark">Dark</option>
+            </select>
+        </div>
+        <div class="debug-box" id="deeplDebug">DeepL debug available on Translate page.</div>
+        <div class="settings-actions">
+            <button id="debugTestBtn">Test DeepL</button>
+            <button id="debugClearBtn">Clear cache</button>
+        </div>
+        <div class="settings-note">Theme settings apply across all pages.</div>
+    </div>
+</body>
+</html>
