@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <title>DeutscheTag | Irregular Verbs</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;600;700&family=Playfair+Display:wght@500;600&display=swap');
+    :root {
+      --bg: linear-gradient(135deg, #f7f4ff 0%, #f9f6ef 45%, #eef5ff 100%);
+      --card: #ffffff;
+      --ink: #0f172a;
+      --muted: #64748b;
+      --accent: #6d4bff;
+      --accent-2: #2b72ff;
+      --soft: rgba(109, 75, 255, 0.12);
+      --shadow: 0 18px 45px rgba(15, 23, 42, 0.12);
+      --soft-shadow: 0 12px 24px rgba(15, 23, 42, 0.08);
+      --radius-lg: 26px;
+      --radius-md: 18px;
+      --border: rgba(148, 163, 184, 0.2);
+      --ok: #16a34a;
+      --bad: #dc2626;
+    }
+    body.theme-dark {
+      --bg: linear-gradient(135deg, #0b1120 0%, #0f172a 45%, #111827 100%);
+      --card: #101827;
+      --ink: #e2e8f0;
+      --muted: #94a3b8;
+      --accent: #8b5cf6;
+      --accent-2: #38bdf8;
+      --soft: rgba(139, 92, 246, 0.18);
+      --shadow: 0 18px 45px rgba(0, 0, 0, 0.45);
+      --soft-shadow: 0 12px 24px rgba(0, 0, 0, 0.35);
+      --border: rgba(148, 163, 184, 0.2);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      min-height: 100vh;
+      background: var(--bg);
+      font-family: 'Manrope', 'Segoe UI', sans-serif;
+      color: var(--ink);
+      display: flex;
+      justify-content: center;
+      padding: 20px;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at 20% 20%, rgba(109, 75, 255, 0.18), transparent 55%),
+                  radial-gradient(circle at 80% 10%, rgba(43, 114, 255, 0.15), transparent 45%);
+      pointer-events: none;
+      z-index: -1;
+    }
+    .container { width: 100%; max-width: 1200px; display: flex; flex-direction: column; gap: 18px; }
+    .nav {
+      position: relative;
+      background: var(--card);
+      border-radius: var(--radius-lg);
+      padding: 12px 18px;
+      box-shadow: var(--soft-shadow);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--border);
+    }
+    .brand { text-decoration: none; color: inherit; display: flex; align-items: center; gap: 12px; }
+    .brand img { width: 44px; height: 44px; border-radius: 14px; box-shadow: 0 8px 18px rgba(109, 75, 255, 0.2); }
+    .brand h1 { font-family: 'Playfair Display', serif; font-size: clamp(1.2rem, 2.4vw, 1.8rem); }
+    .menu-toggle {
+      display: inline-flex;
+      border: none;
+      background: rgba(148, 163, 184, 0.2);
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      cursor: pointer;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      flex-direction: column;
+      position: absolute;
+      right: 16px;
+      top: 16px;
+      z-index: 40;
+    }
+    .menu-toggle span { width: 20px; height: 2px; background: var(--ink); border-radius: 999px; display: block; }
+    .nav-links {
+      display: none;
+      position: absolute;
+      right: 16px;
+      top: 68px;
+      flex-direction: column;
+      align-items: stretch;
+      background: var(--card);
+      padding: 12px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      box-shadow: var(--soft-shadow);
+      z-index: 35;
+      min-width: 180px;
+    }
+    .nav-links.open { display: flex; }
+    .nav-links a { text-decoration: none; color: var(--muted); padding: 8px 12px; border-radius: 999px; font-weight: 600; transition: all 0.2s ease; }
+    .nav-links a.active, .nav-links a:hover { background: var(--soft); color: var(--accent); }
+    .nav-actions { margin-right: 68px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+    .timer { background: var(--card); border-radius: 14px; padding: 10px 14px; display: grid; gap: 6px; min-width: 220px; border: 1px solid var(--border); }
+    .timer .row { display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--muted); }
+    .timer strong { color: var(--ink); }
+    .timer button { border: none; border-radius: 10px; padding: 6px 10px; font-weight: 600; cursor: pointer; background: linear-gradient(135deg, var(--accent), var(--accent-2)); color: white; transition: transform 0.2s ease; }
+    .timer button:hover { animation: bounce 0.6s; }
+    .timer .note { font-size: 0.8rem; color: #f59e0b; min-height: 18px; }
+    @keyframes bounce { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+
+    .panel { background: var(--card); border-radius: var(--radius-lg); padding: 20px; box-shadow: var(--shadow); display: grid; gap: 14px; }
+    .panel h2 { font-size: 1.4rem; }
+    .panel p { color: var(--muted); }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; }
+
+    .table-wrap { overflow: auto; border: 1px solid var(--border); border-radius: 14px; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+    th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); }
+    th { color: var(--muted); font-weight: 700; }
+
+    .exercise { display: grid; gap: 12px; }
+    .exercise select, .exercise input {
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--ink);
+      padding: 10px 12px;
+      border-radius: 12px;
+      font-weight: 600;
+    }
+    .sentence-row { display: grid; gap: 6px; padding: 12px; border-radius: 14px; background: rgba(148, 163, 184, 0.12); }
+    .sentence-row .label { font-size: 0.82rem; color: var(--muted); }
+    .sentence-row .de, .sentence-row .en { font-weight: 600; }
+    .sentence-row .feedback { min-height: 18px; font-size: 0.85rem; }
+    .ok { color: var(--ok); }
+    .bad { color: var(--bad); }
+
+    .btns { display: flex; gap: 10px; flex-wrap: wrap; }
+    .btn { border: none; border-radius: 12px; padding: 10px 14px; font-weight: 700; cursor: pointer; background: linear-gradient(135deg, var(--accent), var(--accent-2)); color: white; }
+    .btn.secondary { background: rgba(148, 163, 184, 0.2); color: var(--ink); }
+    .verb-info { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+    .verb-info .tag { background: var(--soft); color: var(--accent); font-weight: 700; padding: 4px 10px; border-radius: 999px; font-size: 0.78rem; }
+    .verb-info .root { font-weight: 700; font-size: 1rem; }
+
+    .settings-fab { position: fixed; right: 22px; bottom: 22px; width: 52px; height: 52px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--accent-2)); color: white; display: grid; place-items: center; box-shadow: var(--shadow); cursor: pointer; z-index: 60; }
+    .settings-panel { position: fixed; right: 22px; bottom: 88px; width: min(320px, 90vw); background: var(--card); border-radius: 18px; border: 1px solid var(--border); box-shadow: var(--shadow); padding: 14px; display: none; flex-direction: column; gap: 12px; z-index: 60; }
+    .settings-panel.open { display: flex; }
+    .settings-row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+    .settings-row select { border: 1px solid var(--border); background: var(--card); color: var(--ink); padding: 8px 10px; border-radius: 10px; font-weight: 600; }
+    .debug-box { background: rgba(148, 163, 184, 0.12); padding: 10px; border-radius: 10px; font-size: 0.85rem; color: var(--muted); }
+    .settings-actions { display: flex; gap: 8px; }
+    .settings-actions button { border: none; border-radius: 10px; padding: 8px 12px; font-weight: 600; cursor: pointer; background: rgba(148, 163, 184, 0.2); color: var(--ink); }
+    .settings-note { font-size: 0.85rem; color: var(--muted); }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <nav class="nav">
+      <a class="brand" href="index.html">
+        <img src="apple-touch-icon.png" alt="DeutscheTag logo">
+        <div>
+          <h1>DeutscheTag</h1>
+          <div style="color: var(--muted); font-size: 0.9rem;">Irregular verbs</div>
+        </div>
+      </a>
+      <button class="menu-toggle" id="menuToggle" aria-label="Open navigation">
+        <span></span><span></span><span></span>
+      </button>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a class="active" href="irregular_verbs.html">Irregular Verbs</a>
+      </div>
+      <div class="nav-actions">
+        <div class="timer" id="timerWidget">
+          <div class="row"><span>Session</span><strong id="sessionTime">00:00</strong></div>
+          <div class="row"><span>Today</span><strong id="todayTime">00:00</strong></div>
+          <div class="row"><span>Streak</span><strong id="streakCount">0 days</strong></div>
+          <div class="note" id="timerNote"></div>
+          <button id="timerToggle">Start</button>
+        </div>
+      </div>
+    </nav>
+
+    <section class="panel">
+      <h2>Practice: Fill the Correct Form</h2>
+      <p>Select a verb, then fill in the missing form in each tense. The English sentence shows the same verb in context.</p>
+      <div class="exercise">
+        <label for="verbSelect" style="font-weight:700;">Choose a verb</label>
+        <select id="verbSelect"></select>
+        <div class="verb-info" id="verbInfo"></div>
+
+        <div class="sentence-row" data-tense="present">
+          <div class="label">Prasens (3rd person singular)</div>
+          <div class="de" id="dePresent"></div>
+          <div class="en" id="enPresent"></div>
+          <input id="inputPresent" placeholder="Type the correct form">
+          <div class="feedback" id="feedbackPresent"></div>
+        </div>
+
+        <div class="sentence-row" data-tense="past">
+          <div class="label">Prateritum (1st/3rd person singular)</div>
+          <div class="de" id="dePast"></div>
+          <div class="en" id="enPast"></div>
+          <input id="inputPast" placeholder="Type the correct form">
+          <div class="feedback" id="feedbackPast"></div>
+        </div>
+
+        <div class="sentence-row" data-tense="perf">
+          <div class="label">Perfekt (3rd person singular)</div>
+          <div class="de" id="dePerf"></div>
+          <div class="en" id="enPerf"></div>
+          <input id="inputPerf" placeholder="Type the correct form">
+          <div class="feedback" id="feedbackPerf"></div>
+        </div>
+
+        <div class="sentence-row" data-tense="plus">
+          <div class="label">Plusquamperfekt (3rd person singular)</div>
+          <div class="de" id="dePlus"></div>
+          <div class="en" id="enPlus"></div>
+          <input id="inputPlus" placeholder="Type the correct form">
+          <div class="feedback" id="feedbackPlus"></div>
+        </div>
+
+        <div class="sentence-row" data-tense="future">
+          <div class="label">Futur I (3rd person singular)</div>
+          <div class="de" id="deFuture"></div>
+          <div class="en" id="enFuture"></div>
+          <input id="inputFuture" placeholder="Type the correct form">
+          <div class="feedback" id="feedbackFuture"></div>
+        </div>
+
+        <div class="btns">
+          <button class="btn" id="checkBtn">Check</button>
+          <button class="btn secondary" id="showBtn">Show Answers</button>
+          <button class="btn secondary" id="nextBtn">Next Verb</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Irregular Verbs: Core Stem Changes</h2>
+      <p>Each verb shows infinitive, 3rd-person singular present, 1st/3rd-person Prateritum, and 3rd-person Perfekt. Alternate forms are included in parentheses where relevant.</p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Infinitive (English)</th>
+              <th>3rd sg. Prasens</th>
+              <th>Prateritum (1st/3rd sg.)</th>
+              <th>Perfekt (3rd sg.)</th>
+              <th>Example</th>
+            </tr>
+          </thead>
+          <tbody id="verbTable"></tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const verbs = [
+      { inf: 'backen', en: 'bake', pres: ['bäckt','backt'], past: ['backte','buk'], perf: 'hat gebacken' },
+      { inf: 'befehlen', en: 'command', pres: ['befiehlt'], past: ['befahl'], perf: 'hat befohlen' },
+      { inf: 'beginnen', en: 'begin', pres: ['beginnt'], past: ['begann'], perf: 'hat begonnen' },
+      { inf: 'beißen', en: 'bite', pres: ['beißt'], past: ['biss'], perf: 'hat gebissen' },
+      { inf: 'bergen', en: 'salvage', pres: ['birgt'], past: ['barg'], perf: 'hat geborgen' },
+      { inf: 'bersten', en: 'burst', pres: ['birst'], past: ['barst'], perf: 'ist geborsten' },
+      { inf: 'betrügen', en: 'cheat', pres: ['betrügt'], past: ['betrog'], perf: 'hat betrogen' },
+      { inf: 'bewegen', en: 'move', pres: ['bewegt'], past: ['bewog'], perf: 'hat bewogen' },
+      { inf: 'biegen', en: 'bend', pres: ['biegt'], past: ['bog'], perf: 'hat gebogen' },
+      { inf: 'bieten', en: 'offer', pres: ['bietet'], past: ['bot'], perf: 'hat geboten' },
+      { inf: 'binden', en: 'bind', pres: ['bindet'], past: ['band'], perf: 'hat gebunden' },
+      { inf: 'bitten', en: 'ask', pres: ['bittet'], past: ['bat'], perf: 'hat gebeten' },
+      { inf: 'blasen', en: 'blow', pres: ['bläst'], past: ['blies'], perf: 'hat geblasen' },
+      { inf: 'bleiben', en: 'remain', pres: ['bleibt'], past: ['blieb'], perf: 'ist geblieben' },
+      { inf: 'braten', en: 'fry', pres: ['brät','bratet'], past: ['briet'], perf: 'hat gebraten' },
+      { inf: 'brechen', en: 'break', pres: ['bricht'], past: ['brach'], perf: 'hat/ist gebrochen' },
+      { inf: 'brennen', en: 'burn', pres: ['brennt'], past: ['brannte'], perf: 'hat gebrannt' },
+      { inf: 'bringen', en: 'bring', pres: ['bringt'], past: ['brachte'], perf: 'hat gebracht' },
+      { inf: 'denken', en: 'think', pres: ['denkt'], past: ['dachte'], perf: 'hat gedacht' },
+      { inf: 'dingen', en: 'rent', pres: ['dingt'], past: ['dang'], perf: 'hat gedungen' },
+      { inf: 'dreschen', en: 'thresh', pres: ['drischt'], past: ['drosch'], perf: 'hat gedroschen' },
+      { inf: 'dringen', en: 'press', pres: ['dringt'], past: ['drang'], perf: 'hat/ist gedrungen' },
+      { inf: 'dürfen', en: 'may', pres: ['darf'], past: ['durfte'], perf: 'hat gedurft' },
+      { inf: 'empfehlen', en: 'recommend', pres: ['empfiehlt'], past: ['empfahl'], perf: 'hat empfohlen' },
+      { inf: 'erlöschen', en: 'extinguish', pres: ['erlischt'], past: ['erlosch'], perf: 'ist erloschen' },
+      { inf: 'erschrecken', en: 'frighten', pres: ['erschrickt'], past: ['erschrak'], perf: 'ist erschrocken' },
+      { inf: 'erwägen', en: 'consider', pres: ['erwägt'], past: ['erwog'], perf: 'hat erwogen' },
+      { inf: 'essen', en: 'eat', pres: ['isst'], past: ['aß'], perf: 'hat gegessen' },
+      { inf: 'fahren', en: 'drive/go', pres: ['fährt'], past: ['fuhr'], perf: 'ist/hat gefahren' },
+      { inf: 'fallen', en: 'fall', pres: ['fällt'], past: ['fiel'], perf: 'ist gefallen' },
+      { inf: 'fangen', en: 'catch', pres: ['fängt'], past: ['fing'], perf: 'hat gefangen' },
+      { inf: 'fechten', en: 'fight', pres: ['ficht'], past: ['focht'], perf: 'hat gefochten' },
+      { inf: 'finden', en: 'find', pres: ['findet'], past: ['fand'], perf: 'hat gefunden' },
+      { inf: 'flechten', en: 'weave', pres: ['flicht'], past: ['flocht'], perf: 'hat geflochten' },
+      { inf: 'fliegen', en: 'fly', pres: ['fliegt'], past: ['flog'], perf: 'ist/hat geflogen' },
+      { inf: 'fliehen', en: 'run away', pres: ['flieht'], past: ['floh'], perf: 'ist geflohen' },
+      { inf: 'fließen', en: 'flow', pres: ['fließt'], past: ['floss'], perf: 'ist geflossen' },
+      { inf: 'fressen', en: 'eat (animals)', pres: ['frisst'], past: ['fraß'], perf: 'hat gefressen' },
+      { inf: 'frieren', en: 'freeze', pres: ['friert'], past: ['fror'], perf: 'hat gefroren' },
+      { inf: 'gären', en: 'ferment', pres: ['gärt'], past: ['gor'], perf: 'ist gegoren' },
+      { inf: 'gebären', en: 'give birth', pres: ['gebiert','gebärt'], past: ['gebar'], perf: 'hat geboren' },
+      { inf: 'geben', en: 'give', pres: ['gibt'], past: ['gab'], perf: 'hat gegeben' },
+      { inf: 'gedeihen', en: 'thrive', pres: ['gedeiht'], past: ['gedieh'], perf: 'ist gediehen' },
+      { inf: 'gehen', en: 'go', pres: ['geht'], past: ['ging'], perf: 'ist gegangen' },
+      { inf: 'gelingen', en: 'succeed', pres: ['gelingt'], past: ['gelang'], perf: 'ist gelungen' },
+      { inf: 'gelten', en: 'be valid', pres: ['gilt'], past: ['galt'], perf: 'hat gegolten' },
+      { inf: 'genesen', en: 'recover', pres: ['genest'], past: ['genas'], perf: 'ist genesen' },
+      { inf: 'genießen', en: 'enjoy', pres: ['genießt'], past: ['genoss'], perf: 'hat genossen' },
+      { inf: 'geschehen', en: 'happen', pres: ['geschieht'], past: ['geschah'], perf: 'ist geschehen' },
+      { inf: 'gewinnen', en: 'win', pres: ['gewinnt'], past: ['gewann'], perf: 'hat gewonnen' },
+      { inf: 'gießen', en: 'pour', pres: ['gießt'], past: ['goss'], perf: 'hat gegossen' },
+      { inf: 'gleichen', en: 'be like', pres: ['gleicht'], past: ['glich'], perf: 'hat geglichen' },
+      { inf: 'gleiten', en: 'glide', pres: ['gleitet'], past: ['glitt'], perf: 'ist geglitten' },
+      { inf: 'glimmen', en: 'smoulder', pres: ['glimmt'], past: ['glomm'], perf: 'hat geglommen' },
+      { inf: 'graben', en: 'dig', pres: ['gräbt'], past: ['grub'], perf: 'hat gegraben' },
+      { inf: 'greifen', en: 'grab', pres: ['greift'], past: ['griff'], perf: 'hat gegriffen' },
+      { inf: 'haben', en: 'have', pres: ['hat'], past: ['hatte'], perf: 'hat gehabt' },
+      { inf: 'halten', en: 'hold', pres: ['hält'], past: ['hielt'], perf: 'hat gehalten' },
+      { inf: 'hängen', en: 'hang', pres: ['hängt'], past: ['hing'], perf: 'hat gehangen' },
+      { inf: 'haün', en: 'hit', pres: ['haut'], past: ['haute','hieb'], perf: 'hat gehaün' },
+      { inf: 'heben', en: 'lift', pres: ['hebt'], past: ['hob'], perf: 'hat gehoben' },
+      { inf: 'heißen', en: 'be called', pres: ['heißt'], past: ['hieß'], perf: 'hat geheißen' },
+      { inf: 'helfen', en: 'help', pres: ['hilft'], past: ['half'], perf: 'hat geholfen' },
+      { inf: 'kennen', en: 'know (familiar)', pres: ['kennt'], past: ['kannte'], perf: 'hat gekannt' },
+      { inf: 'klimmen', en: 'climb', pres: ['klimmt'], past: ['klomm','klimmte'], perf: 'ist geklommen (geklimmt)' },
+      { inf: 'klingen', en: 'sound', pres: ['klingt'], past: ['klang'], perf: 'hat geklungen' },
+      { inf: 'kneifen', en: 'pinch', pres: ['kneift'], past: ['kniff'], perf: 'hat gekniffen' },
+      { inf: 'kommen', en: 'come', pres: ['kommt'], past: ['kam'], perf: 'ist gekommen' },
+      { inf: 'können', en: 'can', pres: ['kann'], past: ['konnte'], perf: 'hat gekonnt' },
+      { inf: 'kriechen', en: 'crawl', pres: ['kriecht'], past: ['kroch'], perf: 'ist gekrochen' },
+      { inf: 'laden', en: 'load', pres: ['lädt'], past: ['lud'], perf: 'hat geladen' },
+      { inf: 'lassen', en: 'let', pres: ['lässt'], past: ['ließ'], perf: 'hat gelassen' },
+      { inf: 'laufen', en: 'run', pres: ['läuft'], past: ['lief'], perf: 'ist gelaufen' },
+      { inf: 'leiden', en: 'suffer', pres: ['leidet'], past: ['litt'], perf: 'hat gelitten' },
+      { inf: 'leihen', en: 'lend', pres: ['leiht'], past: ['lieh'], perf: 'hat geliehen' },
+      { inf: 'lesen', en: 'read', pres: ['liest'], past: ['las'], perf: 'hat gelesen' },
+      { inf: 'liegen', en: 'lie/be located', pres: ['liegt'], past: ['lag'], perf: 'hat gelegen' },
+      { inf: 'lügen', en: 'lie', pres: ['lügt'], past: ['log'], perf: 'hat gelogen' },
+      { inf: 'mahlen', en: 'grind', pres: ['mahlt'], past: ['mahlte'], perf: 'hat gemahlen' },
+      { inf: 'meiden', en: 'avoid', pres: ['meidet'], past: ['mied'], perf: 'hat gemieden' },
+      { inf: 'melken', en: 'milk', pres: ['melkt'], past: ['molk','melkte'], perf: 'hat gemolken' },
+      { inf: 'messen', en: 'measure', pres: ['misst'], past: ['maß'], perf: 'hat gemessen' },
+      { inf: 'mögen', en: 'like', pres: ['mag'], past: ['mochte'], perf: 'hat gemocht' },
+      { inf: 'müssen', en: 'must', pres: ['muss'], past: ['musste'], perf: 'hat gemusst' },
+      { inf: 'nehmen', en: 'take', pres: ['nimmt'], past: ['nahm'], perf: 'hat genommen' },
+      { inf: 'nennen', en: 'name', pres: ['nennt'], past: ['nannte'], perf: 'hat genannt' },
+      { inf: 'pfeifen', en: 'whistle', pres: ['pfeift'], past: ['pfiff'], perf: 'hat gepfiffen' },
+      { inf: 'preisen', en: 'praise', pres: ['preist'], past: ['pries'], perf: 'hat gepriesen' },
+      { inf: 'qüllen', en: 'well', pres: ['quillt'], past: ['quoll'], perf: 'ist gequollen' },
+      { inf: 'raten', en: 'advise', pres: ['rät'], past: ['riet'], perf: 'hat geraten' },
+      { inf: 'reiben', en: 'rub', pres: ['reibt'], past: ['rieb'], perf: 'hat gerieben' },
+      { inf: 'reißen', en: 'tear', pres: ['reißt'], past: ['riss'], perf: 'hat/ist gerissen' },
+      { inf: 'reiten', en: 'ride', pres: ['reitet'], past: ['ritt'], perf: 'hat/ist geritten' },
+      { inf: 'rennen', en: 'run, race', pres: ['rennt'], past: ['rannte'], perf: 'ist gerannt' },
+      { inf: 'riechen', en: 'smell', pres: ['riecht'], past: ['roch'], perf: 'hat gerochen' },
+      { inf: 'ringen', en: 'wrestle', pres: ['ringt'], past: ['rang'], perf: 'hat gerungen' },
+      { inf: 'rinnen', en: 'trickle', pres: ['rinnt'], past: ['rann'], perf: 'ist geronnen' },
+      { inf: 'rufen', en: 'call', pres: ['ruft'], past: ['rief'], perf: 'hat gerufen' },
+      { inf: 'salzen', en: 'salt', pres: ['salzt'], past: ['salzte'], perf: 'hat gesalzen' },
+      { inf: 'saufen', en: 'drink heavily', pres: ['säuft'], past: ['soff'], perf: 'hat gesoffen' },
+      { inf: 'saugen', en: 'suck', pres: ['saugt'], past: ['sog','saugte'], perf: 'hat gesogen (gesaugt)' },
+      { inf: 'schaffen', en: 'create', pres: ['schafft'], past: ['schuf'], perf: 'hat geschaffen' },
+      { inf: 'scheiden', en: 'separate', pres: ['scheidet'], past: ['schied'], perf: 'hat/ist geschieden' },
+      { inf: 'scheinen', en: 'shine', pres: ['scheint'], past: ['schien'], perf: 'hat geschienen' },
+      { inf: 'scheißen', en: 'shit', pres: ['scheißt'], past: ['schiss'], perf: 'hat geschissen' },
+      { inf: 'schelten', en: 'scold', pres: ['schilt'], past: ['schalt'], perf: 'hat gescholten' },
+      { inf: 'scheren', en: 'shear', pres: ['schert'], past: ['schor'], perf: 'hat geschoren' },
+      { inf: 'schieben', en: 'push', pres: ['schiebt'], past: ['schob'], perf: 'hat geschoben' },
+      { inf: 'schießen', en: 'shoot', pres: ['schießt'], past: ['schoss'], perf: 'hat geschossen' },
+      { inf: 'schlafen', en: 'sleep', pres: ['schläft'], past: ['schlief'], perf: 'hat geschlafen' },
+      { inf: 'schlagen', en: 'hit', pres: ['schlägt'], past: ['schlug'], perf: 'hat geschlagen' },
+      { inf: 'schleichen', en: 'creep', pres: ['schleicht'], past: ['schlich'], perf: 'ist geschlichen' },
+      { inf: 'schleifen', en: 'grind', pres: ['schleift'], past: ['schliff'], perf: 'hat geschliffen' },
+      { inf: 'schließen', en: 'close', pres: ['schließt'], past: ['schloss'], perf: 'hat geschlossen' },
+      { inf: 'schlingen', en: 'swallow', pres: ['schlingt'], past: ['schlang'], perf: 'hat geschlungen' },
+      { inf: 'schmeißen', en: 'throw', pres: ['schmeißt'], past: ['schmiss'], perf: 'hat geschmissen' },
+      { inf: 'schmelzen', en: 'melt', pres: ['schmilzt'], past: ['schmolz'], perf: 'hat/ist geschmolzen' },
+      { inf: 'schneiden', en: 'cut', pres: ['schneidet'], past: ['schnitt'], perf: 'hat geschnitten' },
+      { inf: 'schreiben', en: 'write', pres: ['schreibt'], past: ['schrieb'], perf: 'hat geschrieben' },
+      { inf: 'schreien', en: 'scream', pres: ['schreit'], past: ['schrie'], perf: 'hat geschrien' },
+      { inf: 'schreiten', en: 'stride', pres: ['schreitet'], past: ['schritt'], perf: 'ist geschritten' },
+      { inf: 'schweigen', en: 'be silent', pres: ['schweigt'], past: ['schwieg'], perf: 'hat geschwiegen' },
+      { inf: 'schwellen', en: 'swell', pres: ['schwillt'], past: ['schwoll'], perf: 'ist geschwollen' },
+      { inf: 'schwimmen', en: 'swim', pres: ['schwimmt'], past: ['schwamm'], perf: 'ist/hat geschwommen' },
+      { inf: 'schwingen', en: 'swing', pres: ['schwingt'], past: ['schwang'], perf: 'ist/hat geschwungen' },
+      { inf: 'schwören', en: 'swear', pres: ['schwört'], past: ['schwor'], perf: 'hat geschworen' },
+      { inf: 'sehen', en: 'see', pres: ['sieht'], past: ['sah'], perf: 'hat gesehen' },
+      { inf: 'sein', en: 'be', pres: ['ist'], past: ['war'], perf: 'ist gewesen' },
+      { inf: 'senden', en: 'send', pres: ['sendet'], past: ['sandte','sendete'], perf: 'hat gesandt (gesendet)' },
+      { inf: 'singen', en: 'sing', pres: ['singt'], past: ['sang'], perf: 'hat gesungen' },
+      { inf: 'sinken', en: 'sink', pres: ['sinkt'], past: ['sank'], perf: 'ist gesunken' },
+      { inf: 'sinnen', en: 'ponder', pres: ['sinnt'], past: ['sann'], perf: 'hat gesonnen' },
+      { inf: 'sitzen', en: 'sit', pres: ['sitzt'], past: ['saß'], perf: 'hat gesessen' },
+      { inf: 'sollen', en: 'should', pres: ['soll'], past: ['sollte'], perf: 'hat gesollt' },
+      { inf: 'spalten', en: 'split', pres: ['spaltet'], past: ['spaltete'], perf: 'hat gespalten' },
+      { inf: 'speien', en: 'spit', pres: ['speit'], past: ['spie'], perf: 'hat gespien' },
+      { inf: 'spinnen', en: 'spin', pres: ['spinnt'], past: ['spann'], perf: 'hat gesponnen' },
+      { inf: 'sprechen', en: 'speak', pres: ['spricht'], past: ['sprach'], perf: 'hat gesprochen' },
+      { inf: 'sprießen', en: 'sprout', pres: ['sprießt'], past: ['spross'], perf: 'ist gesprossen' },
+      { inf: 'springen', en: 'jump', pres: ['springt'], past: ['sprang'], perf: 'ist gesprungen' },
+      { inf: 'stechen', en: 'sting', pres: ['sticht'], past: ['stach'], perf: 'hat gestochen' },
+      { inf: 'stehen', en: 'stand (be upright)', pres: ['steht'], past: ['stand'], perf: 'hat gestanden' },
+      { inf: 'stehlen', en: 'steal', pres: ['stiehlt'], past: ['stahl'], perf: 'hat gestohlen' },
+      { inf: 'steigen', en: 'climb', pres: ['steigt'], past: ['stieg'], perf: 'ist gestiegen' },
+      { inf: 'sterben', en: 'die', pres: ['stirbt'], past: ['starb'], perf: 'ist gestorben' },
+      { inf: 'stieben', en: 'spray', pres: ['stiebt'], past: ['stob'], perf: 'ist gestoben' },
+      { inf: 'stinken', en: 'stink', pres: ['stinkt'], past: ['stank'], perf: 'hat gestunken' },
+      { inf: 'stoßen', en: 'push', pres: ['stößt'], past: ['stieß'], perf: 'hat/ist gestoßen' },
+      { inf: 'streichen', en: 'paint/cancel', pres: ['streicht'], past: ['strich'], perf: 'hat gestrichen' },
+      { inf: 'streiten', en: 'argue', pres: ['streitet'], past: ['stritt'], perf: 'hat gestritten' },
+      { inf: 'tragen', en: 'carry', pres: ['trägt'], past: ['trug'], perf: 'hat getragen' },
+      { inf: 'treffen', en: 'meet', pres: ['trifft'], past: ['traf'], perf: 'hat getroffen' },
+      { inf: 'treiben', en: 'drive', pres: ['treibt'], past: ['trieb'], perf: 'hat/ist getrieben' },
+      { inf: 'treten', en: 'step/kick', pres: ['tritt'], past: ['trat'], perf: 'hat/ist getreten' },
+      { inf: 'trinken', en: 'drink', pres: ['trinkt'], past: ['trank'], perf: 'hat getrunken' },
+      { inf: 'tun', en: 'do', pres: ['tut'], past: ['tat'], perf: 'hat getan' },
+      { inf: 'verbleichen', en: 'fade', pres: ['verbleicht'], past: ['verblich'], perf: 'ist verblichen' },
+      { inf: 'verderben', en: 'spoil', pres: ['verdirbt'], past: ['verdarb'], perf: 'hat/ist verdorben' },
+      { inf: 'verdrießen', en: 'vex', pres: ['verdriest'], past: ['verdross'], perf: 'hat verdrossen' },
+      { inf: 'vergessen', en: 'forget', pres: ['vergisst'], past: ['vergaß'], perf: 'hat vergessen' },
+      { inf: 'verlieren', en: 'lose', pres: ['verliert'], past: ['verlor'], perf: 'hat verloren' },
+      { inf: 'verschwinden', en: 'disappear', pres: ['verschwindet'], past: ['verschwand'], perf: 'ist verschwunden' },
+      { inf: 'verzeihen', en: 'forgive', pres: ['verzeiht'], past: ['verzieh'], perf: 'hat verziehen' },
+      { inf: 'wachsen', en: 'grow', pres: ['wächst'], past: ['wuchs'], perf: 'ist gewachsen' },
+      { inf: 'waschen', en: 'wash', pres: ['wäscht'], past: ['wusch'], perf: 'hat gewaschen' },
+      { inf: 'weichen', en: 'yield', pres: ['weicht'], past: ['wich'], perf: 'ist gewichen' },
+      { inf: 'weisen', en: 'point', pres: ['weist'], past: ['wies'], perf: 'hat gewiesen' },
+      { inf: 'wenden', en: 'turn', pres: ['wendet'], past: ['wandte','wendete'], perf: 'hat gewandt (gewendet)' },
+      { inf: 'werben', en: 'advertise', pres: ['wirbt'], past: ['warb'], perf: 'hat geworben' },
+      { inf: 'werden', en: 'become', pres: ['wird'], past: ['wurde'], perf: 'ist geworden' },
+      { inf: 'werfen', en: 'throw', pres: ['wirft'], past: ['warf'], perf: 'hat geworfen' },
+      { inf: 'wiegen', en: 'weigh', pres: ['wiegt'], past: ['wog'], perf: 'hat gewogen' },
+      { inf: 'winden', en: 'wind/twist', pres: ['windet'], past: ['wand'], perf: 'hat gewunden' },
+      { inf: 'wissen', en: 'know (fact)', pres: ['weiß'], past: ['wusste'], perf: 'hat gewusst' },
+      { inf: 'wollen', en: 'want', pres: ['will'], past: ['wollte'], perf: 'hat gewollt' },
+      { inf: 'wringen', en: 'wring', pres: ['wringt'], past: ['wrang'], perf: 'hat gewrungen' },
+      { inf: 'ziehen', en: 'pull/move', pres: ['zieht'], past: ['zog'], perf: 'hat/ist gezogen' },
+      { inf: 'zwingen', en: 'force', pres: ['zwingt'], past: ['zwang'], perf: 'hat gezwungen' }
+    ];
+
+    function renderTable() {
+      const tbody = document.getElementById('verbTable');
+      tbody.innerHTML = '';
+      verbs.forEach((v) => {
+        const pres = v.pres.join(' / ');
+        const past = v.past.join(' / ');
+        const tr = document.createElement('tr');
+        const sentence = buildSentence(v, pickContext(v, parsePerf(v.perf).auxOptions[0] || 'hat', false)).present.de.replace('____', v.pres[0]);
+        tr.innerHTML = `<td><strong>${v.inf}</strong> – ${v.en}</td><td>${pres}</td><td>${past}</td><td>${v.perf}</td><td>${sentence}</td>`;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function normalize(str) {
+      return str
+        .toLowerCase()
+        .replace(/ä/g, 'ae')
+        .replace(/ö/g, 'oe')
+        .replace(/ü/g, 'ue')
+        .replace(/ß/g, 'ss')
+        .replace(/\s+/g, ' ')
+        .trim();
+    }
+
+    function splitOptions(str) {
+      if (!str) return [];
+      const slashParts = str.split('/').map((s) => s.trim()).filter(Boolean);
+      const out = [];
+      slashParts.forEach((part) => {
+        const match = part.match(/^(.*?)\((.*?)\)$/) || part.match(/^(.*?)\((.*?)\)/);
+        if (match) {
+          const main = match[1].trim();
+          const alt = match[2].trim();
+          if (main) out.push(main);
+          if (alt) out.push(...alt.split('/').map((s) => s.trim()).filter(Boolean));
+        } else {
+          out.push(part);
+        }
+      });
+      return out.filter(Boolean);
+    }
+
+    function parsePerf(perf) {
+      const parts = perf.trim().split(' ');
+      const auxRaw = parts.shift() || 'hat';
+      const auxOptions = auxRaw.split('/').map((s) => s.trim()).filter(Boolean);
+      const partStr = parts.join(' ').trim();
+      const partOptions = splitOptions(partStr);
+      return { auxOptions, partOptions };
+    }
+
+    function thirdPerson(enBase) {
+      const bits = enBase.split(' ');
+      const first = bits.shift();
+      let conj = first;
+      if (first === 'be') conj = 'is';
+      else if (first === 'have') conj = 'has';
+      else if (first === 'do') conj = 'does';
+      else if (first === 'go') conj = 'goes';
+      else if (first.endsWith('y') && !/[aeiou]y$/.test(first)) conj = first.slice(0, -1) + 'ies';
+      else if (/(s|x|z|ch|sh|o)$/.test(first)) conj = first + 'es';
+      else conj = first + 's';
+      return [conj, ...bits].join(' ');
+    }
+
+    function baseEnglish(en) {
+      return en.split('/')[0].split(',')[0].trim();
+    }
+
+    const EN_IRREGULAR = {
+      be: { past: 'was', part: 'been' },
+      have: { past: 'had', part: 'had' },
+      do: { past: 'did', part: 'done' },
+      go: { past: 'went', part: 'gone' },
+      begin: { past: 'began', part: 'begun' },
+      bite: { past: 'bit', part: 'bitten' },
+      break: { past: 'broke', part: 'broken' },
+      bring: { past: 'brought', part: 'brought' },
+      buy: { past: 'bought', part: 'bought' },
+      catch: { past: 'caught', part: 'caught' },
+      choose: { past: 'chose', part: 'chosen' },
+      come: { past: 'came', part: 'come' },
+      cut: { past: 'cut', part: 'cut' },
+      drink: { past: 'drank', part: 'drunk' },
+      drive: { past: 'drove', part: 'driven' },
+      eat: { past: 'ate', part: 'eaten' },
+      fall: { past: 'fell', part: 'fallen' },
+      feel: { past: 'felt', part: 'felt' },
+      fight: { past: 'fought', part: 'fought' },
+      find: { past: 'found', part: 'found' },
+      fly: { past: 'flew', part: 'flown' },
+      forget: { past: 'forgot', part: 'forgotten' },
+      forgive: { past: 'forgave', part: 'forgiven' },
+      get: { past: 'got', part: 'gotten' },
+      give: { past: 'gave', part: 'given' },
+      hear: { past: 'heard', part: 'heard' },
+      keep: { past: 'kept', part: 'kept' },
+      know: { past: 'knew', part: 'known' },
+      leave: { past: 'left', part: 'left' },
+      lose: { past: 'lost', part: 'lost' },
+      make: { past: 'made', part: 'made' },
+      meet: { past: 'met', part: 'met' },
+      read: { past: 'read', part: 'read' },
+      run: { past: 'ran', part: 'run' },
+      say: { past: 'said', part: 'said' },
+      see: { past: 'saw', part: 'seen' },
+      sell: { past: 'sold', part: 'sold' },
+      send: { past: 'sent', part: 'sent' },
+      sing: { past: 'sang', part: 'sung' },
+      sit: { past: 'sat', part: 'sat' },
+      speak: { past: 'spoke', part: 'spoken' },
+      stand: { past: 'stood', part: 'stood' },
+      steal: { past: 'stole', part: 'stolen' },
+      swim: { past: 'swam', part: 'swum' },
+      take: { past: 'took', part: 'taken' },
+      teach: { past: 'taught', part: 'taught' },
+      tell: { past: 'told', part: 'told' },
+      think: { past: 'thought', part: 'thought' },
+      throw: { past: 'threw', part: 'thrown' },
+      wear: { past: 'wore', part: 'worn' },
+      win: { past: 'won', part: 'won' },
+      write: { past: 'wrote', part: 'written' }
+    };
+
+    function englishPastForm(verb) {
+      const bits = verb.split(' ');
+      const first = bits.shift();
+      let past = first;
+      if (EN_IRREGULAR[first]) past = EN_IRREGULAR[first].past;
+      else if (first.endsWith('e')) past = first + 'd';
+      else if (first.endsWith('y') && !/[aeiou]y$/.test(first)) past = first.slice(0, -1) + 'ied';
+      else past = first + 'ed';
+      return [past, ...bits].join(' ');
+    }
+
+    function englishParticiple(verb) {
+      const bits = verb.split(' ');
+      const first = bits.shift();
+      let part = first;
+      if (EN_IRREGULAR[first]) part = EN_IRREGULAR[first].part;
+      else part = englishPastForm(first);
+      return [part, ...bits].join(' ');
+    }
+
+    function buildEnglishSentence(subject, base, tense, comp) {
+      const subj = subject === 'Es' ? 'It' : 'He';
+      const suffix = comp ? ` ${comp}` : '';
+      if (base.startsWith('be ')) {
+        const rest = base.slice(3);
+        if (tense === 'present') return `${subj} is ${rest}${suffix}.`;
+        if (tense === 'past') return `${subj} was ${rest}${suffix}.`;
+        if (tense === 'perf') return `${subj} has been ${rest}${suffix}.`;
+        if (tense === 'plus') return `${subj} had been ${rest}${suffix}.`;
+        if (tense === 'future') return `${subj} will be ${rest}${suffix}.`;
+      }
+      if (base === 'be') {
+        if (tense === 'present') return `${subj} is${suffix}.`;
+        if (tense === 'past') return `${subj} was${suffix}.`;
+        if (tense === 'perf') return `${subj} has been${suffix}.`;
+        if (tense === 'plus') return `${subj} had been${suffix}.`;
+        if (tense === 'future') return `${subj} will be${suffix}.`;
+      }
+      if (tense === 'present') return `${subj} ${thirdPerson(base)}${suffix}.`;
+      if (tense === 'past') return `${subj} ${englishPastForm(base)}${suffix}.`;
+      if (tense === 'perf') return `${subj} has ${englishParticiple(base)}${suffix}.`;
+      if (tense === 'plus') return `${subj} had ${englishParticiple(base)}${suffix}.`;
+      return `${subj} will ${base}${suffix}.`;
+    }
+
+    const impersonalVerbs = new Set(['geschehen', 'gelingen', 'scheinen', 'frieren']);
+    const motionVerbs = new Set([
+      'gehen','kommen','fahren','laufen','fliegen','reiten','rennen','springen','schwimmen',
+      'steigen','fallen','treten','ziehen','kriechen','gleiten','schreiten','schleichen',
+      'rinnen','sinken','verschwinden'
+    ]);
+    const stativeVerbs = new Set(['sein','bleiben','stehen','sitzen','liegen']);
+    const noObjectVerbs = new Set(['schlafen','singen','schwimmen','stehen','sitzen','liegen','bleiben','sein']);
+    const objectVerbs = new Set([
+      'backen','befehlen','beginnen','beißen','betrügen','biegen','bieten','binden','bitten','blasen',
+      'braten','brechen','bringen','denken','empfehlen','essen','fangen','finden','fressen','geben',
+      'genießen','gießen','greifen','haben','halten','heben','helfen','kennen','laden','lassen',
+      'leihen','lesen','messen','nehmen','nennen','pfeifen','preisen','raten','reiben','reißen',
+      'rufen','salzen','saufen','saugen','schaffen','scheren','schieben','schießen','schlagen',
+      'schmeißen','schneiden','schreiben','sehen','senden','stechen','stehlen','stoßen','streichen',
+      'tragen','treffen','treiben','trinken','tun','vergessen','verlieren','verzeihen','waschen',
+      'weisen','wenden','werfen','wiegen','winden','zwingen'
+    ]);
+
+    const subjectPool = [
+      { de: 'Er', en: 'He' },
+      { de: 'Sie', en: 'She' }
+    ];
+
+    const contextPool = {
+      motion: [
+        { de: 'nach Hause', en: 'home' },
+        { de: 'in die Stadt', en: 'to the city' },
+        { de: 'zum Bahnhof', en: 'to the station' }
+      ],
+      stative: [
+        { de: 'hier', en: 'here' },
+        { de: 'dort', en: 'there' },
+        { de: 'zu Hause', en: 'at home' }
+      ],
+      object: [
+        { de: 'das', en: 'it' },
+        { de: 'etwas', en: 'something' },
+        { de: 'die Sache', en: 'the thing' }
+      ],
+      time: [
+        { de: 'heute', en: 'today' },
+        { de: 'gerade', en: 'right now' },
+        { de: 'schon', en: 'already' }
+      ]
+    };
+
+    function pickRandom(list) {
+      return list[Math.floor(Math.random() * list.length)];
+    }
+
+    function pickContext(v, aux, randomize = false) {
+      if (impersonalVerbs.has(v.inf)) return { subject: { de: 'Es', en: 'It' }, comp: { de: '', en: '' } };
+      const subject = randomize ? pickRandom(subjectPool) : subjectPool[0];
+      let comp = { de: '', en: '' };
+      if (motionVerbs.has(v.inf)) comp = randomize ? pickRandom(contextPool.motion) : contextPool.motion[0];
+      else if (stativeVerbs.has(v.inf)) comp = randomize ? pickRandom(contextPool.stative) : contextPool.stative[0];
+      else if (objectVerbs.has(v.inf)) comp = randomize ? pickRandom(contextPool.object) : contextPool.object[0];
+      else if (noObjectVerbs.has(v.inf)) comp = randomize ? pickRandom(contextPool.time) : contextPool.time[0];
+      else comp = aux === 'ist' ? (randomize ? pickRandom(contextPool.time) : contextPool.time[0]) : (randomize ? pickRandom(contextPool.object) : contextPool.object[0]);
+      return { subject, comp };
+    }
+
+    function buildSentence(v, context) {
+      const perfInfo = parsePerf(v.perf);
+      const aux = perfInfo.auxOptions[0] || 'hat';
+      const auxPast = aux === 'ist' ? 'war' : 'hatte';
+      const base = baseEnglish(v.en);
+      const ctx = context || pickContext(v, aux, false);
+      const deComp = ctx.comp.de ? `${ctx.comp.de}` : '';
+      const enComp = ctx.comp.en ? `${ctx.comp.en}` : '';
+      const subjDe = ctx.subject.de;
+      return {
+        present: {
+          de: `${subjDe} ____${deComp ? ' ' + deComp : ''}.`,
+          en: buildEnglishSentence(subjDe, base, 'present', enComp)
+        },
+        past: {
+          de: `${subjDe} ____${deComp ? ' ' + deComp : ''}.`,
+          en: buildEnglishSentence(subjDe, base, 'past', enComp)
+        },
+        perf: {
+          de: `${subjDe} ${aux} ${deComp ? deComp + ' ' : ''}____.`,
+          en: buildEnglishSentence(subjDe, base, 'perf', enComp)
+        },
+        plus: {
+          de: `${subjDe} ${auxPast} ${deComp ? deComp + ' ' : ''}____.`,
+          en: buildEnglishSentence(subjDe, base, 'plus', enComp)
+        },
+        future: {
+          de: `${subjDe} wird ${deComp ? deComp + ' ' : ''}____.`,
+          en: buildEnglishSentence(subjDe, base, 'future', enComp)
+        },
+        answers: {
+          present: v.pres,
+          past: v.past,
+          perf: perfInfo.partOptions.length ? perfInfo.partOptions : [v.perf],
+          plus: perfInfo.partOptions.length ? perfInfo.partOptions : [v.perf],
+          future: [v.inf]
+        },
+        meta: { aux, auxPast, subject: subjDe, deComp, enComp }
+      };
+    }
+
+    const verbSelect = document.getElementById('verbSelect');
+    const dePresent = document.getElementById('dePresent');
+    const enPresent = document.getElementById('enPresent');
+    const dePast = document.getElementById('dePast');
+    const enPast = document.getElementById('enPast');
+    const dePerf = document.getElementById('dePerf');
+    const enPerf = document.getElementById('enPerf');
+    const inputPresent = document.getElementById('inputPresent');
+    const inputPast = document.getElementById('inputPast');
+    const inputPerf = document.getElementById('inputPerf');
+    const dePlus = document.getElementById('dePlus');
+    const enPlus = document.getElementById('enPlus');
+    const inputPlus = document.getElementById('inputPlus');
+    const deFuture = document.getElementById('deFuture');
+    const enFuture = document.getElementById('enFuture');
+    const inputFuture = document.getElementById('inputFuture');
+    const feedbackPresent = document.getElementById('feedbackPresent');
+    const feedbackPast = document.getElementById('feedbackPast');
+    const feedbackPerf = document.getElementById('feedbackPerf');
+    const feedbackPlus = document.getElementById('feedbackPlus');
+    const feedbackFuture = document.getElementById('feedbackFuture');
+    const verbInfo = document.getElementById('verbInfo');
+
+    let currentSentence = null;
+
+    function setVerb(v) {
+      const context = pickContext(v, parsePerf(v.perf).auxOptions[0] || 'hat', true);
+      const s = buildSentence(v, context);
+      currentSentence = s;
+      dePresent.textContent = s.present.de;
+      enPresent.textContent = s.present.en;
+      dePast.textContent = s.past.de;
+      enPast.textContent = s.past.en;
+      dePerf.textContent = s.perf.de;
+      enPerf.textContent = s.perf.en;
+      dePlus.textContent = s.plus.de;
+      enPlus.textContent = s.plus.en;
+      deFuture.textContent = s.future.de;
+      enFuture.textContent = s.future.en;
+      inputPresent.value = '';
+      inputPast.value = '';
+      inputPerf.value = '';
+      inputPlus.value = '';
+      inputFuture.value = '';
+      feedbackPresent.textContent = '';
+      feedbackPast.textContent = '';
+      feedbackPerf.textContent = '';
+      feedbackPlus.textContent = '';
+      feedbackFuture.textContent = '';
+      verbInfo.innerHTML = `<span class="tag">VERB</span><span class="root">${v.inf}</span><span style="color:var(--muted);font-weight:600;">${v.en}</span>`;
+    }
+
+    function matches(value, options) {
+      const cleaned = normalize(value)
+        .replace(/^(hat|ist|war|hatte)\s+/i, '')
+        .trim();
+      return options.some((o) => normalize(o) === cleaned);
+    }
+
+    function checkAnswers() {
+      const v = verbs[verbSelect.selectedIndex];
+      const s = currentSentence || buildSentence(v);
+      if (matches(inputPresent.value, s.answers.present)) {
+        feedbackPresent.textContent = 'Correct.';
+        feedbackPresent.className = 'feedback ok';
+      } else {
+        feedbackPresent.textContent = `Correct: ${s.answers.present.join(' / ')}`;
+        feedbackPresent.className = 'feedback bad';
+      }
+      if (matches(inputPast.value, s.answers.past)) {
+        feedbackPast.textContent = 'Correct.';
+        feedbackPast.className = 'feedback ok';
+      } else {
+        feedbackPast.textContent = `Correct: ${s.answers.past.join(' / ')}`;
+        feedbackPast.className = 'feedback bad';
+      }
+      if (matches(inputPerf.value, s.answers.perf)) {
+        feedbackPerf.textContent = 'Correct.';
+        feedbackPerf.className = 'feedback ok';
+      } else {
+        feedbackPerf.textContent = `Correct: ${s.answers.perf.join(' / ')}`;
+        feedbackPerf.className = 'feedback bad';
+      }
+      if (matches(inputPlus.value, s.answers.plus)) {
+        feedbackPlus.textContent = 'Correct.';
+        feedbackPlus.className = 'feedback ok';
+      } else {
+        feedbackPlus.textContent = `Correct: ${s.answers.plus.join(' / ')}`;
+        feedbackPlus.className = 'feedback bad';
+      }
+      if (matches(inputFuture.value, s.answers.future)) {
+        feedbackFuture.textContent = 'Correct.';
+        feedbackFuture.className = 'feedback ok';
+      } else {
+        feedbackFuture.textContent = `Correct: ${s.answers.future.join(' / ')}`;
+        feedbackFuture.className = 'feedback bad';
+      }
+    }
+
+    function showAnswers() {
+      const v = verbs[verbSelect.selectedIndex];
+      const s = currentSentence || buildSentence(v);
+      inputPresent.value = s.answers.present[0];
+      inputPast.value = s.answers.past[0];
+      inputPerf.value = s.answers.perf[0];
+      inputPlus.value = s.answers.plus[0];
+      inputFuture.value = s.answers.future[0];
+      feedbackPresent.textContent = `Answer: ${s.answers.present.join(' / ')}`;
+      feedbackPresent.className = 'feedback ok';
+      feedbackPast.textContent = `Answer: ${s.answers.past.join(' / ')}`;
+      feedbackPast.className = 'feedback ok';
+      feedbackPerf.textContent = `Answer: ${s.answers.perf.join(' / ')}`;
+      feedbackPerf.className = 'feedback ok';
+      feedbackPlus.textContent = `Answer: ${s.answers.plus.join(' / ')}`;
+      feedbackPlus.className = 'feedback ok';
+      feedbackFuture.textContent = `Answer: ${s.answers.future.join(' / ')}`;
+      feedbackFuture.className = 'feedback ok';
+    }
+
+    verbs.forEach((v) => {
+      const opt = document.createElement('option');
+      opt.value = v.inf;
+      opt.textContent = `${v.inf} — ${v.en}`;
+      verbSelect.appendChild(opt);
+    });
+
+    verbSelect.addEventListener('change', () => setVerb(verbs[verbSelect.selectedIndex]));
+    document.getElementById('checkBtn').addEventListener('click', checkAnswers);
+    document.getElementById('showBtn').addEventListener('click', showAnswers);
+    document.getElementById('nextBtn').addEventListener('click', () => {
+      const idx = (verbSelect.selectedIndex + 1) % verbs.length;
+      verbSelect.selectedIndex = idx;
+      setVerb(verbs[idx]);
+    });
+
+    renderTable();
+    const initialIndex = Math.floor(Math.random() * verbs.length);
+    verbSelect.selectedIndex = initialIndex;
+    setVerb(verbs[initialIndex]);
+  </script>
+  <script src="menu-settings.js"></script>
+
+  <div class="settings-fab" id="settingsFab" aria-label="Open settings">⚙</div>
+  <div class="settings-panel" id="settingsPanel">
+    <h4>Settings</h4>
+    <div class="settings-row">
+      <label for="settingsTheme" style="font-weight:600;">Theme</label>
+      <select id="settingsTheme">
+        <option value="system">System</option>
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+      </select>
+    </div>
+    <div class="debug-box" id="deeplDebug">DeepL debug available on Translate page.</div>
+    <div class="settings-actions">
+      <button id="debugTestBtn">Test DeepL</button>
+      <button id="debugClearBtn">Clear cache</button>
+    </div>
+    <div class="settings-note">Theme settings apply across all pages.</div>
+  </div>
+</body>
+</html>

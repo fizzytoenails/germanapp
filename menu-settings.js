@@ -10,6 +10,7 @@
     ['number_time_match.html', 'Number/Time Match'],
     ['grammar_guide.html', 'Grammar Guide'],
     ['verb_forms.html', 'Verb Forms'],
+    ['irregular_verbs.html', 'Irregular Verbs'],
     ['article_prefix_practice.html', 'Articles'],
     ['prefix_suffix_builder.html', 'Prefixes & Suffixes'],
     ['case_overview.html', 'Case Overview'],
