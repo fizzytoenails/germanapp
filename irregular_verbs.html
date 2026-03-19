@@ -514,7 +514,7 @@
     }
 
     function baseEnglish(en) {
-      return en.split('/')[0].split(',')[0].trim();
+      return en.split('/')[0].split(',')[0].replace(/\(.*?\)/g, '').trim();
     }
 
     const EN_IRREGULAR = {
@@ -523,9 +523,18 @@
       do: { past: 'did', part: 'done' },
       go: { past: 'went', part: 'gone' },
       begin: { past: 'began', part: 'begun' },
+      bind: { past: 'bound', part: 'bound' },
       bite: { past: 'bit', part: 'bitten' },
+      can: { past: 'could', part: 'been able to' },
+      blow: { past: 'blew', part: 'blown' },
+      burn: { past: 'burned', part: 'burned' },
+      burst: { past: 'burst', part: 'burst' },
       break: { past: 'broke', part: 'broken' },
       bring: { past: 'brought', part: 'brought' },
+      become: { past: 'became', part: 'become' },
+      bend: { past: 'bent', part: 'bent' },
+      creep: { past: 'crept', part: 'crept' },
+      dig: { past: 'dug', part: 'dug' },
       buy: { past: 'bought', part: 'bought' },
       catch: { past: 'caught', part: 'caught' },
       choose: { past: 'chose', part: 'chosen' },
@@ -539,36 +548,68 @@
       fight: { past: 'fought', part: 'fought' },
       find: { past: 'found', part: 'found' },
       fly: { past: 'flew', part: 'flown' },
+      freeze: { past: 'froze', part: 'frozen' },
       forget: { past: 'forgot', part: 'forgotten' },
       forgive: { past: 'forgave', part: 'forgiven' },
       get: { past: 'got', part: 'gotten' },
       give: { past: 'gave', part: 'given' },
+      grow: { past: 'grew', part: 'grown' },
+      hang: { past: 'hung', part: 'hung' },
       hear: { past: 'heard', part: 'heard' },
+      hold: { past: 'held', part: 'held' },
       keep: { past: 'kept', part: 'kept' },
       know: { past: 'knew', part: 'known' },
+      lend: { past: 'lent', part: 'lent' },
+      let: { past: 'let', part: 'let' },
       leave: { past: 'left', part: 'left' },
       lose: { past: 'lost', part: 'lost' },
       make: { past: 'made', part: 'made' },
       meet: { past: 'met', part: 'met' },
+      may: { past: 'might', part: 'been allowed to' },
+      must: { past: 'had to', part: 'had to' },
       read: { past: 'read', part: 'read' },
+      ride: { past: 'rode', part: 'ridden' },
       run: { past: 'ran', part: 'run' },
+      ring: { past: 'rang', part: 'rung' },
       say: { past: 'said', part: 'said' },
       see: { past: 'saw', part: 'seen' },
       sell: { past: 'sold', part: 'sold' },
       send: { past: 'sent', part: 'sent' },
       sing: { past: 'sang', part: 'sung' },
+      shoot: { past: 'shot', part: 'shot' },
+      shine: { past: 'shone', part: 'shone' },
+      sink: { past: 'sank', part: 'sunk' },
       sit: { past: 'sat', part: 'sat' },
+      sleep: { past: 'slept', part: 'slept' },
+      smell: { past: 'smelled', part: 'smelled' },
       speak: { past: 'spoke', part: 'spoken' },
+      should: { past: 'should', part: 'should have' },
+      spit: { past: 'spat', part: 'spat' },
+      split: { past: 'split', part: 'split' },
+      spoil: { past: 'spoiled', part: 'spoiled' },
+      spring: { past: 'sprang', part: 'sprung' },
       stand: { past: 'stood', part: 'stood' },
       steal: { past: 'stole', part: 'stolen' },
+      strike: { past: 'struck', part: 'struck' },
+      stride: { past: 'strode', part: 'stridden' },
+      sting: { past: 'stung', part: 'stung' },
+      stink: { past: 'stank', part: 'stunk' },
+      swear: { past: 'swore', part: 'sworn' },
+      sweep: { past: 'swept', part: 'swept' },
+      swell: { past: 'swelled', part: 'swollen' },
       swim: { past: 'swam', part: 'swum' },
+      swing: { past: 'swung', part: 'swung' },
       take: { past: 'took', part: 'taken' },
       teach: { past: 'taught', part: 'taught' },
+      tear: { past: 'tore', part: 'torn' },
       tell: { past: 'told', part: 'told' },
       think: { past: 'thought', part: 'thought' },
       throw: { past: 'threw', part: 'thrown' },
       wear: { past: 'wore', part: 'worn' },
+      weave: { past: 'wove', part: 'woven' },
+      wind: { past: 'wound', part: 'wound' },
       win: { past: 'won', part: 'won' },
+      wring: { past: 'wrung', part: 'wrung' },
       write: { past: 'wrote', part: 'written' }
     };
 
@@ -595,6 +636,31 @@
     function buildEnglishSentence(subject, base, tense, comp) {
       const subj = subject === 'Es' ? 'It' : 'He';
       const suffix = comp ? ` ${comp}` : '';
+      if (base === 'can') {
+        if (tense === 'present') return `${subj} can do${suffix}.`;
+        if (tense === 'past') return `${subj} could do${suffix}.`;
+        if (tense === 'perf') return `${subj} has been able to do${suffix}.`;
+        if (tense === 'plus') return `${subj} had been able to do${suffix}.`;
+        return `${subj} will be able to do${suffix}.`;
+      }
+      if (base === 'must') {
+        if (tense === 'present') return `${subj} must do${suffix}.`;
+        if (tense === 'past') return `${subj} had to do${suffix}.`;
+        if (tense === 'perf') return `${subj} has had to do${suffix}.`;
+        if (tense === 'plus') return `${subj} had had to do${suffix}.`;
+        return `${subj} will have to do${suffix}.`;
+      }
+      if (base === 'may') {
+        if (tense === 'present') return `${subj} may do${suffix}.`;
+        if (tense === 'past') return `${subj} might do${suffix}.`;
+        if (tense === 'perf') return `${subj} has been allowed to do${suffix}.`;
+        if (tense === 'plus') return `${subj} had been allowed to do${suffix}.`;
+        return `${subj} will be allowed to do${suffix}.`;
+      }
+      if (base === 'should') {
+        if (tense === 'present' || tense === 'future') return `${subj} should do${suffix}.`;
+        return `${subj} should have done${suffix}.`;
+      }
       if (base.startsWith('be ')) {
         const rest = base.slice(3);
         if (tense === 'present') return `${subj} is ${rest}${suffix}.`;
@@ -618,6 +684,7 @@
     }
 
     const impersonalVerbs = new Set(['geschehen', 'gelingen', 'scheinen', 'frieren']);
+    const modalVerbs = new Set(['können','müssen','dürfen','sollen','wollen','mögen']);
     const motionVerbs = new Set([
       'gehen','kommen','fahren','laufen','fliegen','reiten','rennen','springen','schwimmen',
       'steigen','fallen','treten','ziehen','kriechen','gleiten','schreiten','schleichen',
@@ -671,6 +738,9 @@
     function pickContext(v, aux, randomize = false) {
       if (impersonalVerbs.has(v.inf)) return { subject: { de: 'Es', en: 'It' }, comp: { de: '', en: '' } };
       const subject = randomize ? pickRandom(subjectPool) : subjectPool[0];
+      if (modalVerbs.has(v.inf)) {
+        return { subject, comp: { de: 'das machen', en: 'it' } };
+      }
       let comp = { de: '', en: '' };
       if (motionVerbs.has(v.inf)) comp = randomize ? pickRandom(contextPool.motion) : contextPool.motion[0];
       else if (stativeVerbs.has(v.inf)) comp = randomize ? pickRandom(contextPool.stative) : contextPool.stative[0];
